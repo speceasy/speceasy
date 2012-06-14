@@ -72,11 +72,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseContextSpecification.cs" />
     <Compile Include="ContextSpecification.cs" />
     <Compile Include="NunitExtensions.cs" />
+    <Compile Include="NuSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordReplayContextSpecification.cs" />
   </ItemGroup>
@@ -95,4 +98,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)\..\..\Library\ContextSpecs\</PostBuildEvent>
+  </PropertyGroup>
 </Project>
