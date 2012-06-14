@@ -67,7 +67,7 @@ namespace TrackAbout.Mobile.NuSpec
         }
 
         protected Dictionary<string, Action> it = new Dictionary<string, Action>();
-        protected Dictionary<string, Action> context = new Dictionary<string, Action>();
+        protected Dictionary<string, Action> when = new Dictionary<string, Action>();
         protected Action before = delegate { };
         protected Action act = delegate { };
 
@@ -78,14 +78,14 @@ namespace TrackAbout.Mobile.NuSpec
         [Test]
         public void Examples()
         {
-            SetupMethodContexts();
-            RunContextSpecs(before);
+            SetupWhenMethods();
+            RunWhenSpecs(before);
 
             if (exceptions.Any())
                 throw new Exception("Specifications failed!", exceptions[0]);
         }
 
-        private void SetupMethodContexts()
+        private void SetupWhenMethods()
         {
             var type = GetType();
             var methods = type.GetMethods();
@@ -94,23 +94,23 @@ namespace TrackAbout.Mobile.NuSpec
             foreach (var m in declaredMethods)
             {
                 var method = m;
-                context[method.Name] = () => method.Invoke(this, null);
+                when[method.Name] = () => method.Invoke(this, null);
             }
         }
 
-        private void RunContextSpecs(Action beforeStack)
+        private void RunWhenSpecs(Action beforeStack)
         {
-            RunContextSpecs(beforeStack, 0);
+            RunWhenSpecs(beforeStack, 0);
         }
 
-        private void RunContextSpecs(Action beforeStack, int depth)
+        private void RunWhenSpecs(Action beforeStack, int depth)
         {
-            var cachedContexts = context.Select(kvp => kvp);
+            var whenContexts = when.Select(kvp => kvp);
             var cachedAct = act;
-            foreach (var ctx in cachedContexts)
+            foreach (var ctx in whenContexts)
             {
                 it = new Dictionary<string, Action>();
-                context = new Dictionary<string, Action>();
+                when = new Dictionary<string, Action>();
                 before = delegate { };
                 act = cachedAct;
                 ctx.Value();
@@ -118,7 +118,7 @@ namespace TrackAbout.Mobile.NuSpec
                 var cachedBefore = before;
                 Action newBeforeStack = () => { beforeStack(); cachedBefore(); };
                 RunSpecs(newBeforeStack, depth + 1);
-                RunContextSpecs(newBeforeStack, depth + 1);
+                RunWhenSpecs(newBeforeStack, depth + 1);
             }
         }
 
