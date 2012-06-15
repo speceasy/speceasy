@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using Ninject;
 using Ninject.Activation.Providers;
@@ -11,32 +12,36 @@ using Rhino.Mocks.Interfaces;
 
 namespace TrackAbout.Mobile.NuSpec
 {
-    public class WhenAction
+    public class GivenAction
     {
-        public WhenAction(Action before)
+        public GivenAction(Action given)
         {
-            this.before = before;
+            this.given = given;
         }
-        public Action before { get; set; }
+        public Action given { get; set; }
         public Action verify { get; set; }
+        public void SetupContext()
+        {
+            verify();
+        }
     }
 
-    public class WhenDictionary : Dictionary<string, WhenAction>
+    public class GivenDictionary : Dictionary<string, GivenAction>
     {
-        public WhenAction this[string key, Action before]
+        public GivenAction this[string key, Action given]
         {
             get
             {
-                if (ContainsKey(key)) throw new Exception("Reusing a when description");
-                return base[key] = new WhenAction(before);
+                if (ContainsKey(key)) throw new Exception("Reusing a given description");
+                return base[key] = new GivenAction(given);
             }
         }
-        public new WhenAction this[string key]
+        public new GivenAction this[string key]
         {
             get
             {
-                if (ContainsKey(key)) throw new Exception("Reusing a when description");
-                return base[key] = new WhenAction(() => { });
+                if (ContainsKey(key)) throw new Exception("Reusing a given description");
+                return base[key] = new GivenAction(() => { });
             }
         }
     }
@@ -95,26 +100,45 @@ namespace TrackAbout.Mobile.NuSpec
             MockingKernel.AddBinding(binding);
         }
 
-        protected Dictionary<string, Action> it = new Dictionary<string, Action>();
-        protected WhenDictionary when = new WhenDictionary();
-        protected Action before = delegate { };
-        protected Action act = delegate { };
+        private Dictionary<string, Action> then = new Dictionary<string, Action>();
+        private GivenDictionary given = new GivenDictionary();
+        private KeyValuePair<string, Action> when;
+
+        protected void Then(string description, Action specification)
+        {
+            then[description] = specification;
+        }
+        protected GivenAction Given(string description, Action setup)
+        {
+            return given[description, setup];
+        }
+        protected GivenAction Given(string description)
+        {
+            return given[description, () => { }];
+        }
+        protected void When(string description, Action action)
+        {
+            when = new KeyValuePair<string, Action>(description, action);
+        }
 
         protected TUnit SUT;
 
         private readonly List<Exception> exceptions = new List<Exception>();
+        private readonly StringBuilder finalOutput = new StringBuilder();
 
         [Test]
         public void Examples()
         {
-            SetupWhenMethods();
-            RunWhenSpecs(before);
+            SetupMethods();
+            RunWhenSpecs();
 
+            Console.WriteLine("------------ FULL RESULTS ------------");
+            Console.WriteLine(finalOutput);
             if (exceptions.Any())
                 throw new Exception("Specifications failed!", exceptions[0]);
         }
 
-        private void SetupWhenMethods()
+        private void SetupMethods()
         {
             var type = GetType();
             var methods = type.GetMethods();
@@ -123,54 +147,83 @@ namespace TrackAbout.Mobile.NuSpec
             foreach (var m in declaredMethods)
             {
                 var method = m;
-                when[method.Name, () => { }].verify = () => method.Invoke(this, null);
+                given[method.Name, () => { }].verify = () => method.Invoke(this, null);
             }
         }
 
-        private void RunWhenSpecs(Action beforeStack)
+        private void RunWhenSpecs()
         {
-            RunWhenSpecs(beforeStack, 0);
+            RunWhenSpecs(new Stack<KeyValuePair<string, GivenAction>>(), 0);
         }
 
-        private void RunWhenSpecs(Action beforeStack, int depth)
+        private void RunWhenSpecs(Stack<KeyValuePair<string, GivenAction>> givenStack, int depth)
         {
-            var whenContexts = when.Select(kvp => kvp);
-            var cachedAct = act;
-            foreach (var ctx in whenContexts)
+            var givenContexts = given.Select(kvp => kvp);
+            var cachedWhen = when;
+            foreach (var ctx in givenContexts)
             {
-                var whenAction = ctx.Value;
-                it = new Dictionary<string, Action>();
-                when = new WhenDictionary();
-                before = delegate { };
-                act = cachedAct;
-                whenAction.verify();
-                Console.WriteLine(Indent("when " + ctx.Key, depth));
-                var cachedBefore = before;
-                Action newBeforeStack = () => { beforeStack(); whenAction.before(); cachedBefore(); };
-                RunSpecs(newBeforeStack, depth + 1);
-                RunWhenSpecs(newBeforeStack, depth + 1);
+                var givenContext = ctx.Value;
+                then = new Dictionary<string, Action>();
+                given = new GivenDictionary();
+                when = cachedWhen;
+
+                givenContext.SetupContext();
+
+                if (depth > 0)
+                    givenStack.Push(ctx);
+                RunSpecs(givenStack, depth + 1);
+                RunWhenSpecs(givenStack, depth + 1);
+                if (givenStack.Any())
+                    givenStack.Pop();
             }
         }
 
-        private void RunSpecs(Action beforeStack, int depth)
+        private void RunSpecs(Stack<KeyValuePair<string, GivenAction>> givenStack, int depth)
         {
-            foreach (var spec in it)
+            if (!then.Any()) return;
+
+            var output = new StringBuilder();
+
+            var givenDescriptions = givenStack.Reverse().Select(kvp => kvp.Key).ToList();
+            if (givenDescriptions.Any())
             {
-                Console.WriteLine(Indent("it " + spec.Key, depth));
+                output.AppendLine("given " + givenDescriptions.First());
+                foreach (var description in givenDescriptions.Skip(1))
+                    output.AppendLine(Indent("and " + description, 1));
+            }
+            output.AppendLine("when " + when.Key);
+
+            var thenText = "then ";
+            var failurePrefix = output.ToString();
+            foreach (var spec in then)
+            {
+                output.AppendLine(thenText + spec.Key);
+                if (thenText == "then ")
+                    thenText = Indent("and ", 1);
+
                 MockingKernel = new MockingKernel();
                 try
                 {
-                    beforeStack();
+                    foreach (var action in givenStack.Select(kvp => kvp.Value))
+                        action.given();
                     SUT = Get<TUnit>();
-                    act();
+                    when.Value();
                     spec.Value();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(Indent("FAILED!", depth + 1));
+                    Console.Write(failurePrefix);
+                    Console.WriteLine("then " + spec.Key);
+                    Console.WriteLine(Indent("FAILED!", 1));
+                    Console.WriteLine();
+
+                    output.AppendLine(Indent("FAILED!", 1));
                     exceptions.Add(ex);
                 }
             }
+
+            output.AppendLine();
+            finalOutput.Append(output.ToString());
         }
 
         private static string Indent(string text, int depth)
