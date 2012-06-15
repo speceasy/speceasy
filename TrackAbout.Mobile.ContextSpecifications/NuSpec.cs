@@ -12,37 +12,29 @@ using Rhino.Mocks.Interfaces;
 
 namespace TrackAbout.Mobile.NuSpec
 {
-    public class GivenAction
+    public class Context
     {
-        public GivenAction(Action given)
+        public Context()
         {
-            this.given = given;
+            given = () => { };
+        }
+
+        public Context(Action given)
+        {
+            this.given = given;            
         }
         public Action given { get; set; }
-        public Action verify { get; set; }
+
+        private Action setup;
+
+        public void Verify(Action verify)
+        {
+            setup = verify;
+        }
+        
         public void SetupContext()
         {
-            verify();
-        }
-    }
-
-    public class GivenDictionary : Dictionary<string, GivenAction>
-    {
-        public GivenAction this[string key, Action given]
-        {
-            get
-            {
-                if (ContainsKey(key)) throw new Exception("Reusing a given description");
-                return base[key] = new GivenAction(given);
-            }
-        }
-        public new GivenAction this[string key]
-        {
-            get
-            {
-                if (ContainsKey(key)) throw new Exception("Reusing a given description");
-                return base[key] = new GivenAction(() => { });
-            }
+            setup();
         }
     }
 
@@ -101,21 +93,23 @@ namespace TrackAbout.Mobile.NuSpec
         }
 
         private Dictionary<string, Action> then = new Dictionary<string, Action>();
-        private GivenDictionary given = new GivenDictionary();
+        private Dictionary<string, Context> contexts = new Dictionary<string, Context>();
         private KeyValuePair<string, Action> when;
 
         protected void Then(string description, Action specification)
         {
             then[description] = specification;
         }
-        protected GivenAction Given(string description, Action setup)
+        protected Context Given(string description, Action setup)
         {
-            return given[description, setup];
+            if (contexts.ContainsKey(description)) throw new Exception("Reusing a given description");
+            return contexts[description] = new Context(setup);
         }
-        protected GivenAction Given(string description)
+        protected Context Given(string description)
         {
-            return given[description, () => { }];
+            return Given(description, () => { });
         }
+
         protected void When(string description, Action action)
         {
             when = new KeyValuePair<string, Action>(description, action);
@@ -127,10 +121,10 @@ namespace TrackAbout.Mobile.NuSpec
         private readonly StringBuilder finalOutput = new StringBuilder();
 
         [Test]
-        public void Examples()
+        public void Verify()
         {
-            SetupMethods();
-            RunWhenSpecs();
+            CreateMethodContexts();
+            VerifyContexts();
 
             Console.WriteLine("------------ FULL RESULTS ------------");
             Console.WriteLine(finalOutput);
@@ -138,7 +132,7 @@ namespace TrackAbout.Mobile.NuSpec
                 throw new Exception("Specifications failed!", exceptions[0]);
         }
 
-        private void SetupMethods()
+        private void CreateMethodContexts()
         {
             var type = GetType();
             var methods = type.GetMethods();
@@ -147,44 +141,43 @@ namespace TrackAbout.Mobile.NuSpec
             foreach (var m in declaredMethods)
             {
                 var method = m;
-                given[method.Name, () => { }].verify = () => method.Invoke(this, null);
+                Given(method.Name).Verify(() => method.Invoke(this, null));
             }
         }
 
-        private void RunWhenSpecs()
+        private void VerifyContexts()
         {
-            RunWhenSpecs(new Stack<KeyValuePair<string, GivenAction>>(), 0);
+            VerifyContexts(new Stack<KeyValuePair<string, Context>>(), 0);
         }
 
-        private void RunWhenSpecs(Stack<KeyValuePair<string, GivenAction>> givenStack, int depth)
+        private void VerifyContexts(Stack<KeyValuePair<string, Context>> contextStack, int depth)
         {
-            var givenContexts = given.Select(kvp => kvp);
             var cachedWhen = when;
-            foreach (var ctx in givenContexts)
+            foreach (var namedContext in contexts.Select(kvp => kvp))
             {
-                var givenContext = ctx.Value;
+                var givenContext = namedContext.Value;
                 then = new Dictionary<string, Action>();
-                given = new GivenDictionary();
+                contexts = new Dictionary<string, Context>();
                 when = cachedWhen;
 
                 givenContext.SetupContext();
 
                 if (depth > 0)
-                    givenStack.Push(ctx);
-                RunSpecs(givenStack, depth + 1);
-                RunWhenSpecs(givenStack, depth + 1);
-                if (givenStack.Any())
-                    givenStack.Pop();
+                    contextStack.Push(namedContext);
+                VerifySpecs(contextStack);
+                VerifyContexts(contextStack, depth + 1);
+                if (contextStack.Any())
+                    contextStack.Pop();
             }
         }
 
-        private void RunSpecs(Stack<KeyValuePair<string, GivenAction>> givenStack, int depth)
+        private void VerifySpecs(Stack<KeyValuePair<string, Context>> contextStack)
         {
             if (!then.Any()) return;
 
             var output = new StringBuilder();
 
-            var givenDescriptions = givenStack.Reverse().Select(kvp => kvp.Key).ToList();
+            var givenDescriptions = contextStack.Reverse().Select(kvp => kvp.Key).ToList();
             if (givenDescriptions.Any())
             {
                 output.AppendLine("given " + givenDescriptions.First());
@@ -204,7 +197,7 @@ namespace TrackAbout.Mobile.NuSpec
                 MockingKernel = new MockingKernel();
                 try
                 {
-                    foreach (var action in givenStack.Select(kvp => kvp.Value))
+                    foreach (var action in contextStack.Select(kvp => kvp.Value))
                         action.given();
                     SUT = Get<TUnit>();
                     when.Value();
