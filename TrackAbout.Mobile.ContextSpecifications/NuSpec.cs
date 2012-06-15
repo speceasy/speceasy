@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NUnit.Framework;
 using Ninject;
 using Ninject.Activation.Providers;
@@ -12,6 +11,28 @@ using Rhino.Mocks.Interfaces;
 
 namespace TrackAbout.Mobile.NuSpec
 {
+    public class WhenAction
+    {
+        public WhenAction(Action before)
+        {
+            this.before = before;
+        }
+        public Action before { get; set; }
+        public Action verify { get; set; }
+    }
+
+    public class WhenDictionary : Dictionary<string, WhenAction>
+    {
+        public WhenAction this[string key, Action before]
+        {
+            get
+            {
+                if (base[key] == null) throw new Exception("Reusing a when description");
+                return base[key] = new WhenAction(before);
+            }
+        }
+    }
+
     [TestFixture]
     public class NuSpec<TUnit>
     {
