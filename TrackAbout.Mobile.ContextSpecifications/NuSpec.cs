@@ -27,8 +27,16 @@ namespace TrackAbout.Mobile.NuSpec
         {
             get
             {
-                if (base[key] == null) throw new Exception("Reusing a when description");
+                if (ContainsKey(key)) throw new Exception("Reusing a when description");
                 return base[key] = new WhenAction(before);
+            }
+        }
+        public new WhenAction this[string key]
+        {
+            get
+            {
+                if (ContainsKey(key)) throw new Exception("Reusing a when description");
+                return base[key] = new WhenAction(() => { });
             }
         }
     }
@@ -88,7 +96,7 @@ namespace TrackAbout.Mobile.NuSpec
         }
 
         protected Dictionary<string, Action> it = new Dictionary<string, Action>();
-        protected Dictionary<string, Action> when = new Dictionary<string, Action>();
+        protected WhenDictionary when = new WhenDictionary();
         protected Action before = delegate { };
         protected Action act = delegate { };
 
@@ -115,7 +123,7 @@ namespace TrackAbout.Mobile.NuSpec
             foreach (var m in declaredMethods)
             {
                 var method = m;
-                when[method.Name] = () => method.Invoke(this, null);
+                when[method.Name, () => { }].verify = () => method.Invoke(this, null);
             }
         }
 
@@ -130,14 +138,15 @@ namespace TrackAbout.Mobile.NuSpec
             var cachedAct = act;
             foreach (var ctx in whenContexts)
             {
+                var whenAction = ctx.Value;
                 it = new Dictionary<string, Action>();
-                when = new Dictionary<string, Action>();
+                when = new WhenDictionary();
                 before = delegate { };
                 act = cachedAct;
-                ctx.Value();
+                whenAction.verify();
                 Console.WriteLine(Indent("when " + ctx.Key, depth));
                 var cachedBefore = before;
-                Action newBeforeStack = () => { beforeStack(); cachedBefore(); };
+                Action newBeforeStack = () => { beforeStack(); whenAction.before(); cachedBefore(); };
                 RunSpecs(newBeforeStack, depth + 1);
                 RunWhenSpecs(newBeforeStack, depth + 1);
             }
