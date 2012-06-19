@@ -96,15 +96,17 @@ namespace TrackAbout.Mobile.NuSpec
         private Dictionary<string, Context> contexts = new Dictionary<string, Context>();
         private KeyValuePair<string, Action> when;
 
-        protected void Then(string description, Action specification)
-        {
-            then[description] = specification;
-        }
         protected Context Given(string description, Action setup)
         {
             if (contexts.ContainsKey(description)) throw new Exception("Reusing a given description");
             return contexts[description] = new Context(setup);
         }
+
+        protected Context Given(Action setup)
+        {
+            return contexts[CreateUnnamedContextName()] = new Context(setup);
+        }
+
         protected Context Given(string description)
         {
             return Given(description, () => { });
@@ -115,12 +117,27 @@ namespace TrackAbout.Mobile.NuSpec
             when = new KeyValuePair<string, Action>(description, action);
         }
 
+        protected void Then(string description, Action specification)
+        {
+            then[description] = specification;
+        }
+
         protected TUnit SUT 
         {
             get { return Get<TUnit>(); }
             set { Set(value); }
         }
 
+        private int nuSpecContextId;
+        private string CreateUnnamedContextName()
+        {
+            return "NUSPEC" + (nuSpecContextId++).ToString();
+        }
+
+        private bool IsNamedContext(string name)
+        {
+            return !name.StartsWith("NUSPEC");
+        }
 
         private readonly List<Exception> exceptions = new List<Exception>();
         private readonly StringBuilder finalOutput = new StringBuilder();
@@ -183,12 +200,14 @@ namespace TrackAbout.Mobile.NuSpec
             var output = new StringBuilder();
 
             var givenDescriptions = contextStack.Reverse().Select(kvp => kvp.Key).ToList();
-            if (givenDescriptions.Any())
+            var givenText = "given ";
+            foreach (var description in givenDescriptions.Where(IsNamedContext))
             {
-                output.AppendLine("given " + givenDescriptions.First());
-                foreach (var description in givenDescriptions.Skip(1))
-                    output.AppendLine(Indent("and " + description, 1));
+                output.AppendLine(givenText + description);
+                if (givenText == "given ")
+                    givenText = Indent("and ", 1);
             }
+
             output.AppendLine("when " + when.Key);
 
             var thenText = "then ";
