@@ -209,12 +209,13 @@ namespace TrackAbout.Mobile.NuSpec
                 }
                 catch (Exception ex)
                 {
+                    var failureMessage = Indent("FAILED! " + ex.Message, 1);
                     Console.Write(failurePrefix);
                     Console.WriteLine("then " + spec.Key);
-                    Console.WriteLine(Indent("FAILED!", 1));
+                    Console.WriteLine(failureMessage);
                     Console.WriteLine();
 
-                    output.AppendLine(Indent("FAILED!", 1));
+                    output.AppendLine(failureMessage);
                     exceptions.Add(ex);
                 }
             }
