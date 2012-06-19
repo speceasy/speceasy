@@ -110,7 +110,7 @@ namespace TrackAbout.Mobile.NuSpec
             return Given(description, () => { });
         }
 
-        protected void When(string description, Action action)
+        protected virtual void When(string description, Action action)
         {
             when = new KeyValuePair<string, Action>(description, action);
         }
