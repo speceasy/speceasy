@@ -115,7 +115,12 @@ namespace TrackAbout.Mobile.NuSpec
             when = new KeyValuePair<string, Action>(description, action);
         }
 
-        protected TUnit SUT;
+        protected TUnit SUT 
+        {
+            get { return Get<TUnit>(); }
+            set { Set(value); }
+        }
+
 
         private readonly List<Exception> exceptions = new List<Exception>();
         private readonly StringBuilder finalOutput = new StringBuilder();
@@ -199,7 +204,6 @@ namespace TrackAbout.Mobile.NuSpec
                 {
                     foreach (var action in contextStack.Select(kvp => kvp.Value))
                         action.given();
-                    SUT = Get<TUnit>();
                     when.Value();
                     spec.Value();
                 }
