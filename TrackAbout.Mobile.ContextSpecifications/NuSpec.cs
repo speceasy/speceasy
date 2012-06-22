@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -14,27 +15,32 @@ namespace TrackAbout.Mobile.NuSpec
 {
     public class Context
     {
+        private readonly Action setupAction;
+        private Action enterAction;
+
         public Context()
+            : this(() => { })
         {
-            given = () => { };
         }
 
-        public Context(Action given)
+        public Context(Action setupAction)
         {
-            this.given = given;            
+            this.setupAction = setupAction;            
         }
-        public Action given { get; set; }
-
-        private Action setup;
 
         public void Verify(Action verify)
         {
-            setup = verify;
+            enterAction = verify;
         }
         
+        public void EnterContext()
+        {
+            enterAction();
+        }
+
         public void SetupContext()
         {
-            setup();
+            setupAction();
         }
     }
 
@@ -131,10 +137,10 @@ namespace TrackAbout.Mobile.NuSpec
         private int nuSpecContextId;
         private string CreateUnnamedContextName()
         {
-            return "NUSPEC" + (nuSpecContextId++).ToString();
+            return "NUSPEC" + (nuSpecContextId++).ToString(CultureInfo.InvariantCulture);
         }
 
-        private bool IsNamedContext(string name)
+        private static bool IsNamedContext(string name)
         {
             return !name.StartsWith("NUSPEC");
         }
@@ -182,7 +188,7 @@ namespace TrackAbout.Mobile.NuSpec
                 contexts = new Dictionary<string, Context>();
                 when = cachedWhen;
 
-                givenContext.SetupContext();
+                givenContext.EnterContext();
 
                 if (depth > 0)
                     contextStack.Push(namedContext);
@@ -222,7 +228,7 @@ namespace TrackAbout.Mobile.NuSpec
                 try
                 {
                     foreach (var action in contextStack.Select(kvp => kvp.Value))
-                        action.given();
+                        action.SetupContext();
                     when.Value();
                     spec.Value();
                 }
