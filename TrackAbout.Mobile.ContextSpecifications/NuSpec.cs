@@ -175,10 +175,10 @@ namespace TrackAbout.Mobile.NuSpec
 
         private void VerifyContexts()
         {
-            VerifyContexts(new Stack<KeyValuePair<string, Context>>(), 0);
+            VerifyContexts(new List<KeyValuePair<string, Context>>(), 0);
         }
 
-        private void VerifyContexts(Stack<KeyValuePair<string, Context>> contextStack, int depth)
+        private void VerifyContexts(List<KeyValuePair<string, Context>> contextList, int depth)
         {
             var cachedWhen = when;
             foreach (var namedContext in contexts.Select(kvp => kvp))
@@ -188,24 +188,30 @@ namespace TrackAbout.Mobile.NuSpec
                 contexts = new Dictionary<string, Context>();
                 when = cachedWhen;
 
+                InitializeContext(contextList);
                 givenContext.EnterContext();
 
                 if (depth > 0)
-                    contextStack.Push(namedContext);
-                VerifySpecs(contextStack);
-                VerifyContexts(contextStack, depth + 1);
-                if (contextStack.Any())
-                    contextStack.Pop();
+                    contextList.Add(namedContext);
+                VerifySpecs(contextList);
+                VerifyContexts(contextList, depth + 1);
+                if (contextList.Any())
+                    contextList.Remove(namedContext);
             }
         }
 
-        private void VerifySpecs(Stack<KeyValuePair<string, Context>> contextStack)
+        protected virtual void InitializeTest()
+        {
+            MockingKernel = new MockingKernel();
+        }
+
+        private void VerifySpecs(List<KeyValuePair<string, Context>> contextList)
         {
             if (!then.Any()) return;
 
             var output = new StringBuilder();
 
-            var givenDescriptions = contextStack.Reverse().Select(kvp => kvp.Key).ToList();
+            var givenDescriptions = contextList.Select(kvp => kvp.Key).ToList();
             var givenText = "given ";
             foreach (var description in givenDescriptions.Where(IsNamedContext))
             {
@@ -224,11 +230,9 @@ namespace TrackAbout.Mobile.NuSpec
                 if (thenText == "then ")
                     thenText = Indent("and ", 1);
 
-                MockingKernel = new MockingKernel();
                 try
                 {
-                    foreach (var action in contextStack.Select(kvp => kvp.Value))
-                        action.SetupContext();
+                    InitializeContext(contextList);
                     when.Value();
                     spec.Value();
                 }
@@ -247,6 +251,13 @@ namespace TrackAbout.Mobile.NuSpec
 
             output.AppendLine();
             finalOutput.Append(output.ToString());
+        }
+
+        private void InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
+        {
+            InitializeTest();
+            foreach (var action in contextList.Select(kvp => kvp.Value))
+                action.SetupContext();
         }
 
         private static string Indent(string text, int depth)
