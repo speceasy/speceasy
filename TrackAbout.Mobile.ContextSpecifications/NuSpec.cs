@@ -15,22 +15,28 @@ namespace TrackAbout.Mobile.NuSpec
 {
     public class Context
     {
-        private readonly Action setupAction;
-        private Action enterAction;
+        private readonly Action setupAction = delegate { };
+        private Action enterAction = delegate { };
 
         public Context()
-            : this(() => { })
         {
         }
 
-        public Context(Action setupAction)
+        public Context(Action setup)
         {
-            this.setupAction = setupAction;            
+            setupAction = setup;            
+        }
+
+        public Context(Action setup, Action verify)
+        {
+            setupAction = setup;
+            enterAction = verify;
         }
 
         public void Verify(Action verify)
         {
-            enterAction = verify;
+            var cachedEnterAction = enterAction;
+            enterAction = () => { cachedEnterAction(); verify(); };
         }
         
         public void EnterContext()
@@ -121,6 +127,11 @@ namespace TrackAbout.Mobile.NuSpec
         protected virtual void When(string description, Action action)
         {
             when = new KeyValuePair<string, Action>(description, action);
+        }
+
+        protected virtual Context ForWhen(string description, Action action)
+        {
+            return contexts[CreateUnnamedContextName()] = new Context(() => { }, () => When(description, action));
         }
 
         protected void Then(string description, Action specification)
