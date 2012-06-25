@@ -27,16 +27,16 @@ namespace TrackAbout.Mobile.NuSpec
             setupAction = setup;            
         }
 
-        public Context(Action setup, Action verify)
+        public Context(Action setup, Action addSpecs)
         {
             setupAction = setup;
-            enterAction = verify;
+            enterAction = addSpecs;
         }
 
-        public void Verify(Action verify)
+        public void Verify(Action addSpecs)
         {
             var cachedEnterAction = enterAction;
-            enterAction = () => { cachedEnterAction(); verify(); };
+            enterAction = () => { cachedEnterAction(); addSpecs(); };
         }
         
         public void EnterContext()
