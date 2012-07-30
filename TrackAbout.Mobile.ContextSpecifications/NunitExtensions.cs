@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using System.Linq;
 
 namespace TrackAbout.Mobile.ContextSpecifications

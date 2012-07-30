@@ -13,6 +13,8 @@ using Rhino.Mocks.Interfaces;
 
 namespace TrackAbout.Mobile.NuSpec
 {
+    public delegate void Action();
+
     public class Context
     {
         private readonly Action setupAction = delegate { };
