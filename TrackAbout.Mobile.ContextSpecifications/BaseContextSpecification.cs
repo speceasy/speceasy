@@ -1,5 +1,6 @@
 ﻿using System;
-using Ninject.RhinoMocks;
+using Ninject.MockingKernel;
+using Ninject.MockingKernel.RhinoMock;
 using NUnit.Framework;
 
 namespace TrackAbout.Mobile.ContextSpecifications
@@ -14,7 +15,7 @@ namespace TrackAbout.Mobile.ContextSpecifications
         [SetUp]
         public void BaseSetup()
         {
-			MockingKernel = new MockingKernel();
+			MockingKernel = new RhinoMocksMockingKernel();
             BeforeEachSpec();
             EstablishContext();
             try

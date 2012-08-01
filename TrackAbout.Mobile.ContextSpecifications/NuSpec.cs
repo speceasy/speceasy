@@ -6,8 +6,9 @@ using System.Text;
 using NUnit.Framework;
 using Ninject;
 using Ninject.Activation.Providers;
+using Ninject.MockingKernel;
+using Ninject.MockingKernel.RhinoMock;
 using Ninject.Planning.Bindings;
-using Ninject.RhinoMocks;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -215,7 +216,7 @@ namespace TrackAbout.Mobile.NuSpec
 
         protected virtual void InitializeTest()
         {
-            MockingKernel = new MockingKernel();
+            MockingKernel = new RhinoMocksMockingKernel();
         }
 
         private void VerifySpecs(List<KeyValuePair<string, Context>> contextList)
