@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 using System.Linq;
+using Rhino.Mocks.Constraints;
+using Is = NUnit.Framework.Is;
 
 namespace TrackAbout.Mobile.ContextSpecifications
 {
@@ -35,8 +37,12 @@ namespace TrackAbout.Mobile.ContextSpecifications
             Assert.That(condition, Is.False);
         }
 
-		[DebuggerStepThrough]
         public static void ShouldEqual(this object actual, object expected)
+        {
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        public static void ShouldEqual(this string actual, string expected)
         {
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -161,7 +167,7 @@ namespace TrackAbout.Mobile.ContextSpecifications
 
         public static void ShouldBeInstanceOfType(this object actual, Type expected)
         {
-            Assert.That(actual, Is.InstanceOfType(expected));
+            Assert.That(actual, Is.InstanceOf(expected));
         }
 
         public static void ShouldBeInstanceOf<ExpectedType>(this object actual)
@@ -171,7 +177,7 @@ namespace TrackAbout.Mobile.ContextSpecifications
 
         public static void ShouldNotBeInstanceOfType(this object actual, Type expected)
         {
-            Assert.That(actual, Is.Not.InstanceOfType(expected));
+            Assert.That(actual, Is.Not.InstanceOf(expected));
         }
 
         public static void ShouldNotBeInstanceOf<ExpectedType>(this object actual)
