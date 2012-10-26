@@ -7,8 +7,8 @@
     <ProjectGuid>{D15653FB-10A8-4ABB-BACD-A1694FC3251C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TrackAbout.Mobile.ContextSpecifications</RootNamespace>
-    <AssemblyName>TrackAbout.Mobile.ContextSpecifications</AssemblyName>
+    <RootNamespace>TrackAbout.Mobile.NuSpec</RootNamespace>
+    <AssemblyName>TrackAbout.Mobile.NuSpec</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -68,12 +68,8 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseContextSpecification.cs" />
-    <Compile Include="ContextSpecification.cs" />
-    <Compile Include="NunitExtensions.cs" />
     <Compile Include="NuSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecordReplayContextSpecification.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
