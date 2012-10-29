@@ -1,0 +1,6 @@
+syntax:glob
+
+_ReSharper*
+bin/*
+obj/*
+*.suo
