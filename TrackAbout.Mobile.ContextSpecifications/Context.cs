@@ -1,6 +1,11 @@
 namespace SpecEasy
 {
-    public class Context
+    public interface IContext
+    {
+        void Verify(Action addSpecs);
+    }
+
+    internal class Context : IContext
     {
         private readonly Action setupAction = delegate { };
         private Action enterAction = delegate { };

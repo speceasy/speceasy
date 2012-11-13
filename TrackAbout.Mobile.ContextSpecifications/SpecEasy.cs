@@ -18,78 +18,22 @@ namespace SpecEasy
     [TestFixture]
     public class NuSpec
     {
-        protected MockingKernel MockingKernel;
-
-        protected T Mock<T>() where T : class
-        {
-            return MockRepository.GenerateMock<T>();
-        }
-
-        protected T Get<T>()
-        {
-            return MockingKernel.Get<T>();
-        }
-
-        protected void Set<T>(T item)
-        {
-            var binding = new Binding(typeof(T))
-            {
-                ProviderCallback = ctx => new ConstantProvider<T>(item)
-            };
-            MockingKernel.AddBinding(binding);
-        }
-
-        protected void Raise<T>(Action<T> eventSubscription, params object[] args) where T : class
-        {
-            var mock = Get<T>();
-            mock.Raise(eventSubscription, args);
-        }
-
-        protected void AssertWasCalled<T>(Action<T> action)
-        {
-            var mock = Get<T>();
-            mock.AssertWasCalled(action);
-        }
-
-        protected void AssertWasCalled<T>(Action<T> action, Action<IMethodOptions<object>> methodOptions)
-        {
-            var mock = Get<T>();
-            mock.AssertWasCalled(action, methodOptions);
-        }
-
-        protected void AssertWasNotCalled<T>(Action<T> action)
-        {
-            var mock = Get<T>();
-            mock.AssertWasNotCalled(action);
-        }
-
-        protected void AssertWasNotCalled<T>(Action<T> action, Action<IMethodOptions<object>> methodOptions)
-        {
-            var mock = Get<T>();
-            mock.AssertWasNotCalled(action, methodOptions);
-        }
-
-        protected virtual void InitializeTest()
-        {
-            MockingKernel = new RhinoMocksMockingKernel();
-        }
-
         private Dictionary<string, Action> then = new Dictionary<string, Action>();
         private Dictionary<string, Context> contexts = new Dictionary<string, Context>();
         private KeyValuePair<string, Action> when;
 
-        protected Context Given(string description, Action setup)
+        protected IContext Given(string description, Action setup)
         {
             if (contexts.ContainsKey(description)) throw new Exception("Reusing a given description");
             return contexts[description] = new Context(setup);
         }
 
-        protected Context Given(Action setup)
+        protected IContext Given(Action setup)
         {
             return contexts[CreateUnnamedContextName()] = new Context(setup);
         }
 
-        protected Context Given(string description)
+        protected IContext Given(string description)
         {
             return Given(description, () => { });
         }
@@ -99,7 +43,7 @@ namespace SpecEasy
             when = new KeyValuePair<string, Action>(description, action);
         }
 
-        protected virtual Context ForWhen(string description, Action action)
+        protected virtual IContext ForWhen(string description, Action action)
         {
             return contexts[CreateUnnamedContextName()] = new Context(() => { }, () => When(description, action));
         }
@@ -230,6 +174,10 @@ namespace SpecEasy
                 action.SetupContext();
         }
 
+        protected virtual void InitializeTest()
+        {
+        }
+
         private static string Indent(string text, int depth)
         {
             return new string(' ', depth * 2) + text;
@@ -239,6 +187,63 @@ namespace SpecEasy
     [TestFixture]
     public class NuSpec<TUnit> : NuSpec
     {
+        protected MockingKernel MockingKernel;
+
+        protected T Mock<T>() where T : class
+        {
+            return MockRepository.GenerateMock<T>();
+        }
+
+        protected T Get<T>()
+        {
+            return MockingKernel.Get<T>();
+        }
+
+        protected void Set<T>(T item)
+        {
+            var binding = new Binding(typeof(T))
+            {
+                ProviderCallback = ctx => new ConstantProvider<T>(item)
+            };
+            MockingKernel.AddBinding(binding);
+        }
+
+        protected void Raise<T>(Action<T> eventSubscription, params object[] args) where T : class
+        {
+            var mock = Get<T>();
+            mock.Raise(eventSubscription, args);
+        }
+
+        protected void AssertWasCalled<T>(Action<T> action)
+        {
+            var mock = Get<T>();
+            mock.AssertWasCalled(action);
+        }
+
+        protected void AssertWasCalled<T>(Action<T> action, Action<IMethodOptions<object>> methodOptions)
+        {
+            var mock = Get<T>();
+            mock.AssertWasCalled(action, methodOptions);
+        }
+
+        protected void AssertWasNotCalled<T>(Action<T> action)
+        {
+            var mock = Get<T>();
+            mock.AssertWasNotCalled(action);
+        }
+
+        protected void AssertWasNotCalled<T>(Action<T> action, Action<IMethodOptions<object>> methodOptions)
+        {
+            var mock = Get<T>();
+            mock.AssertWasNotCalled(action, methodOptions);
+        }
+
+        protected override void InitializeTest()
+        {
+            base.InitializeTest();
+            MockingKernel = new RhinoMocksMockingKernel();
+        }
+
         protected TUnit SUT
         {
             get { return Get<TUnit>(); }
