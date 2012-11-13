@@ -70,7 +70,8 @@
   <ItemGroup>
     <Compile Include="Action.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="SpecEasy.cs" />
+    <Compile Include="Spec.cs" />
+    <Compile Include="GenericSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
