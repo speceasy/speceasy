@@ -16,8 +16,20 @@ using Rhino.Mocks.Interfaces;
 namespace SpecEasy
 {
     [TestFixture]
-    public class NuSpec
+    public class Spec
     {
+        [Test]
+        public void Verify()
+        {
+            CreateMethodContexts();
+            VerifyContexts();
+
+            Console.WriteLine("------------ FULL RESULTS ------------");
+            Console.WriteLine(finalOutput);
+            if (exceptions.Any())
+                throw new Exception("Specifications failed!", exceptions[0]);
+        }
+
         private Dictionary<string, Action> then = new Dictionary<string, Action>();
         private Dictionary<string, Context> contexts = new Dictionary<string, Context>();
         private KeyValuePair<string, Action> when;
@@ -38,14 +50,14 @@ namespace SpecEasy
             return Given(description, () => { });
         }
 
-        protected virtual void When(string description, Action action)
-        {
-            when = new KeyValuePair<string, Action>(description, action);
-        }
-
         protected virtual IContext ForWhen(string description, Action action)
         {
             return contexts[CreateUnnamedContextName()] = new Context(() => { }, () => When(description, action));
+        }
+
+        protected virtual void When(string description, Action action)
+        {
+            when = new KeyValuePair<string, Action>(description, action);
         }
 
         protected void Then(string description, Action specification)
@@ -56,28 +68,16 @@ namespace SpecEasy
         private int nuSpecContextId;
         private string CreateUnnamedContextName()
         {
-            return "NUSPEC" + (nuSpecContextId++).ToString(CultureInfo.InvariantCulture);
+            return "SPECEASY" + (nuSpecContextId++).ToString(CultureInfo.InvariantCulture);
         }
 
         private static bool IsNamedContext(string name)
         {
-            return !name.StartsWith("NUSPEC");
+            return !name.StartsWith("SPECEASY");
         }
 
         private readonly List<Exception> exceptions = new List<Exception>();
         private readonly StringBuilder finalOutput = new StringBuilder();
-
-        [Test]
-        public void Verify()
-        {
-            CreateMethodContexts();
-            VerifyContexts();
-
-            Console.WriteLine("------------ FULL RESULTS ------------");
-            Console.WriteLine(finalOutput);
-            if (exceptions.Any())
-                throw new Exception("Specifications failed!", exceptions[0]);
-        }
 
         private void CreateMethodContexts()
         {
@@ -185,7 +185,7 @@ namespace SpecEasy
     }
 
     [TestFixture]
-    public class NuSpec<TUnit> : NuSpec
+    public class Spec<TUnit> : Spec
     {
         protected MockingKernel MockingKernel;
 
