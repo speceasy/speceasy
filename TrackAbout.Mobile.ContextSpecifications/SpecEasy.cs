@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 using Ninject;
@@ -12,49 +13,10 @@ using Ninject.Planning.Bindings;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace TrackAbout.Mobile.NuSpec
+namespace SpecEasy
 {
-    public delegate void Action();
-
-    public class Context
-    {
-        private readonly Action setupAction = delegate { };
-        private Action enterAction = delegate { };
-
-        public Context()
-        {
-        }
-
-        public Context(Action setup)
-        {
-            setupAction = setup;            
-        }
-
-        public Context(Action setup, Action addSpecs)
-        {
-            setupAction = setup;
-            enterAction = addSpecs;
-        }
-
-        public void Verify(Action addSpecs)
-        {
-            var cachedEnterAction = enterAction;
-            enterAction = () => { cachedEnterAction(); addSpecs(); };
-        }
-        
-        public void EnterContext()
-        {
-            enterAction();
-        }
-
-        public void SetupContext()
-        {
-            setupAction();
-        }
-    }
-
     [TestFixture]
-    public class NuSpec<TUnit>
+    public class NuSpec
     {
         protected MockingKernel MockingKernel;
 
@@ -66,6 +28,15 @@ namespace TrackAbout.Mobile.NuSpec
         protected T Get<T>()
         {
             return MockingKernel.Get<T>();
+        }
+
+        protected void Set<T>(T item)
+        {
+            var binding = new Binding(typeof(T))
+            {
+                ProviderCallback = ctx => new ConstantProvider<T>(item)
+            };
+            MockingKernel.AddBinding(binding);
         }
 
         protected void Raise<T>(Action<T> eventSubscription, params object[] args) where T : class
@@ -98,13 +69,9 @@ namespace TrackAbout.Mobile.NuSpec
             mock.AssertWasNotCalled(action, methodOptions);
         }
 
-        protected void Set<T>(T item)
+        protected virtual void InitializeTest()
         {
-            var binding = new Binding(typeof(T))
-                              {
-                                  ProviderCallback = ctx => new ConstantProvider<T>(item)
-                              };
-            MockingKernel.AddBinding(binding);
+            MockingKernel = new RhinoMocksMockingKernel();
         }
 
         private Dictionary<string, Action> then = new Dictionary<string, Action>();
@@ -142,12 +109,6 @@ namespace TrackAbout.Mobile.NuSpec
             then[description] = specification;
         }
 
-        protected TUnit SUT 
-        {
-            get { return Get<TUnit>(); }
-            set { Set(value); }
-        }
-
         private int nuSpecContextId;
         private string CreateUnnamedContextName()
         {
@@ -178,7 +139,7 @@ namespace TrackAbout.Mobile.NuSpec
         {
             var type = GetType();
             var methods = type.GetMethods();
-            var baseMethods = type.BaseType.GetMethods();
+            var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] {};
             var declaredMethods = methods.Where(m => baseMethods.All(bm => bm.Name != m.Name));
             foreach (var m in declaredMethods)
             {
@@ -212,11 +173,6 @@ namespace TrackAbout.Mobile.NuSpec
                 if (contextList.Any())
                     contextList.Remove(namedContext);
             }
-        }
-
-        protected virtual void InitializeTest()
-        {
-            MockingKernel = new RhinoMocksMockingKernel();
         }
 
         private void VerifySpecs(List<KeyValuePair<string, Context>> contextList)
@@ -264,7 +220,7 @@ namespace TrackAbout.Mobile.NuSpec
             }
 
             output.AppendLine();
-            finalOutput.Append(output.ToString());
+            finalOutput.Append(output);
         }
 
         private void InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
@@ -277,6 +233,16 @@ namespace TrackAbout.Mobile.NuSpec
         private static string Indent(string text, int depth)
         {
             return new string(' ', depth * 2) + text;
+        }
+    }
+
+    [TestFixture]
+    public class NuSpec<TUnit> : NuSpec
+    {
+        protected TUnit SUT
+        {
+            get { return Get<TUnit>(); }
+            set { Set(value); }
         }
     }
 }

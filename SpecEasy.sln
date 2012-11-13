@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuSpec", "TrackAbout.Mobile.ContextSpecifications\NuSpec.csproj", "{D15653FB-10A8-4ABB-BACD-A1694FC3251C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecEasy", "TrackAbout.Mobile.ContextSpecifications\SpecEasy.csproj", "{D15653FB-10A8-4ABB-BACD-A1694FC3251C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

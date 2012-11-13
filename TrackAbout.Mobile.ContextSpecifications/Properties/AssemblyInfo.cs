@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TrackAbout.Mobile.ContextSpecifications")]
-[assembly: AssemblyDescription("TrackAbout's Context/Specifications For WinMo Apps")]
+[assembly: AssemblyTitle("SpecEasy")]
+[assembly: AssemblyDescription("Specifications made easy")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TrackAbout, Inc.")]
-[assembly: AssemblyProduct("TrackAbout.Mobile.ContextSpecifications")]
+[assembly: AssemblyProduct("SpecEasy")]
 [assembly: AssemblyCopyright("Copyright ©2010 TrackAbout, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
