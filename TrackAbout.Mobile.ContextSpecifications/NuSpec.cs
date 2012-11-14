@@ -27,7 +27,7 @@ namespace TrackAbout.Mobile.NuSpec
 
         public Context(Action setup)
         {
-            setupAction = setup;            
+            setupAction = setup;
         }
 
         public Context(Action setup, Action addSpecs)
@@ -41,7 +41,7 @@ namespace TrackAbout.Mobile.NuSpec
             var cachedEnterAction = enterAction;
             enterAction = () => { cachedEnterAction(); addSpecs(); };
         }
-        
+
         public void EnterContext()
         {
             enterAction();
@@ -98,6 +98,17 @@ namespace TrackAbout.Mobile.NuSpec
             mock.AssertWasNotCalled(action, methodOptions);
         }
 
+        protected void AssertWasThrown<T>() where T : Exception
+        {
+            if (expectedException is T)
+            {
+                expectedException = null;
+                return;
+            }
+
+            throw new Exception("Expected exception was not thrown");
+        }
+
         protected void Set<T>(T item)
         {
             var binding = new Binding(typeof(T))
@@ -142,7 +153,7 @@ namespace TrackAbout.Mobile.NuSpec
             then[description] = specification;
         }
 
-        protected TUnit SUT 
+        protected TUnit SUT
         {
             get { return Get<TUnit>(); }
             set { Set(value); }
@@ -161,6 +172,7 @@ namespace TrackAbout.Mobile.NuSpec
 
         private readonly List<Exception> exceptions = new List<Exception>();
         private readonly StringBuilder finalOutput = new StringBuilder();
+        private Exception expectedException;
 
         [Test]
         public void Verify()
@@ -246,8 +258,32 @@ namespace TrackAbout.Mobile.NuSpec
 
                 try
                 {
+                    var exceptionThrownAndAsserted = false;
                     InitializeContext(contextList);
-                    when.Value();
+
+                    try
+                    {
+                        expectedException = null;
+                        when.Value();
+                    }
+                    catch (Exception ex)
+                    {
+                        expectedException = ex;
+                        spec.Value();
+
+                        if (expectedException != null)
+                        {
+                            throw;
+                        }
+
+                        exceptionThrownAndAsserted = true;
+                    }
+
+                    if (exceptionThrownAndAsserted)
+                    {
+                        continue;
+                    }
+
                     spec.Value();
                 }
                 catch (Exception ex)
