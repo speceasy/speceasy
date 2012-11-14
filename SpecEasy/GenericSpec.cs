@@ -1,5 +1,4 @@
 ﻿using System;
-using NUnit.Framework;
 using Ninject;
 using Ninject.Activation.Providers;
 using Ninject.MockingKernel;
@@ -10,7 +9,6 @@ using Rhino.Mocks.Interfaces;
 
 namespace SpecEasy
 {
-    [TestFixture]
     public class Spec<TUnit> : Spec
     {
         protected MockingKernel MockingKernel;

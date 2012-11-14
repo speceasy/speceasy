@@ -131,6 +131,7 @@ namespace SpecEasy
 
             var thenText = "then ";
             var failurePrefix = output.ToString();
+
             foreach (var spec in then)
             {
                 output.AppendLine(thenText + spec.Key);
