@@ -68,6 +68,7 @@ namespace SpecEasy
             MockingKernel = new RhinoMocksMockingKernel();
         }
 
+
         protected TUnit SUT
         {
             get { return Get<TUnit>(); }
