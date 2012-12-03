@@ -2,7 +2,7 @@
 
 SpecEasy is a BDD-based unit testing framework that allows you to easily and quickly write tests using a fluid interface that reduces the amount of code needed to create tests.
 
-## Getting started with SpecEasy
+## What does SpecEasy require?
 
 * Download the SpecEasy.dll
 * Add a reference to the following components
@@ -15,7 +15,19 @@ SpecEasy is a BDD-based unit testing framework that allows you to easily and qui
  * Rhino.Mocks
 * Start writing specs the easy way!
 
-## Writing your first spec
+## Quickstart Guide
+
+* Inherit from `Spec<T>`, where T is the type you want to test. SpecEasy will automatically create T, and give you access through a base variable called SUT (System Under Test).
+* No need to decorate your code with test attributes. `Spec<T>` handles that for you.
+* Use `When(string, Action)` to test what you want to test (Action).
+* Use `Given(string, Action).Verify(Action)` for set up code (Arrange).
+* Use `Then(string, Action)` to verify the results (Assert).
+* Nest `Given(string Action)` method calls to handle more complicated set up.
+* Use `Set<T>(T)` to set dependencies that will be injected into your SUT.
+* Use `Get<T>()` to get access to dependencies automatically created for your SUT. Chain calls to `Get<T>()` with calls to `Stub<T>(Action)` to set up mocks for dependencies.
+* Use `AssertWasCalled<T>(Action)` and `AssertWasNotCalled<T>(Action)` to check if methods or properties were called on dependencies.
+ 
+## Going a bit deeper
 
 Let's use FizzBuzz as a sample implementation to test. As a reminder, the rules for FizzBuzz are as follows:
 
@@ -199,7 +211,7 @@ Let's say I have a class that takes in two variables
 		}
 	}
 
-If we want to test the Drive method, most likely what we want to do is ensure that certain methods are called on the car and driver. To do that, we need to be able to have access to the car and driver objects in our test. You can do this manually, using the Set<T>(T) method:
+If we want to test the Drive method, most likely what we want to do is ensure that certain methods are called on the car and driver. To do that, we need to be able to have access to the car and driver objects in our test. You can do this manually, using the `Set<T>(T)` method:
 
 	public class CarServiceSpec
 	{
