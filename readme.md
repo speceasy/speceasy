@@ -17,7 +17,7 @@ SpecEasy is a BDD-based unit testing framework that allows you to easily and qui
 
 ## Quickstart Guide
 
-* Inherit from `Spec<T>`, where T is the type you want to test. SpecEasy will automatically create T, and give you access through a base variable called SUT (System Under Test).
+* Inherit from `Spec<T>`, where T is the type you want to test. SpecEasy give you access to an instance of T through a base variable called SUT (System Under Test), and automatically new it up on demand.
 * No need to decorate your code with test attributes. `Spec<T>` handles that for you.
 * Use `When(string, Action)` to test what you want to test (Action).
 * Use `Given(string, Action).Verify(Action)` for set up code (Arrange).
