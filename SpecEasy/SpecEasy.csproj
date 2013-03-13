@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Action.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="VerifyContext.cs" />
     <Compile Include="Spec.cs" />
     <Compile Include="GenericSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,7 +122,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)..\..\Library\ContextSpecs\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

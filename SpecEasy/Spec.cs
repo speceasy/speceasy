@@ -64,9 +64,10 @@ namespace SpecEasy
             when = new KeyValuePair<string, Action>(description, action);
         }
 
-        protected void Then(string description, Action specification)
+        protected IVerifyContext Then(string description, Action specification)
         {
             then[description] = specification;
+            return new VerifyContext(Then);
         }
 
         private int nuSpecContextId;

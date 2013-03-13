@@ -6,8 +6,6 @@ SpecEasy is a BDD-based unit testing framework that allows you to easily and qui
 
 * Download the SpecEasy.dll
 * Add a reference to the following components
- * Castle.Core
- * Castle.DynamicProxy2
  * Ninject
  * Ninject.MockingKernel
  * Ninject.MockingKernel.RhinoMock
@@ -324,3 +322,38 @@ For each call to Then(), SpecEasy walks up the call stack, running each Given(),
 
 	1 passed, 0 failed, 0 skipped
 
+## Multiple Expectations
+
+You may find the need to make multiple assertions, or verify multiple expectations, for a single Given. This can be done by using multiple `Then` method calls, either by listing them as multiple statements within a function provided to `Verify`, or as a single expression of chained `Then` methods provided to `Verify`.
+
+	public void MultipleStatements()
+	{
+		string result = string.Empty;
+        int input = 0;
+
+        When("running FizzBuzz", () => result = SUT.Do(input));
+		Given("an input of a multiple of 3 and 5", () => input = 30).Verify(() =>
+		{
+			Then("it should return a string starting with fizz", () => Assert.That(result, Is.StringStarting("fizz")));
+			Then("it should return a string ending with buzz", () => Assert.That(result, Is.StringEnding("buzz")));
+		});
+	}
+
+	public void ChainedExpression()
+	{
+		string result = string.Empty;
+        int input = 0;
+        
+        When("running FizzBuzz", () => result = SUT.Do(input));
+		Given("an input of a multiple of 3 and 5", () => input = 30).Verify(() =>
+			Then("it should return a string starting with fizz", () => Assert.That(result, Is.StringStarting("fizz")))
+			.Then("it should return a string ending with buzz", () => Assert.That(result, Is.StringEnding("buzz"))));
+	}
+
+Either form will result in the following output:
+
+	------------ FULL RESULTS ------------
+	given an input of a multiple of 3 and 5
+	when running FizzBuzz
+	then it should return a string starting with fizz
+	  and it should return a string ending with buzz
