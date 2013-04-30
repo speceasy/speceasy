@@ -17,8 +17,9 @@ namespace SpecEasy
             CreateMethodContexts();
             VerifyContexts();
 
-            Console.WriteLine("------------ FULL RESULTS ------------");
-            Console.WriteLine(finalOutput);
+            System.Diagnostics.Debug.WriteLine("------------ FULL RESULTS ------------");
+            System.Diagnostics.Debug.WriteLine(finalOutput);
+
             if (exceptions.Any())
                 throw new Exception("Specifications failed!", exceptions[0]);
         }
