@@ -148,6 +148,7 @@ namespace SpecEasy
 
             foreach (var spec in then)
             {
+                SetUp();
                 output.AppendLine(thenText + spec.Key);
                 if (thenText == "then ")
                     thenText = Indent("and ", 1);
@@ -193,11 +194,18 @@ namespace SpecEasy
                     output.AppendLine(failureMessage);
                     exceptions.Add(ex);
                 }
+                finally
+                {
+                    TearDown();
+                }
             }
 
             output.AppendLine();
             finalOutput.Append(output);
         }
+
+        protected virtual void SetUp() { }
+        protected virtual void TearDown() { }
 
         private void InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
         {
