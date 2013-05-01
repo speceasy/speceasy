@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{56D50E15
 		SpecEasy\SpecEasy.nuspec = SpecEasy\SpecEasy.nuspec
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecEasy.Specs", "SpecEasy.Specs\SpecEasy.Specs.csproj", "{101D8D3F-3FAD-4E2A-B483-32338C6E7EAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{D15653FB-10A8-4ABB-BACD-A1694FC3251C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D15653FB-10A8-4ABB-BACD-A1694FC3251C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D15653FB-10A8-4ABB-BACD-A1694FC3251C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{101D8D3F-3FAD-4E2A-B483-32338C6E7EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{101D8D3F-3FAD-4E2A-B483-32338C6E7EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{101D8D3F-3FAD-4E2A-B483-32338C6E7EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{101D8D3F-3FAD-4E2A-B483-32338C6E7EAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
