@@ -10,27 +10,27 @@ namespace SpecEasy.Specs.SetUpAndTearDownSpecs
         {
             timesCalled = 0;
 
-            When("running a test in a class that overrides FinalizeTest", () => SUT.DoNothing());
-            Then("it should not call finalize test before the first Then", () => Assert.That(timesCalled, Is.EqualTo(0)));
-            Then("it should call finalize test before the second Then", () => Assert.That(timesCalled, Is.EqualTo(1)));
+            When("running a test in a class that overrides TearDown", () => SUT.DoNothing());
+            Then("it should not TearDown before the first Then", () => Assert.That(timesCalled, Is.EqualTo(0)));
+            Then("it should call TearDown before the second Then", () => Assert.That(timesCalled, Is.EqualTo(1)));
         }
 
         public void TearDownWithGivenSpec()
         {
             timesCalled = 0;
 
-            When("running a test in a class that overrides FinalizeTest", () => SUT.DoNothing());
+            When("running a test in a class that overrides TearDown", () => SUT.DoNothing());
 
             Given("there is a given", () => SUT.DoNothing()).Verify(() => {
-                Then("it should not call finalize test before the first Then", () => Assert.That(timesCalled, Is.EqualTo(0)));
-                Then("it should call finalize test before the second Then", () => Assert.That(timesCalled, Is.EqualTo(1)));
+                Then("it should not call TearDown before the first Then", () => Assert.That(timesCalled, Is.EqualTo(0)));
+                Then("it should call TearDown before the second Then", () => Assert.That(timesCalled, Is.EqualTo(1)));
             });
 
             Given("there is another given", () => SUT.DoNothing()).Verify(() =>
                 {
-                    Then("it should call finalize test again before the third Then", () => Assert.That(timesCalled, Is.EqualTo(2)));
+                    Then("it should call TearDown again before the third Then", () => Assert.That(timesCalled, Is.EqualTo(2)));
                     Given("we have nested givens", () => SUT.DoNothing()).Verify(() => 
-                        Then("it should call finalize test again before the nested Then", () => Assert.That(timesCalled, Is.EqualTo(3))));
+                        Then("it should call TearDown again before the nested Then", () => Assert.That(timesCalled, Is.EqualTo(3))));
                 });
         }
 
