@@ -148,7 +148,7 @@ namespace SpecEasy
 
             foreach (var spec in then)
             {
-                SetUp();
+                BeforeEachExample();
                 output.AppendLine(thenText + spec.Key);
                 if (thenText == "then ")
                     thenText = Indent("and ", 1);
@@ -196,7 +196,7 @@ namespace SpecEasy
                 }
                 finally
                 {
-                    TearDown();
+                    AfterEachExample();
                 }
             }
 
@@ -204,8 +204,8 @@ namespace SpecEasy
             finalOutput.Append(output);
         }
 
-        protected virtual void SetUp() { }
-        protected virtual void TearDown() { }
+        protected virtual void BeforeEachExample() { }
+        protected virtual void AfterEachExample() { }
 
         private void InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
         {

@@ -61,9 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SetUpAndTearDownSpecs\TearDownGetsCalledSpec.cs" />
-    <Compile Include="SetUpAndTearDownSpecs\SetUpCalledCorrectNumberOfTimesSpec.cs" />
-    <Compile Include="SetUpAndTearDownSpecs\SetUpGetsCalledSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\AfterEachExampleGetsCalledSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleCalledCorrectNumberOfTimesSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleGetsCalledSpec.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
