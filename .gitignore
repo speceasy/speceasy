@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+syntax:glob
+
+_ReSharper*
+bin
+obj
+packages/*
+*.suo
+*.csproj.user
+=======
 #################
 ## Visual Studio
 #################
@@ -89,3 +99,4 @@ Desktop.ini
 
 # Mac
 .DS_Store
+>>>>>>> upstream/master
