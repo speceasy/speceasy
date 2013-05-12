@@ -148,7 +148,7 @@ namespace SpecEasy
 
             foreach (var spec in then)
             {
-                BeforeEachExample();
+                Before();
                 output.AppendLine(thenText + spec.Key);
                 if (thenText == "then ")
                     thenText = Indent("and ", 1);
@@ -196,12 +196,31 @@ namespace SpecEasy
                 }
                 finally
                 {
-                    AfterEachExample();
+                    After();
                 }
             }
 
             output.AppendLine();
             finalOutput.Append(output);
+        }
+
+        private bool hasCalledBefore;
+        private void Before()
+        {
+            if (!hasCalledBefore)
+            {
+                BeforeEachExample();
+                hasCalledBefore = true;
+            }
+        }
+
+        private void After()
+        {
+            if (hasCalledBefore)
+            {
+                AfterEachExample();
+                hasCalledBefore = false;
+            }
         }
 
         protected virtual void BeforeEachExample() { }
@@ -211,7 +230,10 @@ namespace SpecEasy
         {
             InitializeTest();
             foreach (var action in contextList.Select(kvp => kvp.Value))
+            {
+                Before();
                 action.SetupContext();
+            }
         }
 
         protected virtual void InitializeTest()

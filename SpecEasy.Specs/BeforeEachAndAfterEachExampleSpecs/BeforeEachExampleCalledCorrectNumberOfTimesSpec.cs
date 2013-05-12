@@ -21,22 +21,22 @@ namespace SpecEasy.Specs.SetUpAndTearDownSpecs
                 Then("it should should call BeforeEachExample a fourth time", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++)));
                 Then("it should should call BeforeEachExample a fifth time", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++)));
                 Then("it should should call BeforeEachExample a sixth time", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++)));
-//                Given("there is a second level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
-//                    Then("it should call BeforeEachExample a seventh time.", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++))));
+                Given("there is a second level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
+                    Then("it should call BeforeEachExample a seventh time.", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++))));
             });
         }
 
-//        public void NestedGivenBeforeEachExampleCalls()
-//        {
-//            timesCalled = 0;
-//            verifyCall = 1;
-//
-//            When("running a test that overrides BeforeEachExample", () => Assert.That(timesCalled, Is.EqualTo(verifyCall)));
-//
-//            Given("there is a first level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
-//                Given("there is a second level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
-//                    Then("it should call BeforeEachExample one time.", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++)))));
-//        }
+        public void NestedGivenBeforeEachExampleCalls()
+        {
+            timesCalled = 0;
+            verifyCall = 1;
+
+            When("running a test that overrides BeforeEachExample", () => Assert.That(timesCalled, Is.EqualTo(verifyCall)));
+
+            Given("there is a first level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
+                Given("there is a second level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
+                    Then("it should call BeforeEachExample one time.", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++)))));
+        }
 
         protected override void BeforeEachExample()
         {
