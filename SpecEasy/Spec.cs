@@ -114,7 +114,6 @@ namespace SpecEasy
                 contexts = new Dictionary<string, Context>();
                 when = cachedWhen;
 
-                InitializeContext(contextList);
                 givenContext.EnterContext();
 
                 if (depth > 0)

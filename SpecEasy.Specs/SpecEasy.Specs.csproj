@@ -65,6 +65,7 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleCalledCorrectNumberOfTimesSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleGetsCalledSpec.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
+    <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
