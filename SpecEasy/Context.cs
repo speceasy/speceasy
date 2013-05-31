@@ -7,6 +7,7 @@ namespace SpecEasy
 
     internal class Context : IContext
     {
+        private bool setupActionRun = false;
         private readonly Action setupAction = delegate { };
         private Action enterAction = delegate { };
 
@@ -38,7 +39,10 @@ namespace SpecEasy
 
         public void SetupContext()
         {
+            if (setupActionRun) return;
+
             setupAction();
+            setupActionRun = true;
         }
     }
 }
