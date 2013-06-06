@@ -8,7 +8,11 @@
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Add ability to chain "Then" specifications, and remove references to Castle assemblies.</releaseNotes>
+    <releaseNotes>
+		Only show output if the test fails. 
+		Fix an issue where nested givens were called multiple times leading up to a 'then'. 
+		Added Before/AfterEachExample to behave like 'SetUp' and 'Teardown' between each call to 'then'.
+	</releaseNotes>
     <copyright>Copyright 2013</copyright>
   </metadata>
 </package>
