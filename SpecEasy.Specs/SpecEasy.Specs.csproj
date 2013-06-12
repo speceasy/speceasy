@@ -90,7 +90,6 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleCalledCorrectNumberOfTimesSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleGetsCalledSpec.cs" />
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSetup.cs" />
-    <Compile Include="DatabaseIntegration\Model\Post.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
