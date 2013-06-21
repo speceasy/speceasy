@@ -1,9 +1,4 @@
 ﻿using System;
-using Ninject;
-using Ninject.Activation.Providers;
-using Ninject.MockingKernel;
-using Ninject.MockingKernel.RhinoMock;
-using Ninject.Planning.Bindings;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -11,7 +6,7 @@ namespace SpecEasy
 {
     public class Spec<TUnit> : Spec
     {
-        protected MockingKernel MockingKernel;
+        internal TinyIoCContainer MockingContainer;
 
         protected T Mock<T>() where T : class
         {
@@ -20,16 +15,16 @@ namespace SpecEasy
 
         protected T Get<T>()
         {
-            return MockingKernel.Get<T>();
+            return (T)MockingContainer.Resolve(typeof(T), new ResolveOptions
+                                                              {
+                                                                  UnregisteredResolutionRegistrationAction = (type, o) => MockingContainer.Register(type, o)
+                                                              });
+            //Preferred, but only allows reference types: return MockingContainer.Resolve<T>();
         }
 
         protected void Set<T>(T item)
         {
-            var binding = new Binding(typeof(T))
-            {
-                ProviderCallback = ctx => new ConstantProvider<T>(item)
-            };
-            MockingKernel.AddBinding(binding);
+            MockingContainer.Register(typeof(T), item);
         }
 
         protected void Raise<T>(Action<T> eventSubscription, params object[] args) where T : class
@@ -65,14 +60,33 @@ namespace SpecEasy
         protected override void InitializeTest()
         {
             base.InitializeTest();
-            MockingKernel = new RhinoMocksMockingKernel();
+            MockingContainer = new TinyIoCContainer
+                                   {
+                                       FallbackRegistrationProvider = new AutoMockingRegistrationProvider()
+                                   };
+            MockingContainer.Register(typeof(TUnit)).AsSingleton();
         }
-
 
         protected TUnit SUT
         {
             get { return Get<TUnit>(); }
             set { Set(value); }
+        }
+    }
+
+    internal class AutoMockingRegistrationProvider : IFallbackRegistrationProvider
+    {
+        public bool TryRegister(Type registerType, TinyIoCContainer container)
+        {
+            var mock = TryMockType(registerType);
+            if (mock == null) return false;
+            container.Register(registerType, mock);
+            return true;
+        }
+
+        private static object TryMockType(Type type)
+        {
+            return type.IsInterface || type.IsAbstract ? MockRepository.GenerateMock(type, new Type[0]) : null;
         }
     }
 }

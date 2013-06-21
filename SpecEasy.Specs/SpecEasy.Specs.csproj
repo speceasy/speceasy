@@ -91,6 +91,7 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleGetsCalledSpec.cs" />
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSetup.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
+    <Compile Include="GenericSpec\AutoMockSpec.cs" />
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
