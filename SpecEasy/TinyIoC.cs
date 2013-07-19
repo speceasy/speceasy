@@ -65,7 +65,7 @@
 #endif
 
 #endregion
-namespace SpecEasy
+namespace TinyIoC
 {
     using System;
     using System.Collections.Generic;
@@ -708,7 +708,7 @@ namespace SpecEasy
 
     internal enum FallbackResolutionActions
     {
-        Attempt,
+        AttemptFallbackResolution,
         Fail
     }
 
@@ -736,7 +736,7 @@ namespace SpecEasy
             set { _NamedResolutionFailureAction = value; }
         }
 
-        private FallbackResolutionActions _FallbackResolutionAction = FallbackResolutionActions.Attempt;
+        private FallbackResolutionActions _FallbackResolutionAction = FallbackResolutionActions.AttemptFallbackResolution;
         public FallbackResolutionActions FallbackResolutionAction
         {
             get { return _FallbackResolutionAction; }
@@ -754,9 +754,10 @@ namespace SpecEasy
         {
             return new ResolveOptions
                        {
-                           FallbackResolutionAction = fallbackResolutionAction,
+                           UnregisteredResolutionAction = UnregisteredResolutionAction,
                            NamedResolutionFailureAction = NamedResolutionFailureAction,
-                           UnregisteredResolutionAction = UnregisteredResolutionAction
+                           FallbackResolutionAction = fallbackResolutionAction,
+                           UnregisteredResolutionRegistrationAction = UnregisteredResolutionRegistrationAction
                        };
         }
 
@@ -3470,7 +3471,7 @@ namespace SpecEasy
                 }
             }
 
-            if (options.FallbackResolutionAction == FallbackResolutionActions.Attempt)
+            if (options.FallbackResolutionAction == FallbackResolutionActions.AttemptFallbackResolution)
             {
                 if (FallbackRegistrationProvider.TryRegister(registration.Type, this))
                     return ResolveInternal(registration, parameters, options.CopyWithFallbackResolutionAction(FallbackResolutionActions.Fail));
