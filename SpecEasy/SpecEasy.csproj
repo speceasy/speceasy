@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
+    <Compile Include="AutoMockingRegistrationProvider.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="TinyIoC.cs" />
     <Compile Include="VerifyContext.cs" />
