@@ -17,10 +17,17 @@ namespace SpecEasy
         protected T Get<T>()
         {
             return (T)MockingContainer.Resolve(typeof(T), new ResolveOptions
-                                                              {
-                                                                  UnregisteredResolutionRegistrationAction = (type, o) => MockingContainer.Register(type, o)
-                                                              });
+            {
+                UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
+                FallbackResolutionAction = TryAutoMock
+            });
             //Preferred, but only allows reference types: return MockingContainer.Resolve<T>();
+        }
+
+        private object TryAutoMock(TinyIoCContainer.TypeRegistration registration, TinyIoCContainer container)
+        {
+            var type = registration.Type;
+            return type.IsInterface || type.IsAbstract ? MockRepository.GenerateMock(type, new Type[0]) : null;
         }
 
         protected void Set<T>(T item)
@@ -61,10 +68,7 @@ namespace SpecEasy
         protected override void InitializeTest()
         {
             base.InitializeTest();
-            MockingContainer = new TinyIoCContainer
-                                   {
-                                       FallbackRegistrationProvider = new AutoMockingRegistrationProvider()
-                                   };
+            MockingContainer = new TinyIoCContainer();
             MockingContainer.Register(typeof(TUnit)).AsSingleton();
         }
 

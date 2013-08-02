@@ -700,6 +700,12 @@ namespace TinyIoC
         GenericsOnly
     }
 
+    internal enum UnregisteredResolutionRegistrationOptions
+    {
+        ReturnTransientInstance,
+        RegisterAsSingleton
+    }
+
     internal enum NamedResolutionFailureActions
     {
         AttemptUnnamedResolution,
@@ -710,12 +716,6 @@ namespace TinyIoC
     {
         RegisterSingle,
         RegisterMultiple,
-        Fail
-    }
-
-    internal enum FallbackResolutionActions
-    {
-        AttemptFallbackResolution,
         Fail
     }
 
@@ -736,6 +736,13 @@ namespace TinyIoC
             set { _UnregisteredResolutionAction = value; }
         }
 
+        private UnregisteredResolutionRegistrationOptions _UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.ReturnTransientInstance;
+        public UnregisteredResolutionRegistrationOptions UnregisteredResolutionRegistrationOption
+        {
+            get { return _UnregisteredResolutionRegistrationOption; }
+            set { _UnregisteredResolutionRegistrationOption = value; }
+        }
+
         private NamedResolutionFailureActions _NamedResolutionFailureAction = NamedResolutionFailureActions.Fail;
         public NamedResolutionFailureActions NamedResolutionFailureAction
         {
@@ -743,29 +750,11 @@ namespace TinyIoC
             set { _NamedResolutionFailureAction = value; }
         }
 
-        private FallbackResolutionActions _FallbackResolutionAction = FallbackResolutionActions.AttemptFallbackResolution;
-        public FallbackResolutionActions FallbackResolutionAction
+        private Func<TinyIoCContainer.TypeRegistration, TinyIoCContainer, object> _FallbackResolutionAction = null;
+        public Func<TinyIoCContainer.TypeRegistration, TinyIoCContainer, object> FallbackResolutionAction
         {
             get { return _FallbackResolutionAction; }
-            private set { _FallbackResolutionAction = value; }
-        }
-
-        private Action<Type, object> _UnregisteredResolutionRegistrationAction = null;
-        public Action<Type, object> UnregisteredResolutionRegistrationAction
-        {
-            get { return _UnregisteredResolutionRegistrationAction; }
-            set { _UnregisteredResolutionRegistrationAction = value; }
-        }
-
-        public ResolveOptions CopyWithFallbackResolutionAction(FallbackResolutionActions fallbackResolutionAction)
-        {
-            return new ResolveOptions
-                       {
-                           UnregisteredResolutionAction = UnregisteredResolutionAction,
-                           NamedResolutionFailureAction = NamedResolutionFailureAction,
-                           FallbackResolutionAction = fallbackResolutionAction,
-                           UnregisteredResolutionRegistrationAction = UnregisteredResolutionRegistrationAction
-                       };
+            set { _FallbackResolutionAction = value; }
         }
 
         /// <summary>
@@ -814,28 +803,8 @@ namespace TinyIoC
     }
     #endregion
 
-    internal interface IFallbackRegistrationProvider
-    {
-        bool TryRegister(Type registerType, TinyIoCContainer container);
-    }
-
     internal sealed partial class TinyIoCContainer : IDisposable
     {
-        private IFallbackRegistrationProvider fallbackRegistrationProvider = new NullFallbackRegistrationProvider();
-        public IFallbackRegistrationProvider FallbackRegistrationProvider
-        {
-            get { return fallbackRegistrationProvider; }
-            set { fallbackRegistrationProvider = value; }
-        }
-
-        private class NullFallbackRegistrationProvider : IFallbackRegistrationProvider
-        {
-            public bool TryRegister(Type registerType, TinyIoCContainer container)
-            {
-                return false;
-            }
-        }
-
         #region Fake NETFX_CORE Classes
 #if NETFX_CORE
         private sealed class MethodAccessException : Exception
@@ -3478,18 +3447,27 @@ namespace TinyIoC
             {
                 if (!registration.Type.IsAbstract() && !registration.Type.IsInterface()) {
                     var resolved = ConstructType(null, registration.Type, parameters, options);
-                    if (resolved != null && options.UnregisteredResolutionRegistrationAction != null)
+                    
+                    if (options.UnregisteredResolutionRegistrationOption == UnregisteredResolutionRegistrationOptions.RegisterAsSingleton)
                     {
-                        options.UnregisteredResolutionRegistrationAction(registration.Type, resolved);
+                        Register(registration.Type, resolved, registration.Name);
                     }
+
                     return resolved;
                 }
             }
 
-            if (options.FallbackResolutionAction == FallbackResolutionActions.AttemptFallbackResolution)
+            if (options.FallbackResolutionAction != null)
             {
-                if (FallbackRegistrationProvider.TryRegister(registration.Type, this))
-                    return ResolveInternal(registration, parameters, options.CopyWithFallbackResolutionAction(FallbackResolutionActions.Fail));
+                var resolved = options.FallbackResolutionAction(registration, this);
+                if (resolved != null)
+                {
+                    if (options.UnregisteredResolutionRegistrationOption == UnregisteredResolutionRegistrationOptions.RegisterAsSingleton)
+                    {
+                        Register(registration.Type, resolved, registration.Name);
+                    }
+                    return resolved;
+                }
             }
 
             // Unable to resolve - throw
