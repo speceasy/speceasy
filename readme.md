@@ -6,9 +6,6 @@ SpecEasy is a BDD-based unit testing framework that allows you to easily and qui
 
 * Download the SpecEasy.dll
 * Add a reference to the following components
- * Ninject
- * Ninject.MockingKernel
- * Ninject.MockingKernel.RhinoMock
  * Nunit.Framework
  * Rhino.Mocks
 * Start writing specs the easy way!
