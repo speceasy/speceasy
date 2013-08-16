@@ -354,3 +354,7 @@ Either form will result in the following output:
     when running FizzBuzz
     then it should return a string starting with fizz
       and it should return a string ending with buzz
+
+## License
+
+SpecEasy is released under the [MIT license](https://raw.github.com/trackabout/speceasy/master/LICENSE).
