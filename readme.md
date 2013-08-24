@@ -1,4 +1,4 @@
-<h1 style="text-align: center;"><span style="background-image: url(https://raw.github.com/trackabout/speceasy/master/speceasy_logo.png);background-position: center center;background-size: 100%;display: inline-block;width: 232px;height: 85px;background-repeat: no-repeat;"><span style="visibility: hidden;">SpecEasy</span></span></h1>
+<div align="center"><img src="https://raw.github.com/trackabout/speceasy/master/speceasy_logo.png" alt="SpecEasy" height="85"></div>
 
 SpecEasy is a BDD-based unit testing framework that allows you to easily and quickly write tests using a fluid interface that reduces the amount of code needed to create tests.
 
