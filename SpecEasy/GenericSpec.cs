@@ -14,8 +14,16 @@ namespace SpecEasy
             return MockRepository.GenerateMock<T>();
         }
 
+        private void RequireMockingContainer()
+        {
+            if (MockingContainer == null)
+                throw new InvalidOperationException(
+                    "This method cannot be called before the test context is initialized.");
+        }
+
         protected T Get<T>()
         {
+            RequireMockingContainer();
             return (T)MockingContainer.Resolve(typeof(T), new ResolveOptions
             {
                 UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
@@ -32,6 +40,7 @@ namespace SpecEasy
 
         protected void Set<T>(T item)
         {
+            RequireMockingContainer();
             MockingContainer.Register(typeof(T), item);
         }
 
@@ -65,9 +74,9 @@ namespace SpecEasy
             mock.AssertWasNotCalled(action, methodOptions);
         }
 
-        protected override void InitializeTest()
+        protected override void BeforeEachExample()
         {
-            base.InitializeTest();
+            base.BeforeEachExample();
             MockingContainer = new TinyIoCContainer();
             MockingContainer.Register(typeof(TUnit)).AsSingleton();
         }
