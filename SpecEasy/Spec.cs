@@ -118,6 +118,7 @@ namespace SpecEasy
 
                 if (depth > 0)
                     contextList.Add(namedContext);
+
                 VerifySpecs(contextList);
                 VerifyContexts(contextList, depth + 1);
                 if (contextList.Any())
@@ -148,6 +149,7 @@ namespace SpecEasy
             foreach (var spec in then)
             {
                 Before();
+
                 output.AppendLine(thenText + spec.Key);
                 if (thenText == "then ")
                     thenText = Indent("and ", 1);
@@ -227,16 +229,11 @@ namespace SpecEasy
 
         private void InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
         {
-            InitializeTest();
             foreach (var action in contextList.Select(kvp => kvp.Value))
             {
                 Before();
                 action.SetupContext();
             }
-        }
-
-        protected virtual void InitializeTest()
-        {
         }
 
         private static string Indent(string text, int depth)

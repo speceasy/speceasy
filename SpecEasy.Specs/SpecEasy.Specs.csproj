@@ -77,6 +77,8 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\AfterEachExampleGetsCalledSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleCalledCorrectNumberOfTimesSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleGetsCalledSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\GetSetInBeforeEachExampleSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutInBeforeEachExampleSpec.cs" />
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSetup.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
