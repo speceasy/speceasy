@@ -9,9 +9,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-		Only show output if the test fails. 
-		Fix an issue where nested givens were called multiple times leading up to a 'then'. 
-		Added Before/AfterEachExample to behave like 'SetUp' and 'Teardown' between each call to 'then'.
+Version 1.0 beta release.
+Changes:
+- Remove dependencies on Ninject packages (replaced with internal copy of TinyIoC).
+- Fix issue #8 (NRE when using Get/Set in BeforeEachExample)
 	</releaseNotes>
     <copyright>Copyright 2013</copyright>
   </metadata>
