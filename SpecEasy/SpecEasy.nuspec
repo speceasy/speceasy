@@ -9,11 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Version 1.0 beta release.
-Changes:
-- Remove dependencies on Ninject packages (replaced with internal copy of TinyIoC).
-- Fix issue #8 (NRE when using Get/Set in BeforeEachExample)
-	</releaseNotes>
+    </releaseNotes>
     <copyright>Copyright 2013</copyright>
   </metadata>
 </package>
