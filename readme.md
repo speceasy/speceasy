@@ -6,7 +6,7 @@ SpecEasy is a BDD-based unit testing framework that allows you to easily and qui
 
 SpecEasy is currently built on and requires the NUnit test framework. If you're using NUnit, then it's as simple as:
 
-1. [Install SpecEasy from NuGet][NuGet]
+1. [Install SpecEasy using NuGet][NuGet]
 2. Start writing specs the easy way!
 
 SpecEasy also uses [RhinoMocks][]; this dependency will be installed via NuGet if needed.
