@@ -6,14 +6,14 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
+    <licenseUrl>https://github.com/trackabout/speceasy/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/trackabout/speceasy</projectUrl>
+    <iconUrl>https://raw.github.com/trackabout/speceasy/master/speceasy_logo_sq_128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Version 1.0 beta release.
-Changes:
-- Remove dependencies on Ninject packages (replaced with internal copy of TinyIoC).
-- Fix issue #8 (NRE when using Get/Set in BeforeEachExample)
-	</releaseNotes>
+    </releaseNotes>
     <copyright>Copyright 2013</copyright>
+    <tags>bdd tdd unit test testing fluent</tags>
   </metadata>
 </package>

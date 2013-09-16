@@ -4,11 +4,12 @@ SpecEasy is a BDD-based unit testing framework that allows you to easily and qui
 
 ## What does SpecEasy require?
 
-* Download the SpecEasy.dll
-* Add a reference to the following components
- * Nunit.Framework
- * Rhino.Mocks
-* Start writing specs the easy way!
+SpecEasy is currently built on and requires the NUnit test framework. If you're using NUnit, then it's as simple as:
+
+1. [Install SpecEasy using NuGet][NuGet]
+2. Start writing specs the easy way!
+
+SpecEasy also uses [RhinoMocks][]; this dependency will be installed via NuGet if needed.
 
 ## Quickstart Guide
 
@@ -358,3 +359,6 @@ Either form will result in the following output:
 ## License
 
 SpecEasy is released under the [MIT license](https://raw.github.com/trackabout/speceasy/master/LICENSE).
+
+[NuGet]: https://www.nuget.org/packages/SpecEasy
+[RhinoMocks]: http://www.nuget.org/packages/RhinoMocks/

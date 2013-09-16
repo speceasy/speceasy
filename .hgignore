@@ -1,8 +1,0 @@
-syntax:glob
-
-_ReSharper*
-bin/*
-obj/*
-packages/*
-*.suo
-*.csproj.user
