@@ -91,7 +91,7 @@ Once we change the FizzBuzz class to allow the test to pass, we see the followin
 
 We can have multiple Given/Then combinations, where we can set up different expectations and assert different things. So if we wanted to test an input of 2, we can add another given/then combination:
 
-public void FizzBuzzDo()
+    public void FizzBuzzDo()
     {
         string result = string.Empty;
         int input = 0;
