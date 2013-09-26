@@ -24,15 +24,16 @@ namespace SpecEasy
                 throw new Exception("Specifications failed!", exceptions[0]);
         }
         
-        protected void AssertWasThrown<T>() where T : Exception
+        protected void AssertWasThrown<T>(Action<T> expectation = null) where T : Exception
         {
-            if (expectedException is T)
-            {
-                expectedException = null;
-                return;
-            }
+            var expectedException = thrownException as T;
+            if (expectedException == null) 
+                throw new Exception("Expected exception was not thrown");
+            
+            if (expectation != null)
+                expectation(expectedException);
 
-            throw new Exception("Expected exception was not thrown");
+            thrownException = null;
         }
 
         private Dictionary<string, Action> then = new Dictionary<string, Action>();
@@ -84,7 +85,7 @@ namespace SpecEasy
 
         private readonly List<Exception> exceptions = new List<Exception>();
         private readonly StringBuilder finalOutput = new StringBuilder();
-        private Exception expectedException;
+        private Exception thrownException;
 
         private void CreateMethodContexts()
         {
@@ -161,15 +162,15 @@ namespace SpecEasy
 
                     try
                     {
-                        expectedException = null;
+                        thrownException = null;
                         when.Value();
                     }
                     catch (Exception ex)
                     {
-                        expectedException = ex;
+                        thrownException = ex;
                         spec.Value();
 
-                        if (expectedException != null)
+                        if (thrownException != null)
                         {
                             throw;
                         }
