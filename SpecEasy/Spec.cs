@@ -89,7 +89,7 @@ namespace SpecEasy
         private void CreateMethodContexts()
         {
             var type = GetType();
-            var methods = type.GetMethods();
+            var methods = GetValidMethods(type);
             var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] {};
             var declaredMethods = methods.Where(m => baseMethods.All(bm => bm.Name != m.Name));
             foreach (var m in declaredMethods)
@@ -97,6 +97,12 @@ namespace SpecEasy
                 var method = m;
                 Given(method.Name).Verify(() => method.Invoke(this, null));
             }
+        }
+
+        private static IEnumerable<MethodInfo> GetValidMethods(Type type)
+        {
+            var methods = type.GetMethods();
+            return methods.Where(m => !m.GetCustomAttributes(typeof (IgnoreSpecAttribute), false).Any());
         }
 
         private void VerifyContexts()

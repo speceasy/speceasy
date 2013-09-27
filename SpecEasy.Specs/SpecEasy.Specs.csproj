@@ -82,6 +82,7 @@
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSetup.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
+    <Compile Include="GenericSpec\TestSkippingSpec.cs" />
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
