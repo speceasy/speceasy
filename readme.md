@@ -151,7 +151,7 @@ You can continue the implementation of FizzBuzz this way, and end up with tests 
             Then("it should return fizzbuzz", () => Assert.That(result, Is.EqualTo("fizzbuzz"))));
     }
 
-Once FizzBuzz is implemented, you get an output like so
+The test results will look like this:
 
     ------------ FULL RESULTS ------------
     given an input of 1
@@ -186,22 +186,22 @@ Once FizzBuzz is implemented, you get an output like so
 
 ## Dependencies
 
-One thing that wasn't mentioned in the above spec is that SpecEasy automatically instantiated your class under test for you, and gave you access to it through a variable called SUT (system under test). But what if your SUT has dependencies? SpecEasy can handle that for you too, either automatically, or you can determine what values to use for your class.
+One thing that wasn't mentioned in the above spec is that SpecEasy automatically instantiated your class under test for you, and gave you access to it through a variable called `SUT` (system under test). But what if your SUT has dependencies? SpecEasy can handle that for you too, either automatically, or you can determine what values to use for your class.
 
-Let's say I have a class that takes in two variables
+Let's say I have a class that takes in two dependencies as constructor parameters:
 
-    public class CarService 
+    public class CarService
     {
         private readonly ICar car;
         private readonly IDriver driver;
 
-        public CarService(ICar car, IDriver driver) 
+        public CarService(ICar car, IDriver driver)
         {
             this.car = car;
             this.driver = driver;
         }
 
-        public void Drive() 
+        public void Drive()
         {
             // Make the driver drive the car
         }
@@ -237,7 +237,7 @@ This requires you to make a fake for every parameter and then implement code to 
         }
     }
 
-The Spec<T> base class has a method AssertWasCalled<T>() that can be used to determine if a method is called or a property was set on a dependency. 
+The `Spec<T>` base class has a method `AssertWasCalled<T>()` that can be used to determine whether a method was called or a property was set on a dependency. 
 
 ## Stubs on Dependencies
 
