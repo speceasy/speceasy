@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace SpecEasy.Specs.FizzBuzz
 {
@@ -32,13 +31,6 @@ namespace SpecEasy.Specs.FizzBuzz
 
             Given("an input of a multiple of 3 and 5", () => input = 30).Verify(() =>
                 Then("it should return fizzbuzz", () => Assert.That(result, Is.EqualTo("fizzbuzz"))));
-
-            Given("an input of 7", () => input = 7).Verify(() =>
-                Then("it should throw an argument exception", () => AssertWasThrown<ArgumentException>()));
-
-            Given("an input of a multiple 7", () => input = 7).Verify(() =>
-                Then("it should throw an argument exception for the expected argument", 
-                    () => AssertWasThrown<ArgumentException>(ex => Assert.That(ex.ParamName, Is.EqualTo("input")))));
         }
     }
 
@@ -56,11 +48,6 @@ namespace SpecEasy.Specs.FizzBuzz
             if (input%5 == 0)
             {
                 retVal += "buzz";
-            }
-
-            if (input%7 == 0)
-            {
-                throw new ArgumentException("The input must not be a multiple of 7.", "input");
             }
 
             return retVal ?? input.ToString();
