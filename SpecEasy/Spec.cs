@@ -31,7 +31,18 @@ namespace SpecEasy
                 throw new Exception("Expected exception was not thrown");
             
             if (expectation != null)
-                expectation(expectedException);
+            {
+                try
+                {
+                    expectation(expectedException);
+                }
+                catch (Exception exc)
+                {
+                    var message = string.Format("The expected exception type was thrown but the specified constraint failed. Constraint Exception: {0}{1}", 
+                        Environment.NewLine, exc.Message);
+                    throw new Exception(message, exc);
+                }
+            }
 
             thrownException = null;
         }
