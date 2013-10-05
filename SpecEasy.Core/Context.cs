@@ -1,4 +1,4 @@
-namespace SpecEasy
+namespace SpecEasy.Core
 {
     public interface IContext
     {

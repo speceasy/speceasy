@@ -4,6 +4,7 @@ using System.Data.SqlServerCe;
 using System.Linq;
 using NUnit.Framework;
 using Dapper;
+using SpecEasy.Core;
 
 namespace SpecEasy.Specs.DatabaseIntegration
 {

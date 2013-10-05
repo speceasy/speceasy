@@ -87,6 +87,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpecEasy.Core\SpecEasy.Core.csproj">
+      <Project>{1347b84a-2eba-4f44-9bcd-0270fc5d7e22}</Project>
+      <Name>SpecEasy.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpecEasy\SpecEasy.csproj">
       <Project>{d15653fb-10a8-4abb-bacd-a1694fc3251c}</Project>
       <Name>SpecEasy</Name>
