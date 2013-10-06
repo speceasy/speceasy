@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecEasy.Core", "SpecEasy.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecEasy.MockAdapters.RhinoMocks", "SpecEasy.MockAdapters.RhinoMocks\SpecEasy.MockAdapters.RhinoMocks.csproj", "{16F7C529-3E19-4421-88F3-B4B85A412F66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecEasy.Core.Specs", "SpecEasy.Core.Specs\SpecEasy.Core.Specs.csproj", "{2685969C-1285-465B-AF25-CB07A2CC860B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{16F7C529-3E19-4421-88F3-B4B85A412F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16F7C529-3E19-4421-88F3-B4B85A412F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16F7C529-3E19-4421-88F3-B4B85A412F66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2685969C-1285-465B-AF25-CB07A2CC860B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2685969C-1285-465B-AF25-CB07A2CC860B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2685969C-1285-465B-AF25-CB07A2CC860B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2685969C-1285-465B-AF25-CB07A2CC860B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

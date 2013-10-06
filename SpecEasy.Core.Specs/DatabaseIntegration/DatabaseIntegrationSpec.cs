@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Linq;
-using NUnit.Framework;
 using Dapper;
-using SpecEasy.Core;
+using NUnit.Framework;
 
-namespace SpecEasy.Specs.DatabaseIntegration
+namespace SpecEasy.Core.Specs.DatabaseIntegration
 {
     public class DatabaseIntegrationSpec : Spec
     {
