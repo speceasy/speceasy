@@ -1,6 +1,6 @@
 using System;
 
-namespace SpecEasy
+namespace SpecEasy.Core
 {
     public interface IVerifyContext
     {

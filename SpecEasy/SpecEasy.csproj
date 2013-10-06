@@ -69,11 +69,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="TinyIoC.cs" />
-    <Compile Include="VerifyContext.cs" />
-    <Compile Include="Spec.cs" />
     <Compile Include="GenericSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -94,6 +89,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpecEasy.Core\SpecEasy.Core.csproj">
+      <Project>{1347b84a-2eba-4f44-9bcd-0270fc5d7e22}</Project>
+      <Name>SpecEasy.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpecEasy.MockAdapters.RhinoMocks\SpecEasy.MockAdapters.RhinoMocks.csproj">
+      <Project>{16F7C529-3E19-4421-88F3-B4B85A412F66}</Project>
+      <Name>SpecEasy.MockAdapters.RhinoMocks</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

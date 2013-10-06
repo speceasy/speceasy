@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlServerCe;
+﻿using System.Data.SqlServerCe;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Dapper;
 using NUnit.Framework;
 
-namespace SpecEasy.Specs.DatabaseIntegration
+namespace SpecEasy.Core.Specs.DatabaseIntegration
 {
 
     [SetUpFixture]

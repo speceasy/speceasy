@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 
-namespace SpecEasy
+namespace SpecEasy.Core
 {
     [TestFixture]
     public class Spec
