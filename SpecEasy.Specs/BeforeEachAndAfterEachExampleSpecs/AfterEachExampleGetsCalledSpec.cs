@@ -4,40 +4,36 @@ namespace SpecEasy.Specs.SetUpAndTearDownSpecs
 {
     public class AfterEachExampleGetsCalledSpec : Spec<FakeClass>
     {
-        private int timesCalled = 0;
+        private int timesSet = 0;
 
         public void AfterEachExampleSpec()
         {
-            timesCalled = 0;
-
-            When("running a test in a class that overrides AfterEachExample", () => SUT.DoNothing());
-            Then("it should not AfterEachExample before the first Then", () => Assert.That(timesCalled, Is.EqualTo(0)));
-            Then("it should call AfterEachExample before the second Then", () => Assert.That(timesCalled, Is.EqualTo(1)));
+            When("running a test in a class that resets a variable in AfterEachExample", () => SUT.DoNothing());
+            Then("the variable should be reset before the first Then, which sets it", () => Assert.That(timesSet++ == 0));
+            Then("the variable should be reset before the second Then, which sets it", () => Assert.That(timesSet++ == 0));
         }
 
         public void AfterEachExampleWithGivenSpec()
         {
-            timesCalled = 0;
-
-            When("running a test in a class that overrides AfterEachExample", () => SUT.DoNothing());
+            When("running a test in a class that resets a variable in AfterEachExample", () => SUT.DoNothing());
 
             Given("there is a given", () => SUT.DoNothing()).Verify(() => {
-                Then("it should not call AfterEachExample before the first Then", () => Assert.That(timesCalled, Is.EqualTo(0)));
-                Then("it should call AfterEachExample before the second Then", () => Assert.That(timesCalled, Is.EqualTo(1)));
+                Then("the variable should be reset before the first Then, which sets it", () => Assert.That(timesSet++ == 0));
+                Then("the variable should be reset before the second Then, which sets it", () => Assert.That(timesSet++ == 0));
             });
 
             Given("there is another given", () => SUT.DoNothing()).Verify(() =>
                 {
-                    Then("it should call AfterEachExample again before the third Then", () => Assert.That(timesCalled, Is.EqualTo(2)));
-                    Given("we have nested givens", () => SUT.DoNothing()).Verify(() => 
-                        Then("it should call AfterEachExample again before the nested Then", () => Assert.That(timesCalled, Is.EqualTo(3))));
+                    Then("the variable should be reset before the third Then, which sets it", () => Assert.That(timesSet++ == 0));
+                    Given("we have nested givens", () => SUT.DoNothing()).Verify(() =>
+                        Then("the variable should be reset before the fourth Then, which sets it", () => Assert.That(timesSet++ == 0)));
                 });
         }
 
         protected override void AfterEachExample()
         {
             base.AfterEachExample();
-            timesCalled++;
+            timesSet = 0; 
         }
     }
 }

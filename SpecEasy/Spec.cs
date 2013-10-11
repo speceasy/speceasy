@@ -11,19 +11,123 @@ namespace SpecEasy
     [TestFixture]
     public class Spec
     {
-        [Test]
-        public void Verify()
+        [Test, TestCaseSource("TestCases")]
+        public void Verify(Action test)
+        {
+            test();
+        }
+
+        public IList<TestCaseData> TestCases
+        {
+            get
+            {
+                return BuildTestCases();
+            }
+        }
+
+        private IList<TestCaseData> BuildTestCases()
         {
             CreateMethodContexts();
-            VerifyContexts();
-
-            System.Diagnostics.Debug.WriteLine("------------ FULL RESULTS ------------");
-            System.Diagnostics.Debug.WriteLine(finalOutput);
-
-            if (exceptions.Any())
-                throw new Exception("Specifications failed!", exceptions[0]);
+            return BuildTestCases(new List<KeyValuePair<string, Context>>(), 0);
         }
-        
+
+        private IList<TestCaseData> BuildTestCases(List<KeyValuePair<string, Context>> contextList, int depth)
+        {
+            var testCases = new List<TestCaseData>();
+
+            var cachedWhen = when;
+            foreach (var namedContext in contexts.Select(kvp => kvp))
+            {
+                var givenContext = namedContext.Value;
+                then = new Dictionary<string, Action>();
+                contexts = new Dictionary<string, Context>();
+                when = cachedWhen;
+
+                givenContext.EnterContext();
+
+                if (depth > 0)
+                    contextList.Add(namedContext);
+
+                testCases.AddRange(BuildTestCases(contextList));
+                testCases.AddRange(BuildTestCases(contextList, depth + 1));
+                if (contextList.Any())
+                    contextList.Remove(namedContext);
+            }
+
+            return testCases;
+        }
+
+        private IList<TestCaseData> BuildTestCases(List<KeyValuePair<string, Context>> contextList)
+        {
+            var testCases = new List<TestCaseData>();
+
+            if (!then.Any()) return testCases;
+
+            var setupText = new StringBuilder();
+
+            var givenDescriptions = contextList.Select(kvp => kvp.Key).ToList();
+            var givenText = "given ";
+            foreach (var description in givenDescriptions.Where(IsNamedContext))
+            {
+                setupText.AppendLine(givenText + description);
+                if (givenText == "given ")
+                    givenText = Indent("and ", 1);
+            }
+
+            setupText.AppendLine("when " + when.Key);
+
+            const string thenText = "then ";
+
+            foreach (var spec in then)
+            {
+                var contextListCapture = new List<KeyValuePair<string, Context>>(contextList);
+                var whenCapture = new KeyValuePair<string, Action>(when.Key, when.Value);
+
+                Action executeTest = () =>
+                {
+                    Before();
+
+                    try
+                    {
+                        var exceptionThrownAndAsserted = false;
+                        InitializeContext(contextListCapture);
+
+                        try
+                        {
+                            thrownException = null;
+                            whenCapture.Value();
+                        }
+                        catch (Exception ex)
+                        {
+                            thrownException = ex;
+                            spec.Value();
+
+                            if (thrownException != null)
+                            {
+                                throw;
+                            }
+
+                            exceptionThrownAndAsserted = true;
+                        }
+
+                        if (!exceptionThrownAndAsserted)
+                        {
+                            spec.Value();
+                        }
+                    }
+                    finally
+                    {
+                        After();
+                    }
+                };
+
+                var description = setupText + thenText + spec.Key + Environment.NewLine;
+                testCases.Add(new TestCaseData(executeTest).SetName(description));
+            }
+
+            return testCases;
+        }
+
         protected void AssertWasThrown<T>(Action<T> expectation = null) where T : Exception
         {
             var expectedException = thrownException as T;
@@ -94,8 +198,6 @@ namespace SpecEasy
             return !name.StartsWith("SPECEASY");
         }
 
-        private readonly List<Exception> exceptions = new List<Exception>();
-        private readonly StringBuilder finalOutput = new StringBuilder();
         private Exception thrownException;
 
         private void CreateMethodContexts()
@@ -103,118 +205,13 @@ namespace SpecEasy
             var type = GetType();
             var methods = type.GetMethods();
             var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] {};
-            var declaredMethods = methods.Where(m => baseMethods.All(bm => bm.Name != m.Name));
+            var declaredMethods = methods.Where(m => baseMethods.All(bm => bm.Name != m.Name))
+                .Where(m => !m.GetParameters().Any() && m.ReturnType == typeof(void));
             foreach (var m in declaredMethods)
             {
                 var method = m;
                 Given(method.Name).Verify(() => method.Invoke(this, null));
             }
-        }
-
-        private void VerifyContexts()
-        {
-            VerifyContexts(new List<KeyValuePair<string, Context>>(), 0);
-        }
-
-        private void VerifyContexts(List<KeyValuePair<string, Context>> contextList, int depth)
-        {
-            var cachedWhen = when;
-            foreach (var namedContext in contexts.Select(kvp => kvp))
-            {
-                var givenContext = namedContext.Value;
-                then = new Dictionary<string, Action>();
-                contexts = new Dictionary<string, Context>();
-                when = cachedWhen;
-
-                givenContext.EnterContext();
-
-                if (depth > 0)
-                    contextList.Add(namedContext);
-
-                VerifySpecs(contextList);
-                VerifyContexts(contextList, depth + 1);
-                if (contextList.Any())
-                    contextList.Remove(namedContext);
-            }
-        }
-
-        private void VerifySpecs(List<KeyValuePair<string, Context>> contextList)
-        {
-            if (!then.Any()) return;
-
-            var output = new StringBuilder();
-
-            var givenDescriptions = contextList.Select(kvp => kvp.Key).ToList();
-            var givenText = "given ";
-            foreach (var description in givenDescriptions.Where(IsNamedContext))
-            {
-                output.AppendLine(givenText + description);
-                if (givenText == "given ")
-                    givenText = Indent("and ", 1);
-            }
-
-            output.AppendLine("when " + when.Key);
-
-            var thenText = "then ";
-            var failurePrefix = output.ToString();
-
-            foreach (var spec in then)
-            {
-                Before();
-
-                output.AppendLine(thenText + spec.Key);
-                if (thenText == "then ")
-                    thenText = Indent("and ", 1);
-
-                try
-                {
-                    var exceptionThrownAndAsserted = false;
-                    InitializeContext(contextList);
-
-                    try
-                    {
-                        thrownException = null;
-                        when.Value();
-                    }
-                    catch (Exception ex)
-                    {
-                        thrownException = ex;
-                        spec.Value();
-
-                        if (thrownException != null)
-                        {
-                            throw;
-                        }
-
-                        exceptionThrownAndAsserted = true;
-                    }
-
-                    if (exceptionThrownAndAsserted)
-                    {
-                        continue;
-                    }
-
-                    spec.Value();
-                }
-                catch (Exception ex)
-                {
-                    var failureMessage = Indent("FAILED! " + ex.Message, 1);
-                    Console.Write(failurePrefix);
-                    Console.WriteLine("then " + spec.Key);
-                    Console.WriteLine(failureMessage);
-                    Console.WriteLine();
-
-                    output.AppendLine(failureMessage);
-                    exceptions.Add(ex);
-                }
-                finally
-                {
-                    After();
-                }
-            }
-
-            output.AppendLine();
-            finalOutput.Append(output);
         }
 
         private bool hasCalledBefore;
