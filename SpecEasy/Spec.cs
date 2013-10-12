@@ -23,8 +23,13 @@ namespace SpecEasy
             if (exceptions.Any())
                 throw new Exception("Specifications failed!", exceptions[0]);
         }
+
+        protected void AssertWasThrown<T>() where T : Exception
+        {
+            AssertWasThrown<T>(null);
+        }
         
-        protected void AssertWasThrown<T>(Action<T> expectation = null) where T : Exception
+        protected void AssertWasThrown<T>(Action<T> expectation) where T : Exception
         {
             var expectedException = thrownException as T;
             if (expectedException == null) 
