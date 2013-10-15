@@ -130,6 +130,11 @@ namespace SpecEasy
 
         protected void AssertWasThrown<T>(Action<T> expectation = null) where T : Exception
         {
+            AssertWasThrown<T>(null);
+        }
+        
+        protected void AssertWasThrown<T>(Action<T> expectation) where T : Exception
+        {
             var expectedException = thrownException as T;
             if (expectedException == null) 
                 throw new Exception("Expected exception was not thrown");
