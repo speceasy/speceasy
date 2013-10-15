@@ -5,12 +5,10 @@ namespace SpecEasy.Specs.SetUpAndTearDownSpecs
     public class BeforeEachExampleCalledCorrectNumberOfTimesSpec : Spec<FakeClass>
     {
         private int timesCalled = 0;
-        private int verifyCall = 0;
+        private int verifyCall = 1;
+
         public void CountBeforeEachExampleCalls()
         {
-            timesCalled = 0;
-            verifyCall = 1;
-
             When("running a test that overrides BeforeEachExample", () => Assert.That(timesCalled, Is.EqualTo(verifyCall)));
 
             Then("it should only call BeforeEachExample once to start with", () => Assert.That(timesCalled, Is.EqualTo(verifyCall++)));
@@ -28,9 +26,6 @@ namespace SpecEasy.Specs.SetUpAndTearDownSpecs
 
         public void NestedGivenBeforeEachExampleCalls()
         {
-            timesCalled = 0;
-            verifyCall = 1;
-
             When("running a test that overrides BeforeEachExample", () => Assert.That(timesCalled, Is.EqualTo(verifyCall)));
 
             Given("there is a first level of given methods", () => Assert.That(timesCalled, Is.EqualTo(verifyCall))).Verify(() => 
