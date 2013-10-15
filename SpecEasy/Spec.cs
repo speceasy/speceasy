@@ -128,17 +128,17 @@ namespace SpecEasy
             return testCases;
         }
 
-        protected void AssertWasThrown<T>(Action<T> expectation = null) where T : Exception
+        protected void AssertWasThrown<T>() where T : Exception
         {
             AssertWasThrown<T>(null);
         }
-        
+
         protected void AssertWasThrown<T>(Action<T> expectation) where T : Exception
         {
             var expectedException = thrownException as T;
-            if (expectedException == null) 
+            if (expectedException == null)
                 throw new Exception("Expected exception was not thrown");
-            
+
             if (expectation != null)
             {
                 try
@@ -147,7 +147,7 @@ namespace SpecEasy
                 }
                 catch (Exception exc)
                 {
-                    var message = string.Format("The expected exception type was thrown but the specified constraint failed. Constraint Exception: {0}{1}", 
+                    var message = string.Format("The expected exception type was thrown but the specified constraint failed. Constraint Exception: {0}{1}",
                         Environment.NewLine, exc.Message);
                     throw new Exception(message, exc);
                 }
@@ -209,7 +209,7 @@ namespace SpecEasy
         {
             var type = GetType();
             var methods = type.GetMethods();
-            var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] {};
+            var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] { };
             var declaredMethods = methods.Where(m => baseMethods.All(bm => bm.Name != m.Name))
                 .Where(m => !m.GetParameters().Any() && m.ReturnType == typeof(void));
             foreach (var m in declaredMethods)
