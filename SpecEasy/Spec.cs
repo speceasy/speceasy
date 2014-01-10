@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace SpecEasy
@@ -12,9 +14,9 @@ namespace SpecEasy
     public class Spec
     {
         [Test, TestCaseSource("TestCases")]
-        public void Verify(Action test)
+        public async Task Verify(Func<Task> test)
         {
-            test();
+            await test().ConfigureAwait(false);
         }
 
         public IList<TestCaseData> TestCases
@@ -39,7 +41,7 @@ namespace SpecEasy
             foreach (var namedContext in contexts.Select(kvp => kvp))
             {
                 var givenContext = namedContext.Value;
-                then = new Dictionary<string, Action>();
+                then = new Dictionary<string, Func<Task>>();
                 contexts = new Dictionary<string, Context>();
                 when = cachedWhen;
 
@@ -81,38 +83,39 @@ namespace SpecEasy
             foreach (var spec in then)
             {
                 var contextListCapture = new List<KeyValuePair<string, Context>>(contextList);
-                var whenCapture = new KeyValuePair<string, Action>(when.Key, when.Value);
+                var whenCapture = new KeyValuePair<string, Func<Task>>(when.Key, when.Value);
 
-                Action executeTest = () =>
+                Func<Task> executeTest = async () =>
                 {
                     Before();
 
                     try
                     {
                         var exceptionThrownAndAsserted = false;
-                        InitializeContext(contextListCapture);
+                        await InitializeContext(contextListCapture).ConfigureAwait(false);
 
                         try
                         {
                             thrownException = null;
-                            whenCapture.Value();
+                            await whenCapture.Value().ConfigureAwait(false);
                         }
                         catch (Exception ex)
                         {
                             thrownException = ex;
-                            spec.Value();
-
-                            if (thrownException != null)
-                            {
-                                throw;
-                            }
-
-                            exceptionThrownAndAsserted = true;
                         }
+
+                        await spec.Value().ConfigureAwait(false);
+
+                        if (thrownException != null)
+                        {
+                            throw thrownException;
+                        }
+
+                        exceptionThrownAndAsserted = true;
 
                         if (!exceptionThrownAndAsserted)
                         {
-                            spec.Value();
+                            await spec.Value().ConfigureAwait(false);
                         }
                     }
                     finally
@@ -156,17 +159,27 @@ namespace SpecEasy
             thrownException = null;
         }
 
-        private Dictionary<string, Action> then = new Dictionary<string, Action>();
+        private Dictionary<string, Func<Task>> then = new Dictionary<string, Func<Task>>();
         private Dictionary<string, Context> contexts = new Dictionary<string, Context>();
-        private KeyValuePair<string, Action> when;
+        private KeyValuePair<string, Func<Task>> when;
 
         protected IContext Given(string description, Action setup)
+        {
+            return Given(description, WrapAction(setup));
+        }
+
+        protected IContext Given(string description, Func<Task> setup)
         {
             if (contexts.ContainsKey(description)) throw new Exception("Reusing a given description");
             return contexts[description] = new Context(setup);
         }
 
         protected IContext Given(Action setup)
+        {
+            return Given(WrapAction(setup));
+        }
+
+        protected IContext Given(Func<Task> setup)
         {
             return contexts[CreateUnnamedContextName()] = new Context(setup);
         }
@@ -178,18 +191,33 @@ namespace SpecEasy
 
         protected virtual IContext ForWhen(string description, Action action)
         {
-            return contexts[CreateUnnamedContextName()] = new Context(() => { }, () => When(description, action));
+            return contexts[CreateUnnamedContextName()] = new Context(async () => { }, () => When(description, action));
         }
 
         protected virtual void When(string description, Action action)
         {
-            when = new KeyValuePair<string, Action>(description, action);
+            When(description, WrapAction(action));
+        }
+
+        protected virtual void When(string description, Func<Task> func)
+        {
+            when = new KeyValuePair<string, Func<Task>>(description, func);
         }
 
         protected IVerifyContext Then(string description, Action specification)
         {
+            return Then(description, WrapAction(specification));
+        }
+
+        protected IVerifyContext Then(string description, Func<Task> specification)
+        {
             then[description] = specification;
             return new VerifyContext(Then);
+        }
+
+        private static Func<Task> WrapAction(Action action)
+        {
+            return async () => action();
         }
 
         private int nuSpecContextId;
@@ -241,12 +269,12 @@ namespace SpecEasy
         protected virtual void BeforeEachExample() { }
         protected virtual void AfterEachExample() { }
 
-        private void InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
+        private async Task InitializeContext(IEnumerable<KeyValuePair<string, Context>> contextList)
         {
             foreach (var action in contextList.Select(kvp => kvp.Value))
             {
                 Before();
-                action.SetupContext();
+                await action.SetupContext().ConfigureAwait(false);
             }
         }
 

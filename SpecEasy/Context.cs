@@ -1,34 +1,44 @@
+using System.Threading.Tasks;
+using System;
+
 namespace SpecEasy
 {
     public interface IContext
     {
+        void Verify(Func<Task> addSpecs);
+
         void Verify(Action addSpecs);
     }
 
     internal class Context : IContext
     {
-        private readonly Action setupAction = delegate { };
+        private readonly Func<Task> setupAction = async delegate { };
         private Action enterAction = delegate { };
 
         public Context()
         {
         }
 
-        public Context(Action setup)
+        public Context(Func<Task> setup)
         {
             setupAction = setup;            
         }
 
-        public Context(Action setup, Action addSpecs)
+        public Context(Func<Task> setup, Action addSpecs)
         {
             setupAction = setup;
             enterAction = addSpecs;
         }
 
-        public void Verify(Action addSpecs)
+        public void Verify(Func<Task> addSpecs)
         {
             var cachedEnterAction = enterAction;
-            enterAction = () => { cachedEnterAction(); addSpecs(); };
+            enterAction = async () => { cachedEnterAction(); addSpecs(); };
+        }
+
+        public void Verify(Action addSpecs)
+        {
+            Verify(async () => addSpecs());
         }
         
         public void EnterContext()
@@ -36,9 +46,9 @@ namespace SpecEasy
             enterAction();
         }
 
-        public void SetupContext()
+        public async Task SetupContext()
         {
-            setupAction();
+            await setupAction().ConfigureAwait(false);
         }
     }
 }
