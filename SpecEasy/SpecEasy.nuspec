@@ -12,6 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+Version 2.0.0 of SpecEasy introduces support for testing async methods. 
+Note that this version requires .NET 4.5.1 and includes a breaking change from the 1.0.0 release as described here:
+https://github.com/trackabout/speceasy/pull/23#issuecomment-32572855
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>bdd tdd unit test testing fluent</tags>

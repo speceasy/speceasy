@@ -9,7 +9,15 @@ SpecEasy is currently built on and requires the NUnit test framework. If you're 
 1. [Install SpecEasy using NuGet][NuGet]
 2. Start writing specs the easy way!
 
-SpecEasy also uses [RhinoMocks][]; this dependency will be installed via NuGet if needed.
+SpecEasy also uses [RhinoMocks][] and [NUnit][]; these dependencies will be installed via NuGet if needed.
+
+## A note on versions
+There are currently two major versions of SpecEasy available on NuGet:
+
+* Version 1.0.0 - Targets .NET 3.5 or higher
+* Version 2.0.0 - Targets .NET 4.5.1 or higher and supports testing async methods
+
+At this time, active development is only planned for the 2.0.0 version unless some significant feature is needed for projects targeting .NET 3.5 or 4.0.
 
 ## Quickstart Guide
 
