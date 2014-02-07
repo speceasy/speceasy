@@ -382,6 +382,8 @@ An alternative is to use BDD-style extension methods to make your tests more rea
     Given("an input of 1", () => input = 1).Verify(() =>
         Then("it should return a stringified 1", () => result.ShouldBe("1")));
 
+You can combine SpecEasy with any assertion framework; the core SpecEasy assembly takes no dependencies on any assertion library. The `SpecEasy.Specs` project in this repository has examples of using the Should library.
+
 ## License
 
 SpecEasy is released under the [MIT license](https://raw.github.com/trackabout/speceasy/master/LICENSE).
