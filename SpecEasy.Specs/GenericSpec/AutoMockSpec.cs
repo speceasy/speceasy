@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using Rhino.Mocks;
+﻿using Rhino.Mocks;
+using Should;
 
 namespace SpecEasy.Specs.GenericSpec
 {
@@ -15,27 +15,25 @@ namespace SpecEasy.Specs.GenericSpec
                 {
                     var sut1 = SUT;
                     var sut2 = SUT;
-                    Assert.That(sut1, Is.SameAs(sut2));
+                    sut1.ShouldBeSameAs(sut2);
                 });
-                Then("it gets a default mock object for dependency 1", () => Assert.That(SUT.Dep1, Is.Not.InstanceOf<Dependency1Impl>()));
-                Given("stubbed values for depedencies", () => Get<IDependency1>().Stub(d => d.Value).Return("stub-value-1")).Verify(() =>
+
+                Then("it gets a default mock object for dependency 1", () => SUT.Dep1.ShouldNotBeType<Dependency1Impl>());
+                Given("stubbed values for dependencies", () => Get<IDependency1>().Stub(d => d.Value).Return("stub-value-1")).Verify(() =>
                     Then("it should produce the same instance of a mock dependency each time it's requested", () =>
-                        Assert.That(Get<IDependency1>(), Is.SameAs(Get<IDependency1>()))).
+                        Get<IDependency1>().ShouldBeSameAs(Get<IDependency1>())).
                     Then("it should get stubbed values from its mocked dependencies", () =>
-                        Assert.That(SUT.Dep1.Value, Is.EqualTo("stub-value-1")))
+                        SUT.Dep1.Value.ShouldEqual("stub-value-1"))
                 );
             });
 
             Given("a dependency registered by the caller", () => Set<IDependency1>(new Dependency1Impl("dep-1-impl"))).Verify(() =>
                 Then("it gets the same object each time a registered class is requested", () =>
-                {
-                    Assert.That(Get<IDependency1>(), Is.SameAs(Get<IDependency1>()));
-                }).
+                    Get<IDependency1>().ShouldBeSameAs(Get<IDependency1>())).
                 Then("it gets the same object each time an unregistered concrete object is requested", () =>
-                {
-                    Assert.That(Get<Dependency2Impl>(), Is.SameAs(Get<Dependency2Impl>()));
-                }).
-                Then("it gets the specified object for dependency 1", () => Assert.That(SUT.Dep1.Value, Is.EqualTo("dep-1-impl"))));
+                    Get<Dependency2Impl>().ShouldBeSameAs(Get<Dependency2Impl>())).
+                Then("it gets the specified object for dependency 1", () =>
+                    SUT.Dep1.Value.ShouldEqual("dep-1-impl")));
         }
     }
 

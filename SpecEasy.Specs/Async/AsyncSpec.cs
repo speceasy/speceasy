@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlServerCe;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using Rhino.Mocks;
-using Rhino.Mocks.Impl.Invocation.Specifications;
+using Should;
 
 namespace SpecEasy.Specs.Async
 {
@@ -25,10 +20,10 @@ namespace SpecEasy.Specs.Async
 
             Given("a value has been saved", () => Get<IPersistence>().Stub(persistence => persistence.LoadAsync(Name)).Return(Task.Factory.StartNew(() => Value))).Verify(() =>
             {
-                Then("the desired value is loaded", () => Assert.AreEqual(result, Value));
+                Then("the desired value is loaded", () => result.ShouldEqual(Value));
 
                 Given("the persistence tracks the load count", ()=> Get<IPersistence>().Stub(persistence => persistence.GetLoadCountAsync()).Return(Task.Factory.StartNew(()=>count))).Verify(()=>
-                    Then("the number of loads can be retrieved", async () => Assert.AreEqual(count, await SUT.GetLoadCountAsync().ConfigureAwait(false))));
+                    Then("the number of loads can be retrieved", async () => count.ShouldEqual(await SUT.GetLoadCountAsync().ConfigureAwait(false))));
             });
 
             Given("there is an error loading the value", () => Get<IPersistence>().Stub(persistence => persistence.LoadAsync(Name)).Throw(new InvalidOperationException())).Verify(() =>
@@ -40,7 +35,7 @@ namespace SpecEasy.Specs.Async
                 await SUT.SaveAsync(Name, Value).ConfigureAwait(false);
             }).Verify(() =>
                 Given("the data is then loaded", () => Get<IPersistence>().Stub(persistence => persistence.LoadAsync(Name)).Return(Task.Factory.StartNew(() => intermediate))).Verify(() =>
-                    Then("the previously stored data is retrieved", () => Assert.AreEqual(result, Value))));
+                    Then("the previously stored data is retrieved", () => result.ShouldEqual(Value))));
         }
     }
 

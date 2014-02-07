@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlServerCe;
+﻿using System.Data.SqlServerCe;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Dapper;
 using NUnit.Framework;
 
@@ -13,7 +9,7 @@ namespace SpecEasy.Specs.DatabaseIntegration
     [SetUpFixture]
     public class DatabaseIntegrationSetup
     {
-        public const string TestDBConnectionString = "Data Source=TestDB.sdf;";
+        public const string TestDbConnectionString = "Data Source=TestDB.sdf;";
 
         [SetUp]
         public void BeforeDatabaseIntegration()
@@ -21,10 +17,10 @@ namespace SpecEasy.Specs.DatabaseIntegration
             if (File.Exists("TestDB.sdf"))
                 File.Delete("TestDB.sdf");
 
-            var engine = new SqlCeEngine(TestDBConnectionString);
+            var engine = new SqlCeEngine(TestDbConnectionString);
             engine.CreateDatabase();
 
-            using (var connection = new SqlCeConnection(TestDBConnectionString))
+            using (var connection = new SqlCeConnection(TestDbConnectionString))
             {
                 connection.Execute(@"
                    create table Posts (

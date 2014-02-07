@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Should;
 
-namespace SpecEasy.Specs.SetUpAndTearDownSpecs
+namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
     public class BeforeEachExampleGetsCalledSpec : Spec<FakeClass>
     {
@@ -10,10 +10,10 @@ namespace SpecEasy.Specs.SetUpAndTearDownSpecs
         {
             When("running a test with BeforeEachExample overridden", () => SUT.DoNothing());
 
-            Then("it should run BeforeEachExample", () => Assert.That(testValue, Is.EqualTo(50)));
+            Then("it should run BeforeEachExample", () => testValue.ShouldEqual(50));
 
             Given("a given changes the value set in BeforeEachExample", () => testValue = 75).Verify(() => 
-                Then("it should not have the value from BeforeEachExample", () => Assert.That(testValue, Is.EqualTo(75))));
+                Then("it should not have the value from BeforeEachExample", () => testValue.ShouldEqual(75)));
         }
 
         protected override void BeforeEachExample()
