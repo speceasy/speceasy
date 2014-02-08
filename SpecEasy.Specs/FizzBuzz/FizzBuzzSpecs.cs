@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Globalization;
+using NUnit.Framework;
 
 namespace SpecEasy.Specs.FizzBuzz
 {
@@ -50,7 +51,7 @@ namespace SpecEasy.Specs.FizzBuzz
                 retVal += "buzz";
             }
 
-            return retVal ?? input.ToString();
+            return retVal ?? input.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

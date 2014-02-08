@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Should;
 
 namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
@@ -16,7 +16,7 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
             When("getting value from SUT", () => value = SUT.Value);
             Given("SUT was set up in BeforeEachExample").Verify(() =>
-                Then("it should get the value from the SUT set up in BeforeEachExample", () => Assert.That(value, Is.EqualTo(123))));
+                Then("it should get the value from the SUT set up in BeforeEachExample", () => value.ShouldEqual(123)));
         }
 
         public class SutWithValueTypeDependency

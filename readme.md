@@ -364,9 +364,31 @@ Either form will result in the following output:
     then it should return a string starting with fizz
       and it should return a string ending with buzz
 
+## BDD-style assertions
+
+In the interest of remaining lightweight and flexible, SpecEasy doesn't implement or enforce a certain style of writing assertions. You are free to use any type of assertions that throw an exception upon failure. The examples above use the standard NUnit `Assert` class for familiarity.
+
+An alternative is to use BDD-style extension methods to make your tests more readable. Two lightweight libraries that work well with SpecEasy are [Should][]:
+
+    using Should;
+    ...
+    Given("an input of 1", () => input = 1).Verify(() =>
+        Then("it should return a stringified 1", () => result.ShouldEqual("1")));
+
+…and [Shouldly][]:
+
+    using Shouldly;
+    ...
+    Given("an input of 1", () => input = 1).Verify(() =>
+        Then("it should return a stringified 1", () => result.ShouldBe("1")));
+
+You can combine SpecEasy with any assertion framework; the core SpecEasy assembly takes no dependencies on any assertion library. The `SpecEasy.Specs` project in this repository has examples of using the Should library.
+
 ## License
 
 SpecEasy is released under the [MIT license](https://raw.github.com/trackabout/speceasy/master/LICENSE).
 
 [NuGet]: https://www.nuget.org/packages/SpecEasy
-[RhinoMocks]: http://www.nuget.org/packages/RhinoMocks/
+[RhinoMocks]: https://www.nuget.org/packages/RhinoMocks/
+[Should]: https://github.com/erichexter/Should
+[Shouldly]: http://shouldly.github.io/

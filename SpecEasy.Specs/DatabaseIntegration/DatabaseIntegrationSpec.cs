@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Linq;
-using NUnit.Framework;
 using Dapper;
+using Should;
 
 namespace SpecEasy.Specs.DatabaseIntegration
 {
@@ -15,7 +15,7 @@ namespace SpecEasy.Specs.DatabaseIntegration
         protected override void BeforeEachExample()
         {
             base.BeforeEachExample();
-			dbConnection = new SqlCeConnection(DatabaseIntegrationSetup.TestDBConnectionString);
+			dbConnection = new SqlCeConnection(DatabaseIntegrationSetup.TestDbConnectionString);
             dbConnection.Open();
             transaction = dbConnection.BeginTransaction();
         }
@@ -35,16 +35,16 @@ namespace SpecEasy.Specs.DatabaseIntegration
 
 		    const string firstPostBody = "this is the body of the first post.";
 		    const string secondPostBody = "body of the second post.";
-
+            
             When("querying a database within a spec", () => queryResult = GetPosts());
 
             Given("a post is created in a test context.", () => CreatePost(firstPostBody)).Verify(() =>
-                Then("the current context can find the single post created.", () => Assert.AreEqual(1, queryResult.Count)).
+                Then("the current context can find the single post created.", () => queryResult.Count.ShouldEqual(1)).
                 Then("a subsequent assertion from within the same context should find the same single post, but it should not be duplicated.", () =>
-                        Assert.IsTrue(queryResult.All(p => p.Body.Equals(firstPostBody)))));
+                        queryResult.All(p => p.Body.Equals(firstPostBody)).ShouldBeTrue()));
 
-            Given("a post is created in a context following but separate from a prevous context.", () => CreatePost(secondPostBody)).Verify(() =>
-                Then("the current context should only find the single post created in this context.", () => Assert.AreEqual(1, queryResult.Count())));
+            Given("a post is created in a context following but separate from a previous context.", () => CreatePost(secondPostBody)).Verify(() =>
+                Then("the current context should only find the single post created in this context.", () => queryResult.Count.ShouldEqual(1)));
 		}
 
 		private IList<dynamic> GetPosts()

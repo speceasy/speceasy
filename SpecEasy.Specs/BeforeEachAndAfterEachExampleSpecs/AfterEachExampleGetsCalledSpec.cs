@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 
-namespace SpecEasy.Specs.SetUpAndTearDownSpecs
+namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
     public class AfterEachExampleGetsCalledSpec : Spec<FakeClass>
     {
-        private int timesSet = 0;
+        private int timesSet;
 
         public void AfterEachExampleSpec()
         {
