@@ -55,7 +55,7 @@ Let's get started writing specs.
 
 ### 1.) Inherit from Spec
 
-    public class FizzBuzzpecs : SpecEasy.Spec<FizzBuzz> { }
+    public class FizzBuzzSpecs : SpecEasy.Spec<FizzBuzz> { }
 
 ### 2.) Test the simplest case first
 
