@@ -92,6 +92,7 @@ namespace SpecEasy
                     try
                     {
                         var exceptionThrownAndAsserted = false;
+
                         await InitializeContext(contextListCapture).ConfigureAwait(false);
 
                         try
@@ -106,15 +107,13 @@ namespace SpecEasy
 
                         try
                         {
+                            exceptionAsserted = false;
                             await spec.Value().ConfigureAwait(false);
                         }
                         catch (Exception)
                         {
                             if (thrownException == null || exceptionAsserted)
-                            {
-                                exceptionAsserted = false;
                                 throw;
-                            }
                         }
 
                         if (thrownException != null)
