@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace SpecEasy
 {
     [TestFixture]
-    public class Spec
+    public class Spec : AssertionHelper
     {
         [Test, TestCaseSource("TestCases")]
         public async Task Verify(Func<Task> test)
