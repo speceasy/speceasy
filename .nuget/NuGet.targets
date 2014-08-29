@@ -132,7 +132,7 @@
         </Task>
     </UsingTask>
     
-     <UsingTask TaskName="SetEnvironmentVariable" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+     <UsingTask TaskName="SetEnvironmentVariable" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v$(MSBuildToolsVersion).dll">
         <ParameterGroup>
             <EnvKey ParameterType="System.String" Required="true" />
             <EnvValue ParameterType="System.String" Required="true" />
