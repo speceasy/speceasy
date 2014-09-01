@@ -389,6 +389,7 @@ You can combine SpecEasy with any assertion framework; the core SpecEasy assembl
 SpecEasy is released under the [MIT license](https://raw.github.com/trackabout/speceasy/master/LICENSE).
 
 [NuGet]: https://www.nuget.org/packages/SpecEasy
+[NUnit]: https://www.nuget.org/packages/NUnit/
 [RhinoMocks]: https://www.nuget.org/packages/RhinoMocks/
 [Should]: https://github.com/erichexter/Should
 [Shouldly]: http://shouldly.github.io/
