@@ -92,6 +92,7 @@ namespace SpecEasy
                     try
                     {
                         var exceptionThrownAndAsserted = false;
+
                         await InitializeContext(contextListCapture).ConfigureAwait(false);
 
                         try
@@ -104,7 +105,16 @@ namespace SpecEasy
                             thrownException = ex;
                         }
 
-                        await spec.Value().ConfigureAwait(false);
+                        try
+                        {
+                            exceptionAsserted = false;
+                            await spec.Value().ConfigureAwait(false);
+                        }
+                        catch (Exception)
+                        {
+                            if (thrownException == null || exceptionAsserted)
+                                throw;
+                        }
 
                         if (thrownException != null)
                         {
@@ -138,6 +148,7 @@ namespace SpecEasy
 
         protected void AssertWasThrown<T>(Action<T> expectation) where T : Exception
         {
+            exceptionAsserted = true;
             var expectedException = thrownException as T;
             if (expectedException == null)
                 throw new Exception("Expected exception was not thrown");
@@ -232,6 +243,7 @@ namespace SpecEasy
         }
 
         private Exception thrownException;
+        private bool exceptionAsserted;
 
         private void CreateMethodContexts()
         {
