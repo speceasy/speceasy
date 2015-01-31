@@ -67,6 +67,9 @@ DocProject/Help/html
 # Click-Once directory
 publish
 
+# Nuget package
+*.nupkg
+
 # Others
 [Bb]in
 [Oo]bj

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
@@ -12,11 +12,17 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Version 2.0.0 of SpecEasy introduces support for testing async methods. 
-Note that this version requires .NET 4.5.1 and includes a breaking change from the 1.0.0 release as described here:
-https://github.com/trackabout/speceasy/pull/23#issuecomment-32572855
+Version 2.0.1 of SpecEasy includes:
+  - A fix that prevents exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
+  - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
+  - Several other minor fixes.
     </releaseNotes>
-    <copyright>Copyright 2013</copyright>
+    <copyright>Copyright 2015</copyright>
     <tags>bdd tdd unit test testing fluent</tags>
   </metadata>
+  <files>
+    <!-- Do not need to include .NET 4.5.1 version here because nuget automatically adds the output of
+         either the default build configuration or the configuration specified when running the pack command. -->
+    <file src="..\SpecEasy\bin\Release45\$id$.dll" target="lib\net45\" />
+  </files>
 </package>
