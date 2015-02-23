@@ -5,8 +5,6 @@ namespace SpecEasy
 {
     public interface IContext
     {
-        void Verify(Func<Task> addSpecs);
-
         void Verify(Action addSpecs);
     }
 
@@ -30,15 +28,10 @@ namespace SpecEasy
             enterAction = addSpecs;
         }
 
-        public void Verify(Func<Task> addSpecs)
-        {
-            var cachedEnterAction = enterAction;
-            enterAction = async () => { cachedEnterAction(); addSpecs(); };
-        }
-
         public void Verify(Action addSpecs)
         {
-            Verify(async () => addSpecs());
+            var cachedEnterAction = enterAction;
+            enterAction = () => { cachedEnterAction(); addSpecs(); };
         }
         
         public void EnterContext()
