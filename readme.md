@@ -12,12 +12,13 @@ SpecEasy is currently built on and requires the NUnit test framework. If you're 
 SpecEasy also uses [RhinoMocks][] and [NUnit][]; these dependencies will be installed via NuGet if needed.
 
 ## A note on versions
-There are currently two major versions of SpecEasy available on NuGet:
+There are currently three versions of SpecEasy available on NuGet:
 
 * Version 1.0.0 - Targets .NET 3.5 or higher
-* Version 2.0.0 - Targets .NET 4.5.1 or higher and supports testing async methods
+* Version 2.0.0 - Targets .NET 4.5.1 or higher and adds support for testing async methods
+* Version 2.1.0 - Fixes [hiding of method under test exceptions](https://github.com/trackabout/speceasy/pull/24) and adds support for .NET 4.5.
 
-At this time, active development is only planned for the 2.0.0 version unless some significant feature is needed for projects targeting .NET 3.5 or 4.0.
+At this time, active development is only planned for v2.0.0 or greater unless some significant feature is needed for projects targeting .NET 3.5 or 4.0.
 
 ## Quickstart Guide
 
@@ -30,7 +31,7 @@ At this time, active development is only planned for the 2.0.0 version unless so
 * Use `Set<T>(T)` to set dependencies that will be injected into your SUT.
 * Use `Get<T>()` to get access to dependencies automatically created for your SUT. Chain calls to `Get<T>()` with calls to `Stub<T>(Action)` to set up mocks for dependencies.
 * Use `AssertWasCalled<T>(Action)` and `AssertWasNotCalled<T>(Action)` to check if methods or properties were called on dependencies.
- 
+
 ## Going a bit deeper
 
 Let's use FizzBuzz as a sample implementation to test. As a reminder, the rules for FizzBuzz are as follows:
@@ -43,12 +44,12 @@ Let's use FizzBuzz as a sample implementation to test. As a reminder, the rules 
 
 We'll start out with a base FizzBuzz implementation:
 
-    public class FizzBuzz 
+    public class FizzBuzz
     {
-        public string Do(int number) 
+        public string Do(int number)
         {
             return "";
-        } 
+        }
     }
 
 Let's get started writing specs.
@@ -72,7 +73,7 @@ SpecEasy doesn't require that you decorate your code with attributes to run test
             Then("it should return a stringified 1", () => Assert.That(result, Is.EqualTo("1"))));
     }
 
-Now, if we run the test, it fails. 
+Now, if we run the test, it fails.
 
     Test 'TrackAbout.Mobile.Test.Unit.FizzBuzz.FizzBuzzSpecs.Spec.Verify' failed: System.Exception : Specifications failed!
     ----> NUnit.Framework.AssertionException :   Expected string length 1 but was 0. Strings differ at index 0.
@@ -109,7 +110,7 @@ We can have multiple Given/Then combinations, where we can set up different expe
         Given("an input of 1", () => input = 1).Verify(() =>
             Then("it should return a stringified 1", () => Assert.That(result, Is.EqualTo("1"))));
 
-        Given("an input of 2", () => input = 2).Verify(() => 
+        Given("an input of 2", () => input = 2).Verify(() =>
             Then("it should return a stringified 2", () => Assert.That(result, Is.EqualTo("2"))));
     }
 
@@ -140,7 +141,7 @@ You can continue the implementation of FizzBuzz this way, and end up with tests 
         Given("an input of 1", () => input = 1).Verify(() =>
             Then("it should return a stringified 1", () => Assert.That(result, Is.EqualTo("1"))));
 
-        Given("an input of 2", () => input = 2).Verify(() => 
+        Given("an input of 2", () => input = 2).Verify(() =>
             Then("it should return a stringified 2", () => Assert.That(result, Is.EqualTo("2"))));
 
         Given("an input of 3", () => input = 3).Verify(() =>
@@ -245,7 +246,7 @@ This requires you to make a fake for every parameter and then implement code to 
         }
     }
 
-The `Spec<T>` base class has a method `AssertWasCalled<T>()` that can be used to determine whether a method was called or a property was set on a dependency. 
+The `Spec<T>` base class has a method `AssertWasCalled<T>()` that can be used to determine whether a method was called or a property was set on a dependency.
 
 ## Stubs on Dependencies
 
@@ -258,7 +259,7 @@ Since SpecEasy handles creating your dependencies for you, it also has a way to 
             var keys = new CarKey();
             When("driving a car", () => SUT.Drive());
 
-            Given("the driver is carrying keys", => () => Get<IDriver>().Stub(d => d.GetKeys()).Return(keys)).Verify(() => 
+            Given("the driver is carrying keys", => () => Get<IDriver>().Stub(d => d.GetKeys()).Return(keys)).Verify(() =>
                 Then("the driver should start the car", () => AssertWasCalled<IDriver>(d => d.Start(Get<ICar>())));
         }
     }
@@ -272,11 +273,11 @@ Continuing with the above scenario, let's imagine we're testing the following co
     public void Drive()
     {
         var keys = driver.GetKeys();
-        if (car.Accepts(keys)) 
+        if (car.Accepts(keys))
         {
             driver.Start(car);
         }
-        else 
+        else
         {
             driver.FindKeysFor(car);
         }
@@ -300,10 +301,10 @@ We can do this using multiple nested calls to Given() for the different setups w
             Given("the driver is carrying keys", => () => Get<IDriver>().Stub(d => d.GetKeys()).Return(keys)).Verify(() => {
                 Then("the driver should show her keys", () => AssertWasCalled<IDriver>(d => d.GetKeys()));
 
-                Given("the car accepts the keys", () => Get<ICar>().Stub(c => c.Accepts(keys)).Return(true)).Verify(() => 
+                Given("the car accepts the keys", () => Get<ICar>().Stub(c => c.Accepts(keys)).Return(true)).Verify(() =>
                     Then("it should start the car", () => AssertWasCalled<IDriver>(d => d.Start(Get<ICar>()))));
 
-                Given("the car does not accept the keys", () => Get<ICar>().Stub(c => c.Accepts(keys)).Return(false)).Verify(() => 
+                Given("the car does not accept the keys", () => Get<ICar>().Stub(c => c.Accepts(keys)).Return(false)).Verify(() =>
                     Then("it should not start the car", () => AssertWasNotCalled<IDriver>(d => d.Start(Arg<ICar>.Is.Anything))));
             });
         }
@@ -349,7 +350,7 @@ You may find the need to make multiple assertions, or verify multiple expectatio
     {
         string result = string.Empty;
         int input = 0;
-        
+
         When("running FizzBuzz", () => result = SUT.Do(input));
         Given("an input of a multiple of 3 and 5", () => input = 30).Verify(() =>
             Then("it should return a string starting with fizz", () => Assert.That(result, Is.StringStarting("fizz")))
