@@ -3619,12 +3619,8 @@ namespace TinyIoC
 
         private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type)
         {
-//#if NETFX_CORE
-//			return type.GetTypeInfo().DeclaredConstructors.OrderByDescending(ctor => ctor.GetParameters().Count());
-//#else
-            return type.GetConstructors().OrderByDescending(ctor => ctor.GetParameters().Count());
-//#endif
-        }
+			return type.GetTypeInfo().DeclaredConstructors.OrderByDescending(ctor => ctor.GetParameters().Count());
+        } 
 
         private object ConstructType(Type requestedType, Type implementationType, ResolveOptions options)
         {
