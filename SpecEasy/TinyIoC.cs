@@ -719,6 +719,12 @@ namespace TinyIoC
         Fail
     }
 
+    internal enum CtorParameterSortCountOptions
+    {
+        HighestCountFirst = 0,
+        HighestCountLast = 1
+    }
+
     /// <summary>
     /// Resolution settings
     /// </summary>
@@ -3606,7 +3612,7 @@ namespace TinyIoC
 
             // Get constructors in reverse order based on the number of parameters
             // i.e. be as "greedy" as possible so we satify the most amount of dependencies possible
-            var ctors = this.GetTypeConstructors(type);
+            var ctors = this.GetTypeConstructors(type, CtorParameterSortCountOptions.HighestCountFirst);
 
             foreach (var ctor in ctors)
             {
@@ -3617,10 +3623,31 @@ namespace TinyIoC
             return null;
         }
 
-        private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type)
+        private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type, CtorParameterSortCountOptions parameterCountSortOption)
         {
-			return type.GetTypeInfo().DeclaredConstructors.OrderByDescending(ctor => ctor.GetParameters().Count());
-        } 
+            var ctors = type.GetTypeInfo().DeclaredConstructors
+                .Where(ctor => !ctor.IsPrivate)
+                .OrderBy(ScopeToSortvalue);
+            
+            return parameterCountSortOption == CtorParameterSortCountOptions.HighestCountFirst ? 
+                ctors.ThenByDescending(ctor => ctor.GetParameters().Count()) : 
+                ctors.ThenBy(ctor => ctor.GetParameters().Count());
+        }
+
+        private int ScopeToSortvalue(ConstructorInfo ctor)
+        {
+            if (ctor.IsPublic)
+            {
+                return 1;
+            }
+
+            if (ctor.IsAssembly)
+            {
+                return 2;
+            }
+
+            return 3;
+        }
 
         private object ConstructType(Type requestedType, Type implementationType, ResolveOptions options)
         {
@@ -3656,7 +3683,7 @@ namespace TinyIoC
                 // if we can't construct any then get the constructor
                 // with the least number of parameters so we can throw a meaningful
                 // resolve exception
-                constructor = GetBestConstructor(typeToConstruct, parameters, options) ?? GetTypeConstructors(typeToConstruct).LastOrDefault();
+                constructor = GetBestConstructor(typeToConstruct, parameters, options) ?? GetTypeConstructors(typeToConstruct, CtorParameterSortCountOptions.HighestCountLast).FirstOrDefault();
             }
 
             if (constructor == null)

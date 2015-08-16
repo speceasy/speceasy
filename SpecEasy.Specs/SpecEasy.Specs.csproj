@@ -121,11 +121,19 @@
     <Compile Include="ExceptionReporting\ExceptionReporting.cs" />
     <Compile Include="ExceptionReporting\NUnitBrokenClassTests.cs" />
     <Compile Include="ExceptionReporting\TestResultExtensions.cs" />
-    <Compile Include="ExternalSpec\NumberAdderSpec.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
+    <Compile Include="ExternalSpec\MagicNumberAdderSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TinyIoC\PublicAndInternalCtors.cs" />
+    <Compile Include="TinyIoC\PublicAndPrivateCtors.cs" />
+    <Compile Include="TinyIoC\SinglePublicCtor.cs" />
+    <Compile Include="TinyIoC\TinyIoCPublicAndInternalCtorsSpec.cs" />
+    <Compile Include="TinyIoC\TinyIoCPublicAndPrivateCtorsSpec.cs" />
+    <Compile Include="TinyIoC\TinyIoCSinglePublicCtorSpec.cs" />
+    <Compile Include="TinyIoC\TinyIoCTwoPublicCtorsSpec.cs" />
+    <Compile Include="TinyIoC\TwoPublicCtors.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpecEasy.ExternalLib\SpecEasy.ExternalLib.csproj">
