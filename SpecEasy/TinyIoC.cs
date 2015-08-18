@@ -811,6 +811,10 @@ namespace TinyIoC
 
     internal sealed partial class TinyIoCContainer : IDisposable
     {
+        private const int PublicScopeSortValue = 1;
+        private const int InternalScopeSortValue = 2;
+        private const int PrivateAndProtectedScopeSortValue = 3;
+
         #region Fake NETFX_CORE Classes
 #if NETFX_CORE
         private sealed class MethodAccessException : Exception
@@ -3638,15 +3642,15 @@ namespace TinyIoC
         {
             if (ctor.IsPublic)
             {
-                return 1;
+                return PublicScopeSortValue;
             }
 
             if (ctor.IsAssembly)
             {
-                return 2;
+                return InternalScopeSortValue;
             }
 
-            return 3;
+            return PrivateAndProtectedScopeSortValue;
         }
 
         private object ConstructType(Type requestedType, Type implementationType, ResolveOptions options)
