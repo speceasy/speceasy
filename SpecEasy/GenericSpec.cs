@@ -8,7 +8,9 @@ namespace SpecEasy
 {
     public class Spec<TUnit> : Spec
     {
-        internal TinyIoCContainer MockingContainer;
+        private TinyIoCContainer MockingContainer;
+        private bool alreadyConstructedSUT;
+        private TUnit constructedSUTInstance;
 
         protected T Mock<T>() where T : class
         {
@@ -46,6 +48,29 @@ namespace SpecEasy
         {
             var type = registration.Type;
             return type.IsInterface || type.IsAbstract ? MockRepository.GenerateMock(type, new Type[0]) : null;
+        }
+
+        private TUnit GetSUTInstance()
+        {
+            if (!alreadyConstructedSUT)
+            {
+                constructedSUTInstance = ConstructSUT();
+
+                if (constructedSUTInstance == null)
+                {
+                    throw new InvalidOperationException("Failed to construct SUT: ConstructSUT returned null");
+                }
+
+                Set(constructedSUTInstance);
+                alreadyConstructedSUT = true;
+            }
+
+            return constructedSUTInstance;
+        }
+
+        protected virtual TUnit ConstructSUT()
+        {
+            return Get<TUnit>();
         }
 
         protected void Set<T>(T item)
@@ -88,6 +113,7 @@ namespace SpecEasy
         {
             base.BeforeEachInit();
 
+            alreadyConstructedSUT = false;
             MockingContainer = new TinyIoCContainer();
 
             if (typeof (TUnit).IsAbstract)
@@ -107,12 +133,12 @@ namespace SpecEasy
 
         protected void EnsureSUT()
         {
-            Get<TUnit>();
+            SUT = SUT;
         }
 
         protected TUnit SUT
         {
-            get { return Get<TUnit>(); }
+            get { return GetSUTInstance(); }
             set { Set(value); }
         }
     }
