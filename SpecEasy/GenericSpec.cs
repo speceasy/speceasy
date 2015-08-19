@@ -81,6 +81,11 @@ namespace SpecEasy
             MockingContainer.Register(typeof(TUnit)).AsSingleton();
         }
 
+        protected void EnsureSUT()
+        {
+            Get<TUnit>();
+        }
+
         protected TUnit SUT
         {
             get { return Get<TUnit>(); }
