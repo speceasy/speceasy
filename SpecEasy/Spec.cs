@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -27,6 +26,14 @@ namespace SpecEasy
             }
         }
 
+        private IEnumerable<KeyValuePair<string, Func<Task>>> InheritedThenInEachCases
+        {
+            get
+            {
+                return thenInEachExampleStack.SelectMany(thenInEachCases => thenInEachCases);
+            }
+        }
+
         private IList<TestCaseData> BuildTestCases()
         {
             CreateMethodContexts();
@@ -42,6 +49,7 @@ namespace SpecEasy
             {
                 var givenContext = namedContext.Value;
                 then = new Dictionary<string, Func<Task>>();
+                newThenInEachExamplesInThisContext = new Dictionary<string, Func<Task>>();
                 contexts = new Dictionary<string, Context>();
                 when = cachedWhen;
 
@@ -51,7 +59,13 @@ namespace SpecEasy
                     contextList.Add(namedContext);
 
                 testCases.AddRange(BuildTestCases(contextList));
+
+                thenInEachExampleStack.Push(newThenInEachExamplesInThisContext);
+
                 testCases.AddRange(BuildTestCases(contextList, depth + 1));
+
+                thenInEachExampleStack.Pop();
+
                 if (contextList.Any())
                     contextList.Remove(namedContext);
             }
@@ -80,7 +94,7 @@ namespace SpecEasy
 
             const string thenText = "then ";
 
-            foreach (var spec in then)
+            foreach (var spec in then.Concat(InheritedThenInEachCases))
             {
                 var contextListCapture = new List<KeyValuePair<string, Context>>(contextList);
                 var whenCapture = new KeyValuePair<string, Func<Task>>(when.Key, when.Value);
@@ -171,6 +185,10 @@ namespace SpecEasy
         }
 
         private Dictionary<string, Func<Task>> then = new Dictionary<string, Func<Task>>();
+
+        private Dictionary<string, Func<Task>> newThenInEachExamplesInThisContext = new Dictionary<string, Func<Task>>();
+        private readonly Stack<Dictionary<string, Func<Task>>> thenInEachExampleStack = new Stack<Dictionary<string, Func<Task>>>();
+
         private Dictionary<string, Context> contexts = new Dictionary<string, Context>();
         private KeyValuePair<string, Func<Task>> when;
 
@@ -224,6 +242,22 @@ namespace SpecEasy
         {
             then[description] = specification;
             return new VerifyContext(Then);
+        }
+
+        protected IVerifyContext ThenInEachExample(string description, Action specification)
+        {
+            return ThenInEachExample(description, WrapAction(specification));
+        }
+
+        protected IVerifyContext ThenInEachExample(string description, Func<Task> specification)
+        {
+            if (thenInEachExampleStack.Any(thenEach => thenEach.Keys.Any(previouslyUsedDescription => previouslyUsedDescription.Equals(description))))
+            {
+                throw new Exception("Reusing a then in each example description");
+            }
+
+            newThenInEachExamplesInThisContext[description] = specification;
+            return new VerifyContext(ThenInEachExample);
         }
 
         private static Func<Task> WrapAction(Action action)
