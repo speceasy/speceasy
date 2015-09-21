@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
@@ -23,15 +22,16 @@ namespace SpecEasy
                     "This method cannot be called before the test context is initialized.");
         }
 
+        private ResolveOptions resolveOptions;
         private ResolveOptions ResolveOptions
         {
             get
             {
-                return new ResolveOptions
+                return resolveOptions ?? (resolveOptions = new ResolveOptions
                 {
                     UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
                     FallbackResolutionAction = TryAutoMock
-                };
+                });
             }
         }
 
@@ -91,11 +91,10 @@ namespace SpecEasy
 
             if (typeof (TUnit).IsAbstract)
             {
-                MockingContainer.Register(typeof(TUnit), (ioc, npo) =>
+                MockingContainer.Register(typeof(TUnit), (ioc, namedParameterOverloads) =>
                 {
-                    var constructorInfos = typeof(TUnit).GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-                    var constructor = constructorInfos.OrderByDescending(ctor => ctor.GetParameters().Length).LastOrDefault();
-                    var args = ioc.ResolveConstructorParameters(constructor, npo, ResolveOptions);
+                    var constructor = ioc.GetConstructor(typeof (TUnit), namedParameterOverloads, ResolveOptions, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                    var args = ioc.ResolveConstructorParameters(constructor, namedParameterOverloads, ResolveOptions);
                     return MockRepository.GeneratePartialMock<TUnit>(args);
                 }).AsSingleton();
             }

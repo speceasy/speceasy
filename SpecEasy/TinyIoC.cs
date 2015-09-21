@@ -2568,7 +2568,7 @@ namespace TinyIoC
             {
                 try
                 {
-                    return _factory.Invoke(container, parameters);
+                    return _factory(container, parameters);
                 }
                 catch (Exception ex)
                 {
@@ -2631,10 +2631,10 @@ namespace TinyIoC
         /// </summary>
         private class SingletonDelegateFactory : ObjectFactoryBase
         {
-            private readonly object SingletonLock = new object();
+            private readonly object singletonLock = new object();
             private readonly Type registerType;
-            private readonly Func<TinyIoCContainer, NamedParameterOverloads, object> _factory;
-            private object _Current;
+            private readonly Func<TinyIoCContainer, NamedParameterOverloads, object> factory;
+            private object current;
 
             public override bool AssumeConstruction { get { return true; } }
 
@@ -2645,12 +2645,12 @@ namespace TinyIoC
                 if (parameters.Count != 0)
                     throw new ArgumentException("Cannot specify parameters for singleton types");
 
-                lock (SingletonLock)
-                    if (_Current == null)
+                lock (singletonLock)
+                    if (current == null)
                     {
                         try
                         {
-                            _Current = _factory.Invoke(container, parameters);
+                            current = factory(container, parameters);
                         }
                         catch (Exception ex)
                         {
@@ -2658,7 +2658,7 @@ namespace TinyIoC
                         }
                     }
 
-                return _Current;
+                return current;
             }
 
             public SingletonDelegateFactory(Type registerType, Func<TinyIoCContainer, NamedParameterOverloads, object> factory)
@@ -2666,7 +2666,7 @@ namespace TinyIoC
                 if (factory == null)
                     throw new ArgumentNullException("factory");
 
-                _factory = factory;
+                this.factory = factory;
 
                 this.registerType = registerType;
             }
@@ -2675,7 +2675,7 @@ namespace TinyIoC
             {
                 get
                 {
-                    return new DelegateFactory(registerType, _factory);
+                    return new DelegateFactory(registerType, factory);
                 }
             }
 
@@ -3678,7 +3678,7 @@ namespace TinyIoC
             return true;
         }
 
-        private ConstructorInfo GetBestConstructor(Type type, NamedParameterOverloads parameters, ResolveOptions options)
+        private ConstructorInfo GetBestConstructor(Type type, NamedParameterOverloads parameters, ResolveOptions options, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
@@ -3692,7 +3692,7 @@ namespace TinyIoC
 
             // Get constructors in reverse order based on the number of parameters
             // i.e. be as "greedy" as possible so we satify the most amount of dependencies possible
-            var ctors = this.GetTypeConstructors(type, CtorParameterSortCountOptions.HighestCountFirst);
+            var ctors = this.GetTypeConstructors(type, bindingFlags, CtorParameterSortCountOptions.HighestCountFirst);
 
             foreach (var ctor in ctors)
             {
@@ -3703,9 +3703,9 @@ namespace TinyIoC
             return null;
         }
 
-        private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type, CtorParameterSortCountOptions parameterCountSortOption)
+        private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type, BindingFlags bindingFlags, CtorParameterSortCountOptions parameterCountSortOption)
         {
-            var ctors = type.GetTypeInfo().DeclaredConstructors
+            var ctors = type.GetTypeInfo().GetConstructors(bindingFlags)
                 .Where(ctor => !ctor.IsPrivate)
                 .OrderBy(ScopeToSortvalue);
 
@@ -3759,11 +3759,7 @@ namespace TinyIoC
 #endif
             if (constructor == null)
             {
-                // Try and get the best constructor that we can construct
-                // if we can't construct any then get the constructor
-                // with the least number of parameters so we can throw a meaningful
-                // resolve exception
-                constructor = GetBestConstructor(typeToConstruct, parameters, options) ?? GetTypeConstructors(typeToConstruct, CtorParameterSortCountOptions.HighestCountLast).FirstOrDefault();
+                constructor = GetConstructor(typeToConstruct, parameters, options, BindingFlags.Instance | BindingFlags.Public);
             }
 
             if (constructor == null)
@@ -3802,10 +3798,21 @@ namespace TinyIoC
             }
         }
 
+        public ConstructorInfo GetConstructor(Type typeToConstruct, NamedParameterOverloads parameters, ResolveOptions options, BindingFlags bindingFlags)
+        {
+            // Try and get the best constructor that we can construct
+            // if we can't construct any then get the constructor
+            // with the least number of parameters so we can throw a meaningful
+            // resolve exception
+            return GetBestConstructor(typeToConstruct, parameters, options, bindingFlags) ??
+                   GetTypeConstructors(typeToConstruct, bindingFlags, CtorParameterSortCountOptions.HighestCountLast).FirstOrDefault();
+        }
+
         public object[] ResolveConstructorParameters(ConstructorInfo constructor, NamedParameterOverloads parameters, ResolveOptions options)
         {
-            object[] args = new object[constructor.GetParameters().Count()];
-            var ctorParams = constructor.GetParameters();
+            var constructorParams = constructor.GetParameters();
+            object[] args = new object[constructorParams.Count()];
+            var ctorParams = constructorParams;
             for (int parameterIndex = 0; parameterIndex < ctorParams.Count(); parameterIndex++)
             {
                 var currentParam = ctorParams[parameterIndex];

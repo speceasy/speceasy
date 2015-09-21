@@ -365,6 +365,35 @@ Either form will result in the following output:
     then it should return a string starting with fizz
       and it should return a string ending with buzz
 
+## Specifications for abstract classes
+
+Thanks to RhinoMocks support for partial mocks, it is possible to write specs for abstract classes. Consider the following class:
+
+    public abstract class AbstractAdderClass
+    {
+        public int Add10ToCalculatedInteger()
+        {
+            return CalculateInteger() + 10;
+        }
+
+        public abstract int CalculateInteger();
+    }
+
+It's possible to write specs for this class using the standard Spec<T> base class. SpecEasy will take care of creating a instance of the abstract class, which can then have abstract methods or properties stubbed out using RhinoMocks. The following specs provide an example of this:
+
+    public class PartialMockSpec : Spec<AbstractAdderClass>
+    {
+        public void Add10ToCalculatedInteger()
+        {
+            var result = 0;
+
+            When("adding 10 to the calculated integer", () => result = SUT.Add10ToCalculatedInteger());
+
+            Given("the calculated integer is 10", () => SUT.Stub(s => s.CalculateInteger()).Return(10)).Verify(() =>
+                Then("the result is 20", () => Assert.AreEqual(20, result)));
+        }
+    }
+
 ## BDD-style assertions
 
 In the interest of remaining lightweight and flexible, SpecEasy doesn't implement or enforce a certain style of writing assertions. You are free to use any type of assertions that throw an exception upon failure. The examples above use the standard NUnit `Assert` class for familiarity.
