@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 using TinyIoC;
@@ -21,14 +22,23 @@ namespace SpecEasy
                     "This method cannot be called before the test context is initialized.");
         }
 
+        private ResolveOptions resolveOptions;
+        private ResolveOptions ResolveOptions
+        {
+            get
+            {
+                return resolveOptions ?? (resolveOptions = new ResolveOptions
+                {
+                    UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
+                    FallbackResolutionAction = TryAutoMock
+                });
+            }
+        }
+
         protected T Get<T>()
         {
             RequireMockingContainer();
-            return (T)MockingContainer.Resolve(typeof(T), new ResolveOptions
-            {
-                UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
-                FallbackResolutionAction = TryAutoMock
-            });
+            return (T)MockingContainer.Resolve(typeof(T), ResolveOptions);
             //Preferred, but only allows reference types: return MockingContainer.Resolve<T>();
         }
 
@@ -78,7 +88,20 @@ namespace SpecEasy
         {
             base.BeforeEachExample();
             MockingContainer = new TinyIoCContainer();
-            MockingContainer.Register(typeof(TUnit)).AsSingleton();
+
+            if (typeof (TUnit).IsAbstract)
+            {
+                MockingContainer.Register(typeof(TUnit), (ioc, namedParameterOverloads) =>
+                {
+                    var constructor = ioc.GetConstructor(typeof (TUnit), namedParameterOverloads, ResolveOptions, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                    var args = ioc.ResolveConstructorParameters(constructor, namedParameterOverloads, ResolveOptions);
+                    return MockRepository.GeneratePartialMock<TUnit>(args);
+                }).AsSingleton();
+            }
+            else
+            {
+                MockingContainer.Register(typeof(TUnit)).AsSingleton();
+            }
         }
 
         protected void EnsureSUT()

@@ -123,6 +123,8 @@
     <Compile Include="ExceptionReporting\TestResultExtensions.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
+    <Compile Include="GenericSpec\PartialMockSpec.cs" />
+    <Compile Include="GenericSpec\PartialMockWithConstructorParamsSpec.cs" />
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="ExternalSpec\MagicNumberAdderSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
