@@ -13,7 +13,9 @@
     <description>$description$</description>
     <releaseNotes>
 Version 2.1.0 of SpecEasy includes:
-  - A fix that prevents exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
+  - Prevent exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
+  - Added the ability to detect and use non-public constructors when constructing the SUT.
+  - Enable the testing of abstract classes. 
   - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
   - Several other minor fixes.
     </releaseNotes>

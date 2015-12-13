@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug 4.5.1</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DA1E399D-5136-470E-B780-154BF8DDC5EE}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -14,8 +14,9 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug 4.5.1|AnyCPU'">
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug 4.5.1\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -23,8 +24,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug 4.5|AnyCPU'">
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug 4.5\</OutputPath>
+    <OutputPath>bin\Debug45\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,10 +34,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release 4.5|AnyCPU'">
-    <OutputPath>bin\Release 4.5\</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <OutputPath>bin\Release45\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release 4.5.1|AnyCPU'">
-    <OutputPath>bin\Release 4.5.1\</OutputPath>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
