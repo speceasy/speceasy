@@ -128,6 +128,7 @@
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="ExternalSpec\MagicNumberAdderSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThenInEachExample\ThenInEachExampleSpec.cs" />
     <Compile Include="TinyIoC\PublicAndInternalCtors.cs" />
     <Compile Include="TinyIoC\PublicAndPrivateCtors.cs" />
     <Compile Include="TinyIoC\SinglePrivateCtor.cs" />
