@@ -3759,7 +3759,7 @@ namespace TinyIoC
 #endif
             if (constructor == null)
             {
-                constructor = GetConstructor(typeToConstruct, parameters, options, BindingFlags.Instance | BindingFlags.Public);
+                constructor = GetConstructor(typeToConstruct, parameters, options, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             }
 
             if (constructor == null)
