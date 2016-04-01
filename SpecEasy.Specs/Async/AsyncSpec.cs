@@ -9,7 +9,7 @@ namespace SpecEasy.Specs.Async
     {
         private const string Name = "placeholder";
         private const string Value = "The quick brown fox jumped over the lazy dog.";
-     
+
         public void ReturnOne()
         {
             string result = string.Empty;
