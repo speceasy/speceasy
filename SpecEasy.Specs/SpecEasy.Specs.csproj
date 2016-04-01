@@ -118,9 +118,10 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutInBeforeEachExampleSpec.cs" />
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSetup.cs" />
     <Compile Include="ExceptionAssertions\ExceptionAssertionsSpec.cs" />
-    <Compile Include="ExceptionReporting\ExceptionReporting.cs" />
-    <Compile Include="ExceptionReporting\NUnitBrokenClassTests.cs" />
-    <Compile Include="ExceptionReporting\TestResultExtensions.cs" />
+    <Compile Include="ExceptionReporting\SupportingExamples\BrokenClass.cs" />
+    <Compile Include="ExceptionReporting\SupportingExamples\BrokenClassSpec.cs" />
+    <Compile Include="ExceptionReporting\ExceptionReportingTests.cs" />
+    <Compile Include="ExceptionReporting\SupportingExamples\BrokenClassTests.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
     <Compile Include="GenericSpec\PartialMockSpec.cs" />
@@ -128,6 +129,9 @@
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
     <Compile Include="ExternalSpec\MagicNumberAdderSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecRunner.cs" />
+    <Compile Include="SupportingExampleAttribute.cs" />
+    <Compile Include="TestResultExtensions.cs" />
     <Compile Include="TinyIoC\PublicAndInternalCtors.cs" />
     <Compile Include="TinyIoC\PublicAndPrivateCtors.cs" />
     <Compile Include="TinyIoC\SinglePrivateCtor.cs" />
