@@ -1,9 +1,9 @@
 using NUnit.Framework;
 
-namespace Examples
+namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
 {
-    [TestFixture]
-    internal class NUnitBrokenClassTests
+    [TestFixture, SupportingExample]
+    internal class BrokenClassTests
     {
         [Test]
         public void GivenFalseItReturnsTrue()
