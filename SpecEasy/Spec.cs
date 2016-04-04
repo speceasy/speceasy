@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -181,7 +180,11 @@ namespace SpecEasy
 
         protected IContext Given(string description, Func<Task> setup)
         {
-            if (contexts.ContainsKey(description)) throw new Exception("Reusing a given description");
+            if (contexts.ContainsKey(description))
+            {
+                return contexts[description] = new Context(ThrowDuplicateDescriptionException("given", description));
+            }
+
             return contexts[description] = new Context(setup);
         }
 
@@ -222,8 +225,22 @@ namespace SpecEasy
 
         protected IVerifyContext Then(string description, Func<Task> specification)
         {
-            then[description] = specification;
+            if (then.ContainsKey(description))
+            {
+                then[description] = ThrowDuplicateDescriptionException("then", description);
+            }
+            else
+            {
+                then[description] = specification;
+            }
+
             return new VerifyContext(Then);
+        }
+
+        private static Func<Task> ThrowDuplicateDescriptionException(string typeOfDuplicate, string description)
+        {
+            var stackTrace = Environment.StackTrace;
+            return () => { throw new DuplicateDescriptionException(typeOfDuplicate, description, stackTrace); };
         }
 
         private static Func<Task> WrapAction(Action action)

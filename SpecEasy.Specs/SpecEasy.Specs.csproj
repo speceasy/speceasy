@@ -117,6 +117,7 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\GetSetInBeforeEachExampleSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutInBeforeEachExampleSpec.cs" />
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSetup.cs" />
+    <Compile Include="DuplicateDescriptions\SupportingExamples\DuplicateDescriptionsSpec.cs" />
     <Compile Include="ExceptionAssertions\ExceptionAssertionsSpec.cs" />
     <Compile Include="ExceptionReporting\SupportingExamples\BrokenClass.cs" />
     <Compile Include="ExceptionReporting\SupportingExamples\BrokenClassSpec.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="ExceptionReporting\SupportingExamples\BrokenClassTests.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
+    <Compile Include="DuplicateDescriptions\DuplicateDescriptionsTests.cs" />
     <Compile Include="GenericSpec\PartialMockSpec.cs" />
     <Compile Include="GenericSpec\PartialMockWithConstructorParamsSpec.cs" />
     <Compile Include="GivenCount\GivenCountSpecs.cs" />
