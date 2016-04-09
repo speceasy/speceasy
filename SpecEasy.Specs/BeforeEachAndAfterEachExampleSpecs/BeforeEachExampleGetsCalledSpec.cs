@@ -18,7 +18,6 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
             testValue = 50;
         }
     }

@@ -14,7 +14,6 @@ namespace SpecEasy.Specs.DatabaseIntegration
 
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
 			dbConnection = new SqlCeConnection(DatabaseIntegrationSetup.TestDbConnectionString);
             dbConnection.Open();
             transaction = dbConnection.BeginTransaction();
@@ -22,7 +21,6 @@ namespace SpecEasy.Specs.DatabaseIntegration
 
         protected override void AfterEachExample()
         {
-            base.AfterEachExample();
             transaction.Rollback();
             transaction.Dispose();
             dbConnection.Close();

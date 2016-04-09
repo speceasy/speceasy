@@ -35,7 +35,6 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
             timesCalled++;
         }
          

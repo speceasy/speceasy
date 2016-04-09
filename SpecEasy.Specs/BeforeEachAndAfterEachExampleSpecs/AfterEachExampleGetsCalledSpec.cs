@@ -32,7 +32,6 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
         protected override void AfterEachExample()
         {
-            base.AfterEachExample();
             timesSet = 0; 
         }
     }

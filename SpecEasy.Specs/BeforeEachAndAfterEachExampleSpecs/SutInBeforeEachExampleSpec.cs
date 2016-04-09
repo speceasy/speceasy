@@ -6,7 +6,6 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
     {
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
             SUT = new SutWithValueTypeDependency(123);
         }
 

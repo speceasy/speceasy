@@ -84,9 +84,10 @@ namespace SpecEasy
             mock.AssertWasNotCalled(action, methodOptions);
         }
 
-        protected override void BeforeEachExample()
+        internal override void BeforeEachInit()
         {
-            base.BeforeEachExample();
+            base.BeforeEachInit();
+
             MockingContainer = new TinyIoCContainer();
 
             if (typeof (TUnit).IsAbstract)

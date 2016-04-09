@@ -7,7 +7,6 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
     {
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
             Get<IDependency>().Stub(dep => dep.GetValue()).Return(123);
             Set<IAnotherDependency>(new AnotherDependency(789));
         }
