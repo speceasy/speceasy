@@ -28,36 +28,36 @@ namespace SpecEasy
         private IList<TestCaseData> BuildTestCases()
         {
             CreateMethodContexts();
-            return BuildTestCases(new List<Context>(), 0);
+            return BuildTestCasesForContexts(new List<Context>(), 0);
         }
 
-        private IList<TestCaseData> BuildTestCases(IList<Context> contextList, int depth)
+        private IList<TestCaseData> BuildTestCasesForContexts(IList<Context> parentContexts, int depth)
         {
             var testCases = new List<TestCaseData>();
 
             var cachedWhen = when;
-            foreach (var context in contexts.ToList()) // make a copy of contexts list so we can reassign in the loop
+            foreach (var currentContext in contexts.ToList()) // make a copy of contexts list so we can reassign in the loop
             {
-                var givenContext = context;
                 then = new Dictionary<string, Func<Task>>();
                 contexts = new List<Context>();
                 when = cachedWhen;
 
-                givenContext.EnterContext();
+                currentContext.EnterContext();
 
                 if (depth > 0)
-                    contextList.Add(context);
+                    parentContexts.Add(currentContext);
 
-                testCases.AddRange(BuildTestCases(contextList));
-                testCases.AddRange(BuildTestCases(contextList, depth + 1));
-                if (contextList.Any())
-                    contextList.Remove(context);
+                testCases.AddRange(BuildTestCasesForThens(parentContexts));
+                testCases.AddRange(BuildTestCasesForContexts(parentContexts, depth + 1));
+
+                if (parentContexts.Any())
+                    parentContexts.Remove(currentContext);
             }
 
             return testCases;
         }
 
-        private IList<TestCaseData> BuildTestCases(IList<Context> contextList)
+        private IList<TestCaseData> BuildTestCasesForThens(IList<Context> parentContexts)
         {
             var testCases = new List<TestCaseData>();
 
@@ -66,7 +66,7 @@ namespace SpecEasy
             var setupText = new StringBuilder();
 
             var first = true;
-            foreach (var context in contextList.Where(c => c.IsNamedContext))
+            foreach (var context in parentContexts.Where(c => c.IsNamedContext))
             {
                 setupText.AppendLine(context.Conjunction(first) + context.Description);
                 first = false;
@@ -78,7 +78,7 @@ namespace SpecEasy
 
             foreach (var spec in then)
             {
-                var contextListCapture = new List<Context>(contextList);
+                var parentContextsCapture = new List<Context>(parentContexts);
                 var whenCapture = new KeyValuePair<string, Func<Task>>(when.Key, when.Value);
 
                 Func<Task> executeTest = async () =>
@@ -89,7 +89,7 @@ namespace SpecEasy
                     {
                         var exceptionThrownAndAsserted = false;
 
-                        await InitializeContext(contextListCapture).ConfigureAwait(false);
+                        await InitializeContext(parentContextsCapture).ConfigureAwait(false);
 
                         try
                         {
