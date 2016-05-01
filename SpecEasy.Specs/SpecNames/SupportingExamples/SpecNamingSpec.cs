@@ -3,9 +3,9 @@
     [SupportingExample]
     internal class SpecNamingSpec : Spec
     {
-        public static string ExpectedSpecName = "given a context\r\n  and a sub context\r\n  and another sub context\r\n  but yet another sub context\r\nwhen running the test\r\nthen the test passes\r\n";
+        public static string ExpectedSpecName = "SpecMethod:\r\ngiven a context\r\n  and a sub context\r\n  and another sub context\r\n  but yet another sub context\r\nwhen running the test\r\nthen the test passes\r\n";
 
-        public void RunSpec()
+        public void SpecMethod()
         {
             When("running the test", () => { });
 

@@ -28,10 +28,10 @@ namespace SpecEasy
         private IList<TestCaseData> BuildTestCases()
         {
             CreateMethodContexts();
-            return BuildTestCasesForContexts(new List<Context>(), 0);
+            return BuildTestCasesForContexts(new List<Context>());
         }
 
-        private IList<TestCaseData> BuildTestCasesForContexts(IList<Context> parentContexts, int depth)
+        private IList<TestCaseData> BuildTestCasesForContexts(IList<Context> parentContexts)
         {
             var testCases = new List<TestCaseData>();
 
@@ -43,15 +43,12 @@ namespace SpecEasy
                 when = cachedWhen;
 
                 currentContext.EnterContext();
-
-                if (depth > 0)
-                    parentContexts.Add(currentContext);
+                parentContexts.Add(currentContext);
 
                 testCases.AddRange(BuildTestCasesForThens(parentContexts));
-                testCases.AddRange(BuildTestCasesForContexts(parentContexts, depth + 1));
+                testCases.AddRange(BuildTestCasesForContexts(parentContexts));
 
-                if (parentContexts.Any())
-                    parentContexts.Remove(currentContext);
+                parentContexts.Remove(currentContext);
             }
 
             return testCases;
@@ -65,8 +62,10 @@ namespace SpecEasy
 
             var setupText = new StringBuilder();
 
+            setupText.AppendLine(parentContexts.First().Description + ":"); // start with the spec method's name
+
             var first = true;
-            foreach (var context in parentContexts.Where(c => c.IsNamedContext))
+            foreach (var context in parentContexts.Skip(1).Where(c => c.IsNamedContext))
             {
                 setupText.AppendLine(context.Conjunction(first) + context.Description);
                 first = false;
