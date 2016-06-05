@@ -32,7 +32,7 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
         protected override void AfterEachExample()
         {
-            timesSet = 0; 
+            timesSet = 0;
         }
     }
 }

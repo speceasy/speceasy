@@ -12,7 +12,7 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
             Then("it should run BeforeEachExample", () => testValue.ShouldEqual(50));
 
-            Given("a given changes the value set in BeforeEachExample", () => testValue = 75).Verify(() => 
+            Given("a given changes the value set in BeforeEachExample", () => testValue = 75).Verify(() =>
                 Then("it should not have the value from BeforeEachExample", () => testValue.ShouldEqual(75)));
         }
 

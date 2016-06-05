@@ -19,7 +19,7 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
                 Then("it should should call BeforeEachExample a fourth time", () => timesCalled.ShouldEqual(verifyCall++));
                 Then("it should should call BeforeEachExample a fifth time", () => timesCalled.ShouldEqual(verifyCall++));
                 Then("it should should call BeforeEachExample a sixth time", () => timesCalled.ShouldEqual(verifyCall++));
-                Given("there is a second level of given methods", () => timesCalled.ShouldEqual(verifyCall)).Verify(() => 
+                Given("there is a second level of given methods", () => timesCalled.ShouldEqual(verifyCall)).Verify(() =>
                     Then("it should call BeforeEachExample a seventh time.", () => timesCalled.ShouldEqual(verifyCall++)));
             });
         }
@@ -28,8 +28,8 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
         {
             When("running a test that overrides BeforeEachExample", () => timesCalled.ShouldEqual(verifyCall));
 
-            Given("there is a first level of given methods", () => timesCalled.ShouldEqual(verifyCall)).Verify(() => 
-                Given("there is a second level of given methods", () => timesCalled.ShouldEqual(verifyCall)).Verify(() => 
+            Given("there is a first level of given methods", () => timesCalled.ShouldEqual(verifyCall)).Verify(() =>
+                Given("there is a second level of given methods", () => timesCalled.ShouldEqual(verifyCall)).Verify(() =>
                     Then("it should call BeforeEachExample one time.", () => timesCalled.ShouldEqual(verifyCall++))));
         }
 
@@ -37,6 +37,5 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
         {
             timesCalled++;
         }
-         
     }
 }
