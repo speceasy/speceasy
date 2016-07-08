@@ -20,7 +20,7 @@ namespace SpecEasy
         private bool exceptionAsserted;
         private bool hasCalledBefore;
 
-        [Test, TestCaseSource("TestCases")]
+        [Test, SpecTestCaseSource]
         public async Task Verify(Func<Task> test)
         {
             await test().ConfigureAwait(false);

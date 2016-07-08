@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-syntax:glob
-
-_ReSharper*
-bin
-obj
-packages/*
-*.suo
-*.csproj.user
-=======
 #################
 ## Visual Studio
 #################
@@ -19,6 +9,7 @@ packages/*
 *.suo
 *.user
 *.sln.docstates
+.vs/
 
 # Build results
 [Dd]ebug/
@@ -102,4 +93,3 @@ Desktop.ini
 
 # Mac
 .DS_Store
->>>>>>> upstream/master
