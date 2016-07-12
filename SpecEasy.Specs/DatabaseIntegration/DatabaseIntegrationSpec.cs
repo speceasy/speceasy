@@ -14,7 +14,6 @@ namespace SpecEasy.Specs.DatabaseIntegration
 
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
 			dbConnection = new SqlCeConnection(DatabaseIntegrationSetup.TestDbConnectionString);
             dbConnection.Open();
             transaction = dbConnection.BeginTransaction();
@@ -22,7 +21,6 @@ namespace SpecEasy.Specs.DatabaseIntegration
 
         protected override void AfterEachExample()
         {
-            base.AfterEachExample();
             transaction.Rollback();
             transaction.Dispose();
             dbConnection.Close();
@@ -35,7 +33,7 @@ namespace SpecEasy.Specs.DatabaseIntegration
 
 		    const string firstPostBody = "this is the body of the first post.";
 		    const string secondPostBody = "body of the second post.";
-            
+
             When("querying a database within a spec", () => queryResult = GetPosts());
 
             Given("a post is created in a test context.", () => CreatePost(firstPostBody)).Verify(() =>
@@ -50,11 +48,11 @@ namespace SpecEasy.Specs.DatabaseIntegration
 		private IList<dynamic> GetPosts()
 		{
 		    return dbConnection.Query("select Id, CreateDate, Author, Body from Posts", transaction: transaction).ToList();
-		} 
+		}
 
 		private void CreatePost(string body)
 		{
-		    dbConnection.Execute("insert Posts (CreateDate, Author, Body) values (@CreateDate, @Author, @Body)", new 
+		    dbConnection.Execute("insert Posts (CreateDate, Author, Body) values (@CreateDate, @Author, @Body)", new
 		        {
 		            CreateDate = DateTime.UtcNow,
 		            Author = "Spec Easy",

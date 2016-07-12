@@ -7,7 +7,6 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
     {
         protected override void BeforeEachExample()
         {
-            base.BeforeEachExample();
             Get<IDependency>().Stub(dep => dep.GetValue()).Return(123);
             Set<IAnotherDependency>(new AnotherDependency(789));
         }
@@ -17,7 +16,7 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
             var result = 0;
 
             When("using a dependency", () => result = SUT.UseDependency());
-            
+
             Given("dependencies were set up in BeforeEachExample").Verify(() =>
                 Then("it should get a value from the first dependency that was set up", () => result.ShouldEqual(123)).
                 Then("it should get a value from the second dependency that was set up", () => SUT.UseAnotherDependency().ShouldEqual(789)));

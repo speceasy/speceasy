@@ -82,7 +82,7 @@ namespace SpecEasy
 
                 Func<Task> executeTest = async () =>
                 {
-                    Before();
+                    BeforeIfNotAlreadyRun();
 
                     try
                     {
@@ -309,10 +309,11 @@ namespace SpecEasy
         }
 
         private bool hasCalledBefore;
-        private void Before()
+        private void BeforeIfNotAlreadyRun()
         {
             if (!hasCalledBefore)
             {
+                BeforeEachInit();
                 BeforeEachExample();
                 hasCalledBefore = true;
             }
@@ -327,14 +328,17 @@ namespace SpecEasy
             }
         }
 
+        internal virtual void BeforeEachInit() { }
+
         protected virtual void BeforeEachExample() { }
+
         protected virtual void AfterEachExample() { }
 
         private async Task InitializeContext(IEnumerable<Context> contextList)
         {
             foreach (var context in contextList)
             {
-                Before();
+                BeforeIfNotAlreadyRun();
                 await context.SetupContext().ConfigureAwait(false);
             }
         }
