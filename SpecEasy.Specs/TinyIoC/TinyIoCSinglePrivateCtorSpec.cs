@@ -3,7 +3,6 @@ using Should;
 
 namespace SpecEasy.Specs.TinyIoC
 {
-#if DEBUG
     internal class TinyIoCSinglePrivateCtorSpec : Spec<SinglePrivateCtor>
     {
         public void ConstructorSelection()
@@ -14,6 +13,4 @@ namespace SpecEasy.Specs.TinyIoC
                 Then("an exception should be thrown because we will not use private ctors to build the SUT instance", () => AssertWasThrown<Exception>(ex => ex.GetType().FullName.ShouldStartWith("TinyIoC.TinyIoCResolutionException"))));
         }
     }
-
-#endif
 }
