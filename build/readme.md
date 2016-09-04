@@ -14,5 +14,7 @@
   1. Run `build.nuget.bat`. This will create the NuGet package - `SpecEasy.x.x.x.x.nupkg`.
   1. Push to nuget.org.
 
-     ```..\.nuget\NuGet.exe push SpecEasy.x.x.x.x.nupkg -s http://www.nuget.org/packages/SpecEasy [api key]```
+     ```
+     ..\.nuget\NuGet.exe push SpecEasy.x.x.x.x.nupkg -s http://www.nuget.org/packages/SpecEasy [api key]
+     ```
 
