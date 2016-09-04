@@ -6,20 +6,20 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/trackabout/speceasy/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/trackabout/speceasy</projectUrl>
-    <iconUrl>https://raw.github.com/trackabout/speceasy/master/speceasy_logo_sq_128.png</iconUrl>
+    <licenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/speceasy/speceasy</projectUrl>
+    <iconUrl>https://raw.github.com/speceasy/speceasy/master/speceasy_logo_sq_128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
 Version 2.1.0 of SpecEasy includes:
   - Prevent exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
   - Added the ability to detect and use non-public constructors when constructing the SUT.
-  - Enable the testing of abstract classes. 
+  - Enable the testing of abstract classes.
   - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
   - Several other minor fixes.
     </releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>bdd tdd unit test testing fluent</tags>
   </metadata>
   <files>
