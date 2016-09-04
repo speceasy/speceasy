@@ -17,7 +17,9 @@ Version 2.1.0 of SpecEasy includes:
   - Added the ability to detect and use non-public constructors when constructing the SUT.
   - Enable the testing of abstract classes.
   - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
-  - Several other minor fixes.
+  - Include spec method names as prefix for test case description.
+  - Added `And` and `But` spec context methods. These methods set up context identically to the original `Given` methods but are provided as a way to improve readability.
+  - Several other minor fixes and improvements.
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>bdd tdd unit test testing fluent</tags>
