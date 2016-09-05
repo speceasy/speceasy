@@ -139,7 +139,12 @@ namespace SpecEasy
         protected TUnit SUT
         {
             get { return GetSUTInstance(); }
-            set { Set(value); }
+            set
+            {
+                constructedSUTInstance = value;
+                Set(value);
+                alreadyConstructedSUT = true;
+            }
         }
     }
 }
