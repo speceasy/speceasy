@@ -95,19 +95,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
-    <Compile Include="Context.cs" />
     <Compile Include="DuplicateDescriptionException.cs" />
+    <Compile Include="IContext.cs" />
+    <Compile Include="Internal\Context.cs" />
+    <Compile Include="Internal\VerifyContext.cs" />
+    <Compile Include="IVerifyContext.cs" />
     <Compile Include="TinyIoC.cs" />
-    <Compile Include="VerifyContext.cs" />
     <Compile Include="Spec.cs" />
     <Compile Include="GenericSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="Spec.TestCaseGeneration.cs" />
+    <None Include="SpecEasy.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

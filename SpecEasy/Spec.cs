@@ -1,173 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using SpecEasy.Internal;
 
 namespace SpecEasy
 {
-    [TestFixture]
-    public class Spec
+    public partial class Spec
     {
-        [Test, TestCaseSource("TestCases")]
-        public async Task Verify(Func<Task> test)
+        internal virtual void BeforeEachInit() { }
+
+        protected virtual void BeforeEachExample() { }
+
+        protected virtual void AfterEachExample() { }
+
+        protected IContext Given(string description)
         {
-            await test().ConfigureAwait(false);
+            return Given(description, () => { });
         }
-
-        public IList<TestCaseData> TestCases
-        {
-            get
-            {
-                return BuildTestCases();
-            }
-        }
-
-        private IList<TestCaseData> BuildTestCases()
-        {
-            CreateMethodContexts();
-            return BuildTestCasesForContexts(new List<Context>());
-        }
-
-        private IList<TestCaseData> BuildTestCasesForContexts(IList<Context> parentContexts)
-        {
-            var testCases = new List<TestCaseData>();
-
-            var cachedWhen = when;
-            foreach (var currentContext in contexts.ToList()) // make a copy of contexts list so we can reassign in the loop
-            {
-                then = new Dictionary<string, Func<Task>>();
-                contexts = new List<Context>();
-                when = cachedWhen;
-
-                currentContext.EnterContext();
-                parentContexts.Add(currentContext);
-
-                testCases.AddRange(BuildTestCasesForThens(parentContexts));
-                testCases.AddRange(BuildTestCasesForContexts(parentContexts));
-
-                parentContexts.Remove(currentContext);
-            }
-
-            return testCases;
-        }
-
-        private IList<TestCaseData> BuildTestCasesForThens(IList<Context> parentContexts)
-        {
-            var testCases = new List<TestCaseData>();
-
-            if (!then.Any()) return testCases;
-
-            var setupText = new StringBuilder();
-
-            setupText.AppendLine(parentContexts.First().Description + ":"); // start with the spec method's name
-
-            var first = true;
-            foreach (var context in parentContexts.Skip(1).Where(c => c.IsNamedContext))
-            {
-                setupText.AppendLine(context.Conjunction(first) + context.Description);
-                first = false;
-            }
-
-            setupText.AppendLine("when " + when.Key);
-
-            const string thenText = "then ";
-
-            foreach (var spec in then)
-            {
-                var parentContextsCapture = new List<Context>(parentContexts);
-                var whenCapture = new KeyValuePair<string, Func<Task>>(when.Key, when.Value);
-
-                Func<Task> executeTest = async () =>
-                {
-                    BeforeIfNotAlreadyRun();
-
-                    try
-                    {
-                        var exceptionThrownAndAsserted = false;
-
-                        await InitializeContext(parentContextsCapture).ConfigureAwait(false);
-
-                        try
-                        {
-                            thrownException = null;
-                            await whenCapture.Value().ConfigureAwait(false);
-                        }
-                        catch (Exception ex)
-                        {
-                            thrownException = ex;
-                        }
-
-                        try
-                        {
-                            exceptionAsserted = false;
-                            await spec.Value().ConfigureAwait(false);
-                        }
-                        catch (Exception)
-                        {
-                            if (thrownException == null || exceptionAsserted)
-                                throw;
-                        }
-
-                        if (thrownException != null)
-                        {
-                            throw thrownException;
-                        }
-
-                        exceptionThrownAndAsserted = true;
-
-                        if (!exceptionThrownAndAsserted)
-                        {
-                            await spec.Value().ConfigureAwait(false);
-                        }
-                    }
-                    finally
-                    {
-                        After();
-                    }
-                };
-
-                var description = setupText + thenText + spec.Key + Environment.NewLine;
-                testCases.Add(new TestCaseData(executeTest).SetName(description));
-            }
-
-            return testCases;
-        }
-
-        protected void AssertWasThrown<T>() where T : Exception
-        {
-            AssertWasThrown<T>(null);
-        }
-
-        protected void AssertWasThrown<T>(Action<T> expectation) where T : Exception
-        {
-            exceptionAsserted = true;
-            var expectedException = thrownException as T;
-            if (expectedException == null)
-                throw new Exception("Expected exception was not thrown");
-
-            if (expectation != null)
-            {
-                try
-                {
-                    expectation(expectedException);
-                }
-                catch (Exception exc)
-                {
-                    var message = string.Format("The expected exception type was thrown but the specified constraint failed. Constraint Exception: {0}{1}",
-                        Environment.NewLine, exc.Message);
-                    throw new Exception(message, exc);
-                }
-            }
-
-            thrownException = null;
-        }
-
-        private Dictionary<string, Func<Task>> then = new Dictionary<string, Func<Task>>();
-        private List<Context> contexts = new List<Context>();
-        private KeyValuePair<string, Func<Task>> when;
 
         protected IContext Given(string description, Action setup)
         {
@@ -207,11 +57,6 @@ namespace SpecEasy
             var context = new Context(setup);
             contexts.Add(context);
             return context;
-        }
-
-        protected IContext Given(string description)
-        {
-            return Given(description, () => { });
         }
 
         protected IContext And(string description, Action setup)
@@ -268,16 +113,55 @@ namespace SpecEasy
 
         protected IVerifyContext Then(string description, Func<Task> specification)
         {
-            if (then.ContainsKey(description))
+            if (thens.ContainsKey(description))
             {
-                then[description] = ThrowDuplicateDescriptionException("then", description);
+                thens[description] = ThrowDuplicateDescriptionException("then", description);
             }
             else
             {
-                then[description] = specification;
+                thens[description] = specification;
             }
 
             return new VerifyContext(Then);
+        }
+
+        protected void AssertWasThrown<T>() where T : Exception
+        {
+            AssertWasThrown<T>(null);
+        }
+
+        protected void AssertWasThrown<T>(Action<T> expectation) where T : Exception
+        {
+            exceptionAsserted = true;
+            var expectedException = thrownException as T;
+            if (expectedException == null)
+            {
+                var message = string.Format("Expected exception of type {0} was not thrown: {1}",
+                    typeof(T).FullName,
+                    thrownException != null ? string.Format("an exception of type {0} was thrown instead (see inner exception for details).", thrownException.GetType().FullName) : "no exception was thrown."
+                );
+                throw new Exception(message, thrownException);
+            }
+
+            if (expectation != null)
+            {
+                try
+                {
+                    expectation(expectedException);
+                }
+                catch (Exception expectationException)
+                {
+                    var message = string.Format(
+                        "The expected exception of type {0} was thrown but the specified constraint failed. Constraint Exception: {1}{2}",
+                        typeof(T).FullName,
+                        Environment.NewLine,
+                        expectationException.Message
+                    );
+                    throw new Exception(message, expectationException);
+                }
+            }
+
+            thrownException = null;
         }
 
         private static Func<Task> ThrowDuplicateDescriptionException(string typeOfDuplicate, string description)
@@ -289,58 +173,6 @@ namespace SpecEasy
         private static Func<Task> WrapAction(Action action)
         {
             return async () => action();
-        }
-
-        private Exception thrownException;
-        private bool exceptionAsserted;
-
-        private void CreateMethodContexts()
-        {
-            var type = GetType();
-            var methods = type.GetMethods();
-            var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] { };
-            var declaredMethods = methods.Where(m => baseMethods.All(bm => bm.Name != m.Name))
-                .Where(m => !m.GetParameters().Any() && m.ReturnType == typeof(void));
-            foreach (var m in declaredMethods)
-            {
-                var method = m;
-                Given(method.Name).Verify(() => method.Invoke(this, null));
-            }
-        }
-
-        private bool hasCalledBefore;
-        private void BeforeIfNotAlreadyRun()
-        {
-            if (!hasCalledBefore)
-            {
-                BeforeEachInit();
-                BeforeEachExample();
-                hasCalledBefore = true;
-            }
-        }
-
-        private void After()
-        {
-            if (hasCalledBefore)
-            {
-                AfterEachExample();
-                hasCalledBefore = false;
-            }
-        }
-
-        internal virtual void BeforeEachInit() { }
-
-        protected virtual void BeforeEachExample() { }
-
-        protected virtual void AfterEachExample() { }
-
-        private async Task InitializeContext(IEnumerable<Context> contextList)
-        {
-            foreach (var context in contextList)
-            {
-                BeforeIfNotAlreadyRun();
-                await context.SetupContext().ConfigureAwait(false);
-            }
         }
     }
 }

@@ -8,23 +8,22 @@ namespace SpecEasy
 {
     public class Spec<TUnit> : Spec
     {
-        private TinyIoCContainer MockingContainer;
+        private TinyIoCContainer mockingContainer;
+        private ResolveOptions resolveOptions;
         private bool alreadyConstructedSUT;
         private TUnit constructedSUTInstance;
 
-        protected T Mock<T>() where T : class
+        protected TUnit SUT
         {
-            return MockRepository.GenerateMock<T>();
+            get { return GetSUTInstance(); }
+            set
+            {
+                constructedSUTInstance = value;
+                Set(value);
+                alreadyConstructedSUT = true;
+            }
         }
 
-        private void RequireMockingContainer()
-        {
-            if (MockingContainer == null)
-                throw new InvalidOperationException(
-                    "This method cannot be called before the test context is initialized.");
-        }
-
-        private ResolveOptions resolveOptions;
         private ResolveOptions ResolveOptions
         {
             get
@@ -37,46 +36,32 @@ namespace SpecEasy
             }
         }
 
-        protected T Get<T>()
-        {
-            RequireMockingContainer();
-            return (T)MockingContainer.Resolve(typeof(T), ResolveOptions);
-            //Preferred, but only allows reference types: return MockingContainer.Resolve<T>();
-        }
-
-        private object TryAutoMock(TinyIoCContainer.TypeRegistration registration, TinyIoCContainer container)
-        {
-            var type = registration.Type;
-            return type.IsInterface || type.IsAbstract ? MockRepository.GenerateMock(type, new Type[0]) : null;
-        }
-
-        private TUnit GetSUTInstance()
-        {
-            if (!alreadyConstructedSUT)
-            {
-                constructedSUTInstance = ConstructSUT();
-
-                if (constructedSUTInstance == null)
-                {
-                    throw new InvalidOperationException("Failed to construct SUT: ConstructSUT returned null");
-                }
-
-                Set(constructedSUTInstance);
-                alreadyConstructedSUT = true;
-            }
-
-            return constructedSUTInstance;
-        }
-
         protected virtual TUnit ConstructSUT()
         {
             return Get<TUnit>();
         }
 
+        protected void EnsureSUT()
+        {
+            SUT = SUT;
+        }
+
+        protected T Mock<T>() where T : class
+        {
+            return MockRepository.GenerateMock<T>();
+        }
+
+        protected T Get<T>()
+        {
+            RequireMockingContainer();
+            return (T)mockingContainer.Resolve(typeof(T), ResolveOptions);
+            //Preferred, but only allows reference types: return MockingContainer.Resolve<T>();
+        }
+
         protected void Set<T>(T item)
         {
             RequireMockingContainer();
-            MockingContainer.Register(typeof(T), item);
+            mockingContainer.Register(typeof(T), item);
         }
 
         protected void Raise<T>(Action<T> eventSubscription, params object[] args) where T : class
@@ -114,11 +99,11 @@ namespace SpecEasy
             base.BeforeEachInit();
 
             alreadyConstructedSUT = false;
-            MockingContainer = new TinyIoCContainer();
+            mockingContainer = new TinyIoCContainer();
 
             if (typeof (TUnit).IsAbstract)
             {
-                MockingContainer.Register(typeof(TUnit), (ioc, namedParameterOverloads) =>
+                mockingContainer.Register(typeof(TUnit), (ioc, namedParameterOverloads) =>
                 {
                     var constructor = ioc.GetConstructor(typeof (TUnit), namedParameterOverloads, ResolveOptions, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                     var args = ioc.ResolveConstructorParameters(constructor, namedParameterOverloads, ResolveOptions);
@@ -127,24 +112,40 @@ namespace SpecEasy
             }
             else
             {
-                MockingContainer.Register(typeof(TUnit)).AsSingleton();
+                mockingContainer.Register(typeof(TUnit)).AsSingleton();
             }
         }
 
-        protected void EnsureSUT()
+        private void RequireMockingContainer()
         {
-            SUT = SUT;
+            if (mockingContainer == null)
+            {
+                throw new InvalidOperationException("This method cannot be called before the test context is initialized.");
+            }
         }
 
-        protected TUnit SUT
+        private object TryAutoMock(TinyIoCContainer.TypeRegistration registration, TinyIoCContainer container)
         {
-            get { return GetSUTInstance(); }
-            set
+            var type = registration.Type;
+            return type.IsInterface || type.IsAbstract ? MockRepository.GenerateMock(type, new Type[0]) : null;
+        }
+
+        private TUnit GetSUTInstance()
+        {
+            if (!alreadyConstructedSUT)
             {
-                constructedSUTInstance = value;
-                Set(value);
+                constructedSUTInstance = ConstructSUT();
+
+                if (constructedSUTInstance == null)
+                {
+                    throw new InvalidOperationException("Failed to construct SUT: ConstructSUT returned null");
+                }
+
+                Set(constructedSUTInstance);
                 alreadyConstructedSUT = true;
             }
+
+            return constructedSUTInstance;
         }
     }
 }

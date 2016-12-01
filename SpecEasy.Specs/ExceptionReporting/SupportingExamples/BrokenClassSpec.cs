@@ -10,7 +10,7 @@ namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
 
         public void RunSpec()
         {
-            When("inverting a boolean value", () => result = SUT.Invert(input));
+            When("inverting a boolean value", () => result = SUT.InvertThatThrowsArgumentOutOfRangeException(input));
 
             Given("a false input", () => input = false).Verify(() =>
                 Then("the result is true", () => result.ShouldBeTrue()));

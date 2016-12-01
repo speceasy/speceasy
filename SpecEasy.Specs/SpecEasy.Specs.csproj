@@ -124,7 +124,9 @@
     <Compile Include="ExceptionReporting\SupportingExamples\BrokenClass.cs" />
     <Compile Include="ExceptionReporting\SupportingExamples\BrokenClassSpec.cs" />
     <Compile Include="ExceptionReporting\ExceptionReportingTests.cs" />
-    <Compile Include="ExceptionReporting\SupportingExamples\BrokenClassTests.cs" />
+    <Compile Include="ExceptionReporting\SupportingExamples\ExpectedExceptionDifferentTypeSpec.cs" />
+    <Compile Include="ExceptionReporting\SupportingExamples\ExpectedExceptionExpectationFailureSpec.cs" />
+    <Compile Include="ExceptionReporting\SupportingExamples\ExpectedExceptionNothingThrownSpec.cs" />
     <Compile Include="FizzBuzz\FizzBuzzSpecs.cs" />
     <Compile Include="GenericSpec\AutoMockSpec.cs" />
     <Compile Include="DuplicateDescriptions\DuplicateDescriptionsTests.cs" />
