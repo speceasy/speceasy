@@ -329,6 +329,48 @@ For each call to Then(), SpecEasy walks up the call stack, running each Given(),
 
     1 passed, 0 failed, 0 skipped
 
+## Given Alternatives
+
+There are some alternative syntaxes to Given when setting up tests. You can also specify context using `And()` or `But()`, which are functionally equivalent to `Given()` but modify the resulting test description. The above example can be written as follows:
+
+    public class CarServiceSpec
+    {
+        public Drive()
+        {
+            var keys = new CarKey();
+            When("driving a car", () => SUT.Drive());
+
+            Given("the driver is carrying keys", => () => Get<IDriver>().Stub(d => d.GetKeys()).Return(keys)).Verify(() => {
+                Then("the driver should show her keys", () => AssertWasCalled<IDriver>(d => d.GetKeys()));
+
+                And("the car accepts the keys", () => Get<ICar>().Stub(c => c.Accepts(keys)).Return(true)).Verify(() =>
+                    Then("it should start the car", () => AssertWasCalled<IDriver>(d => d.Start(Get<ICar>()))));
+
+                But("the car does not accept the keys", () => Get<ICar>().Stub(c => c.Accepts(keys)).Return(false)).Verify(() =>
+                    Then("it should not start the car", () => AssertWasNotCalled<IDriver>(d => d.Start(Arg<ICar>.Is.Anything))));
+            });
+        }
+    }
+
+This makes the code read a little more closely to the test output, and in the case of `But()` calls, it actually modifies the test output. This can be an easy way to make the test output read better too. The output for the above tests will be:
+
+    ------------ FULL RESULTS ------------
+    given the driver is carrying keys
+    when driving a car
+    then the driver should show her keys
+
+    given the driver is carrying keys
+    and the car accepts the keys
+    when driving a car
+    then it should start the car
+
+    given the driver is carrying keys
+    but the car does not accept the keys
+    when driving a car
+    then it should not start the car
+
+    1 passed, 0 failed, 0 skipped
+
 ## Multiple Expectations
 
 You may find the need to make multiple assertions, or verify multiple expectations, for a single Given. This can be done by using multiple `Then` method calls, either by listing them as multiple statements within a function provided to `Verify`, or as a single expression of chained `Then` methods provided to `Verify`.
