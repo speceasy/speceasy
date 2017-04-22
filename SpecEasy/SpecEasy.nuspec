@@ -24,9 +24,4 @@ Version 2.1.0 of SpecEasy includes:
     <copyright>Copyright 2016</copyright>
     <tags>bdd tdd unit test testing fluent</tags>
   </metadata>
-  <files>
-    <!-- Do not need to include .NET 4.5.1 version here because nuget automatically adds the output of
-         either the default build configuration or the configuration specified when running the pack command. -->
-    <file src="..\SpecEasy\bin\Release45\$id$.dll" target="lib\net45\" />
-  </files>
 </package>
