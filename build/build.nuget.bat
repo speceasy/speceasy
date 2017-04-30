@@ -1,4 +1,5 @@
-SET MSBUILD=C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
+REM Change path to msbuild if not in system PATH.
+SET MSBUILD="MSBuild.exe"
 
 %MSBUILD% ..\SpecEasy.sln /target:Rebuild /p:Configuration="Release 4.5"
 %MSBUILD% ..\SpecEasy.sln /target:Rebuild /p:Configuration="Release 4.5.1"

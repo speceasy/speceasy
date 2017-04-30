@@ -1,6 +1,6 @@
-﻿using SpecEasy.ExternalLib;
-using Rhino.Mocks;
+﻿using Rhino.Mocks;
 using Should;
+using SpecEasy.ExternalLib;
 
 namespace SpecEasy.Specs.ExternalSpec
 {

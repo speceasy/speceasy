@@ -6,23 +6,22 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/trackabout/speceasy/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/trackabout/speceasy</projectUrl>
-    <iconUrl>https://raw.github.com/trackabout/speceasy/master/speceasy_logo_sq_128.png</iconUrl>
+    <licenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/speceasy/speceasy</projectUrl>
+    <iconUrl>https://raw.github.com/speceasy/speceasy/master/speceasy_logo_sq_128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
 Version 2.1.0 of SpecEasy includes:
-  - A fix that prevents exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
+  - Prevent exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
+  - Added the ability to detect and use non-public constructors when constructing the SUT.
+  - Enable the testing of abstract classes.
   - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
-  - Several other minor fixes.
+  - Include spec method names as prefix for test case description.
+  - Added `And` and `But` spec context methods. These methods set up context identically to the original `Given` methods but are provided as a way to improve readability.
+  - Several other minor fixes and improvements.
     </releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>bdd tdd unit test testing fluent</tags>
   </metadata>
-  <files>
-    <!-- Do not need to include .NET 4.5.1 version here because nuget automatically adds the output of
-         either the default build configuration or the configuration specified when running the pack command. -->
-    <file src="..\SpecEasy\bin\Release45\$id$.dll" target="lib\net45\" />
-  </files>
 </package>

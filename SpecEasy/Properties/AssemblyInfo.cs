@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TrackAbout, Inc.")]
 [assembly: AssemblyProduct("SpecEasy")]
-[assembly: AssemblyCopyright("Copyright ©2013 TrackAbout, Inc.")]
+[assembly: AssemblyCopyright("Copyright ©2016 SpecEasy")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
