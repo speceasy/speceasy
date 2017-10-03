@@ -1,30 +1,30 @@
 ﻿using System.Collections.Generic;
-using NUnit.Core;
+using System.Linq;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace SpecEasy.Specs
 {
     public static class TestResultExtensions
     {
-        public static IEnumerable<TestResult> FailedTests(this TestResult testResult)
+        public static IEnumerable<ITestResult> FailedTests(this ITestResult testResult)
         {
-            if (testResult.FailureSite == FailureSite.Test)
-                return new[] { testResult };
-
-            var failedTests = new List<TestResult>();
-            foreach (var childResult in testResult.Results)
-                failedTests.AddRange(FailedTests((TestResult)childResult));
-            return failedTests;
+            return testResult.AllTests()
+                .Where(result => result.ResultState.Status == TestStatus.Failed)
+            ;
         }
 
-        public static IEnumerable<TestResult> AllTests(this TestResult testResult)
+        public static IEnumerable<ITestResult> AllTests(this ITestResult testResult)
         {
-            if (testResult.Results == null || testResult.Results.Count == 0)
+            if (!testResult.HasChildren)
+            {
                 return new[] { testResult };
+            }
 
-            var tests = new List<TestResult>();
-            foreach (var childResult in testResult.Results)
-                tests.AddRange(AllTests((TestResult)childResult));
-            return tests;
+            return testResult.Children
+                .SelectMany(childResult => childResult.AllTests())
+                .Where(result => !(result is TestSuiteResult))
+            ;
         }
     }
 }

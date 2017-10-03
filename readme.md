@@ -2,6 +2,8 @@
 
 SpecEasy is a BDD-based unit testing framework that allows you to easily and quickly write tests using a fluid interface that reduces the amount of code needed to create tests.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/a0wj7vt0kjorpe9p/branch/master?svg=true)](https://ci.appveyor.com/project/dbertram/speceasy/branch/master)
+
 ## What does SpecEasy require?
 
 SpecEasy is currently built on and requires the NUnit test framework. If you're using NUnit, then it's as simple as:
@@ -17,8 +19,9 @@ There are currently three versions of SpecEasy available on NuGet:
 * Version 1.0.0 - Targets .NET 3.5 or higher
 * Version 2.0.0 - Targets .NET 4.5.1 or higher and adds support for testing async methods
 * Version 2.1.0 - Fixes [hiding of method under test exceptions](https://github.com/trackabout/speceasy/pull/24) and adds support for .NET 4.5.
+* Version 3.0.0 - Updates NUnit dependency from NUnit 2.6.4 to NUnit 3.8.1
 
-At this time, active development is only planned for v2.0.0 or greater unless some significant feature is needed for projects targeting .NET 3.5 or 4.0.
+At this time, active development is only planned for v2.x (targeting NUnit 2.x) and v3.x (targeting NUnit 3.x) or greater.
 
 ## Quickstart Guide
 

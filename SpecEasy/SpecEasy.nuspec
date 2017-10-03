@@ -20,6 +20,8 @@ Version 2.1.0 of SpecEasy includes:
   - Include spec method names as prefix for test case description.
   - Added `And` and `But` spec context methods. These methods set up context identically to the original `Given` methods but are provided as a way to improve readability.
   - Several other minor fixes and improvements.
+Version 3.0.0 of SpecEasy includes:
+  - Support for NUnit 3.x
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>bdd tdd unit test testing fluent</tags>
