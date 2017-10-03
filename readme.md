@@ -2,6 +2,8 @@
 
 SpecEasy is a BDD-based unit testing framework that allows you to easily and quickly write tests using a fluid interface that reduces the amount of code needed to create tests.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/a0wj7vt0kjorpe9p/branch/master?svg=true)](https://ci.appveyor.com/project/dbertram/speceasy/branch/master)
+
 ## What does SpecEasy require?
 
 SpecEasy is currently built on and requires the NUnit test framework. If you're using NUnit, then it's as simple as:
