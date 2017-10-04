@@ -1,4 +1,5 @@
-﻿using Should;
+﻿using NUnit.Framework;
+using Should;
 
 namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
@@ -20,6 +21,9 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
             Given("SUT has been explicitly set", () => SUT = new SutWithValueTypeDependency(123)).Verify(() =>
                 Then("it should get the value provided when the SUT was explicitly set", () => value.ShouldEqual(123)));
+
+            Given("SUT is resolved from the container").Verify(() =>
+                Then("the resolved instance is the same instance as the SUT property", () => Assert.IsTrue(ReferenceEquals(SUT, Get<SutWithValueTypeDependency>()))));
         }
     }
 }

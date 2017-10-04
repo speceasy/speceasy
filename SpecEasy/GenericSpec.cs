@@ -141,7 +141,18 @@ namespace SpecEasy
                     throw new InvalidOperationException("Failed to construct SUT: ConstructSUT returned null");
                 }
 
-                Set(constructedSUTInstance);
+                if (mockingContainer.TryResolve(typeof(TUnit), new ResolveOptions{UnregisteredResolutionAction = UnregisteredResolutionActions.Fail}, out var resolvedType))
+                {
+                    if (!typeof(TUnit).IsValueType && !ReferenceEquals(constructedSUTInstance, resolvedType))
+                    {
+                        throw new InvalidOperationException("An SUT instance other than the newly constructed instance was resolved from the container");
+                    }
+                }
+                else
+                {
+                    Set(constructedSUTInstance);
+                }
+
                 alreadyConstructedSUT = true;
             }
 
