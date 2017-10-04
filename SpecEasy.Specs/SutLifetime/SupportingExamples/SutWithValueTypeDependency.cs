@@ -1,4 +1,4 @@
-﻿namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
+﻿namespace SpecEasy.Specs.SutLifetime.SupportingExamples
 {
     internal class SutWithValueTypeDependency
     {
