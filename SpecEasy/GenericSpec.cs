@@ -18,7 +18,7 @@ namespace SpecEasy
             get { return GetSUTInstance(); }
             set
             {
-                if (!typeof(TUnit).IsValueType && ReferenceEquals(constructedSUTInstance, value))
+                if (alreadyConstructedSUT && !typeof(TUnit).IsValueType && ReferenceEquals(constructedSUTInstance, value))
                 {
                     return;
                 }

@@ -83,6 +83,8 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\AfterEachExampleGetsCalledSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleCalledCorrectNumberOfTimesSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\BeforeEachExampleGetsCalledSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\IntegersSpec.cs" />
+    <Compile Include="BeforeEachAndAfterEachExampleSpecs\Integers.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\GetSetInBeforeEachExampleSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutInBeforeEachExampleSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutSetterAndConstructSutSpec.cs" />
