@@ -88,8 +88,11 @@
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutSetterAndConstructSutSpec.cs" />
     <Compile Include="BeforeEachAndAfterEachExampleSpecs\SutWithValueTypeDependency.cs" />
     <Compile Include="DatabaseIntegration\DatabaseIntegrationSpec.cs" />
-    <Compile Include="Disposal\DisposalSpec.cs" />
+    <Compile Include="Disposal\DisposableCounterSpec.cs" />
     <Compile Include="Disposal\SupportingExamples\DisposableCounter.cs" />
+    <Compile Include="Disposal\DisposableSubscriberSpec.cs" />
+    <Compile Include="Disposal\SupportingExamples\DisposableSubscriber.cs" />
+    <Compile Include="Disposal\SupportingExamples\IUpdateable.cs" />
     <Compile Include="DuplicateDescriptions\SupportingExamples\DuplicateDescriptionsSpec.cs" />
     <Compile Include="ExceptionAssertions\ExceptionAssertionsSpec.cs" />
     <Compile Include="ExceptionReporting\SupportingExamples\BrokenClass.cs" />

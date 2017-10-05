@@ -18,6 +18,11 @@ namespace SpecEasy
             get { return GetSUTInstance(); }
             set
             {
+                if (!typeof(TUnit).IsValueType && ReferenceEquals(constructedSUTInstance, value))
+                {
+                    return;
+                }
+
                 constructedSUTInstance = value;
                 Set(value);
                 alreadyConstructedSUT = true;

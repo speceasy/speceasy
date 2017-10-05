@@ -3,7 +3,7 @@ using SpecEasy.Specs.Disposal.SupportingExamples;
 
 namespace SpecEasy.Specs.Disposal
 {
-    public sealed class DisposalSpec : Spec<DisposableCounter>
+    internal sealed class DisposableCounterSpec : Spec<DisposableCounter>
     {
         public void DisposeCount()
         {
