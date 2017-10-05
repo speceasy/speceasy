@@ -3,7 +3,7 @@ using Should;
 
 namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
-    class SutSetterAndConstructSutSpec : Spec<SutWithValueTypeDependency>
+    internal sealed class SutSetterAndConstructSutSpec : Spec<SutWithValueTypeDependency>
     {
         protected override SutWithValueTypeDependency ConstructSUT()
         {
@@ -16,13 +16,12 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 
             When("getting value from SUT", () => value = SUT.Value);
 
-            Given("SUT has not been explicitly set").Verify(() =>
-                Then("it should get the value used in ConstructSUT", () => value.ShouldEqual(456)));
+            Given($"{nameof(ConstructSUT)} has been overriden to directly construct an instance").Verify(() =>
+                Then($"it should get the value used in {nameof(ConstructSUT)}", () => value.ShouldEqual(456)).
+                Then("the resolved instance is the same instance as the SUT property", () => Assert.IsTrue(ReferenceEquals(SUT, Get<SutWithValueTypeDependency>()))));
 
             Given("SUT has been explicitly set", () => SUT = new SutWithValueTypeDependency(123)).Verify(() =>
-                Then("it should get the value provided when the SUT was explicitly set", () => value.ShouldEqual(123)));
-
-            Given("SUT is resolved from the container").Verify(() =>
+                Then("it should get the value provided when the SUT was explicitly set", () => value.ShouldEqual(123)).
                 Then("the resolved instance is the same instance as the SUT property", () => Assert.IsTrue(ReferenceEquals(SUT, Get<SutWithValueTypeDependency>()))));
         }
     }
