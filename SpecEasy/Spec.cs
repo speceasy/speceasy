@@ -91,7 +91,9 @@ namespace SpecEasy
 
         protected virtual IContext ForWhen(string description, Action action)
         {
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
             var context = new Context(async () => { }, () => When(description, action));
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             contexts.Add(context);
             return context;
         }
@@ -172,7 +174,9 @@ namespace SpecEasy
 
         private static Func<Task> WrapAction(Action action)
         {
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
             return async () => action();
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         }
     }
 }

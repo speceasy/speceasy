@@ -34,7 +34,9 @@ namespace SpecEasy.Internal
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private readonly Func<Task> setupAction = async delegate { };
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         private readonly string conjunction;
         private Action enterAction = delegate { };
 

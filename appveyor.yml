@@ -3,27 +3,31 @@ pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
 image: Visual Studio 2017
-configuration:
-- Debug 4.5
-- Debug 4.5.1
-- Release 4.5
-- Release 4.5.1
+configuration: Release
+platform: Any CPU
 clone_depth: 1
-assembly_info:
+dotnet_csproj:
   patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
 nuget:
   disable_publish_on_pr: true
 before_build:
 - ps: nuget restore
 build:
-  publish_nuget: true
   parallel: true
   verbosity: minimal
 test:
   assemblies:
     only:
-    - '**\*.Specs.dll'
+    - '**\*Specs.dll'
+artifacts:
+- path: '**\*.nupkg'
+  name: NuGet
+deploy:
+- provider: NuGet
+  api_key:
+    secure: /yxWt685EgXCrtSp8KzStaVv3FCojlyug9vq7VIrQinfYNv163R6levhhA+TQV2d
+  on:
+    branch: master
