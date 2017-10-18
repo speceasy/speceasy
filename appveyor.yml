@@ -11,6 +11,14 @@ dotnet_csproj:
   file: '**\*.csproj'
   version: '{version}'
   package_version: '{version}'
+environment:
+  strong_name_secret:
+    secure: JSvwe/X9jR7Vmq1JEiDnsg9ksAiaQBQA6+Ck8bWAyuQ=
+install:
+- ps: >-
+    nuget install secure-file -ExcludeVersion
+
+    secure-file\tools\secure-file -decrypt .\SpecEasy\SpecEasy.snk.enc -secret $($env:strong_name_secret)
 nuget:
   disable_publish_on_pr: true
 before_build:
@@ -23,11 +31,20 @@ test:
     only:
     - '**\*Specs.dll'
 artifacts:
-- path: '**\*.nupkg'
-  name: NuGet
+- path: SpecEasy\SpecEasy.{version}.nupkg
+  name: Package
+- path: SpecEasy\SpecEasy.Signed.{version}.nupkg
+  name: SignedPackage
 deploy:
 - provider: NuGet
   api_key:
     secure: /yxWt685EgXCrtSp8KzStaVv3FCojlyug9vq7VIrQinfYNv163R6levhhA+TQV2d
+  artifact: Package
+  on:
+    branch: master
+- provider: NuGet
+  api_key:
+    secure: /yxWt685EgXCrtSp8KzStaVv3FCojlyug9vq7VIrQinfYNv163R6levhhA+TQV2d
+  artifact: SignedPackage
   on:
     branch: master
