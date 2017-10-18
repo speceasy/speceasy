@@ -5,6 +5,9 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>SpecEasy.snk</AssemblyOriginatorKeyFile>
+    <Authors>SpecEasy</Authors>
+    <Company>SpecEasy</Company>
+    <Product>SpecEasy</Product>
   </PropertyGroup>
 
 </Project>
