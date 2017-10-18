@@ -1,4 +1,6 @@
-﻿namespace SpecEasy.Specs.SpecNames.SupportingExamples
+﻿using System.Threading.Tasks;
+
+namespace SpecEasy.Specs.SpecNames.SupportingExamples
 {
     [SupportingExample]
     internal class SpecNamingSpec : Spec
@@ -12,7 +14,10 @@
             Given("a context", () => { }).Verify(() =>
             Given("a sub context", () => { }).Verify(() =>
             And("another sub context", () => { }).Verify(() =>
-            But("yet another sub context", async () => { }).Verify(() =>
+            But("yet another sub context", async () =>
+            {
+                await Task.FromResult(true);
+            }).Verify(() =>
                 Then("the test passes", () => AnExampleTestThatPasses())))));
         }
 
