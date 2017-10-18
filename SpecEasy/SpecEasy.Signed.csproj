@@ -1,0 +1,10 @@
+﻿<Project>
+
+  <Import Project="SpecEasy.Shared.csproj" />
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>SpecEasy.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+</Project>

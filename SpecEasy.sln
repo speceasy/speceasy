@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy.ExternalLib", "Spe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy.Specs", "SpecEasy.Specs\SpecEasy.Specs.csproj", "{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy.Signed", "SpecEasy\SpecEasy.Signed.csproj", "{F07B6529-218C-47D7-9267-2CE9FD77EBE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

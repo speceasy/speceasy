@@ -1,35 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
 
-  <PropertyGroup>
-    <TargetFrameworks>net45;net451;net452;net46;net461;net462</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <PackageLicenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/speceasy/speceasy</PackageProjectUrl>
-    <PackageIconUrl>https://raw.github.com/speceasy/speceasy/master/speceasy_logo_sq_128.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/speceasy/speceasy</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageTags>bdd tdd unit test testing fluent</PackageTags>
-    <PackageReleaseNotes>Version 2.1.0 of SpecEasy includes:
-  - Prevent exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/trackabout/speceasy/pull/24.
-  - Added the ability to detect and use non-public constructors when constructing the SUT.
-  - Enable the testing of abstract classes.
-  - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
-  - Include spec method names as prefix for test case description.
-  - Added `And` and `But` spec context methods. These methods set up context identically to the original `Given` methods but are provided as a way to improve readability.
-  - Several other minor fixes and improvements.
-Version 3.0.0 of SpecEasy includes:
-  - Support for NUnit 3.x</PackageReleaseNotes>
-    <Description>Specifications made easy.</Description>
-    <Copyright>2017</Copyright>
-    <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.0</AssemblyVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.8.1" />
-    <PackageReference Include="RhinoMocks" Version="3.6.1" />
-  </ItemGroup>
+  <Import Project="SpecEasy.Shared.csproj" />
 
 </Project>

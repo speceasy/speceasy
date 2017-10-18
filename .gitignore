@@ -11,6 +11,10 @@
 *.sln.docstates
 .vs/
 
+# Key file encryption
+SpecEasy/SpecEasy.snk
+secure-file/
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
