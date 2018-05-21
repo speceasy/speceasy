@@ -46,6 +46,8 @@ namespace SpecEasy.Specs
 
         private sealed class SuperSimpleDispatcher : IWorkItemDispatcher
         {
+            public int LevelOfParallelism => 0;
+
             public void Start(WorkItem topLevelWorkItem) => topLevelWorkItem.Execute();
 
             public void Dispatch(WorkItem work) => work.Execute();

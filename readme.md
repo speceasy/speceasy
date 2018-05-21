@@ -20,6 +20,7 @@ There are currently three versions of SpecEasy available on NuGet:
 * Version 2.0.0 - Targets .NET 4.5.1 or higher and adds support for testing async methods
 * Version 2.1.0 - Fixes [hiding of method under test exceptions](https://github.com/trackabout/speceasy/pull/24) and adds support for .NET 4.5.
 * Version 3.0.0 - Updates NUnit dependency from NUnit 2.6.4 to NUnit 3.8.1
+* Version 3.1.0 - Updated NUnit dependency from NUnit 3.8.1 to NUnit 3.10.1
 
 At this time, active development is only planned for v2.x (targeting NUnit 2.x) and v3.x (targeting NUnit 3.x) or greater.
 

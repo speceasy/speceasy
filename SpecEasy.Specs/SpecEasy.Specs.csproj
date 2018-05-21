@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.2" />
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
-    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="RhinoMocks" Version="3.6.1" />
     <PackageReference Include="Should" Version="1.1.20" />
   </ItemGroup>
