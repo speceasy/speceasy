@@ -46,8 +46,12 @@ namespace SpecEasy
             var methods = type.GetMethods();
             var baseMethods = type.BaseType != null ? type.BaseType.GetMethods() : new MethodInfo[] { };
             var declaredMethods = methods
-				.Where(m => baseMethods.All(bm => bm.Name != m.Name))
-                .Where(m => !m.GetParameters().Any() && m.ReturnType == typeof(void));
+                .Where(m => baseMethods.All(bm => bm.Name != m.Name))
+                .Where(m => !m.GetParameters().Any() && m.ReturnType == typeof(void))
+                .Where(m => m.GetCustomAttribute<SetUpAttribute>() is null)
+                .Where(m => m.GetCustomAttribute<OneTimeSetUpAttribute>() is null)
+                .Where(m => m.GetCustomAttribute<TearDownAttribute>() is null)
+                .Where(m => m.GetCustomAttribute<OneTimeTearDownAttribute>() is null);
 
             foreach (var m in declaredMethods)
             {

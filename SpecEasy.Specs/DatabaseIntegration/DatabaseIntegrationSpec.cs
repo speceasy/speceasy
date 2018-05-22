@@ -11,7 +11,9 @@ namespace SpecEasy.Specs.DatabaseIntegration
 {
     public class DatabaseIntegrationSpec : Spec
     {
-        private const string TestDbConnectionString = "Data Source=TestDB.sdf;";
+        private static readonly string DatabaseFileName = $"{Guid.NewGuid().ToString("N").Substring(0, 8).ToLowerInvariant()}.sdf";
+
+        private static string TestDbConnectionString => $"Data Source={DatabaseFileName};";
 
         private SqlCeEngine sqlCeEngine;
         private SqlCeConnection dbConnection;
@@ -20,8 +22,8 @@ namespace SpecEasy.Specs.DatabaseIntegration
         [OneTimeSetUp]
         public void BeforeDatabaseIntegration()
         {
-            if (File.Exists("TestDB.sdf"))
-                File.Delete("TestDB.sdf");
+            if (File.Exists(DatabaseFileName))
+                File.Delete(DatabaseFileName);
 
             sqlCeEngine = new SqlCeEngine(TestDbConnectionString);
             sqlCeEngine.CreateDatabase();
@@ -44,7 +46,7 @@ namespace SpecEasy.Specs.DatabaseIntegration
             try
             {
                 sqlCeEngine.Dispose();
-                File.Delete("TestDB.sdf");
+                File.Delete(DatabaseFileName);
             }
             catch (IOException)
             {
