@@ -1,9 +1,9 @@
-version: 3.1.{build}
+version: 3.2.{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
 skip_branch_with_pr: true
-image: Visual Studio 2017
+image: Visual Studio 2022
 configuration: Release
 platform: Any CPU
 clone_depth: 1
@@ -12,9 +12,9 @@ dotnet_csproj:
   file: '**\*.csproj'
   version: '{version}'
   package_version: '{version}'
-  assembly_version: '3.1.{build}.0'
-  file_version: '3.1.{build}.0'
-  informational_version: '3.1.{build}.0'
+  assembly_version: '3.2.{build}.0'
+  file_version: '3.2.{build}.0'
+  informational_version: '3.2.{build}.0'
 environment:
   strong_name_secret:
     secure: JSvwe/X9jR7Vmq1JEiDnsg9ksAiaQBQA6+Ck8bWAyuQ=

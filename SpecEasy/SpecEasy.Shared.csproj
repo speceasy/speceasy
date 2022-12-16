@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471</TargetFrameworks>
+    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;net48</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <PackageLicenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/speceasy/speceasy</PackageProjectUrl>
     <PackageIconUrl>https://raw.github.com/speceasy/speceasy/master/speceasy_logo_sq_128.png</PackageIconUrl>
+    <PackageIcon>speceasy_logo_sq_128.png</PackageIcon>
     <RepositoryUrl>https://github.com/speceasy/speceasy</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>bdd tdd unit test testing fluent</PackageTags>
@@ -30,16 +31,25 @@ Versions 3.1.x of SpecEasy include:
   - Support for NUnit 3.10.x
   - Support for .NET 4.7, and .NET 4.7.1
 
+Versions 3.2.x of SpecEasy include:
+  - Support for NUnit 3.10.x
+  - Support for .NET 4.7, .NET 4.7.1, and .NET 4.8
+
     </PackageReleaseNotes>
     <Description>Specifications made easy.</Description>
-    <Copyright>2018</Copyright>
-    <Version>3.1.0</Version>
-    <AssemblyVersion>3.1.0</AssemblyVersion>
+    <Copyright>2022</Copyright>
+    <Version>3.2.0</Version>
+    <AssemblyVersion>3.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="RhinoMocks" Version="3.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\speceasy_logo_sq_128.png" Pack="true" PackagePath="" />
+    <None Include="..\LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   </Project>

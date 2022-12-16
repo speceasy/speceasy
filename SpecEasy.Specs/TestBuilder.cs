@@ -26,7 +26,9 @@ namespace SpecEasy.Specs
                 Dispatcher = new SuperSimpleDispatcher()
             };
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
+#pragma warning restore CS0618 // Type or member is obsolete
             workItem.InitializeContext(testExecutionContext);
 
             return workItem;
