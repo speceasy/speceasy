@@ -4,6 +4,7 @@
     <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>NU5048,NU5125</NoWarn>
     <WarningsAsErrors />
     <PackageLicenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/speceasy/speceasy</PackageProjectUrl>
