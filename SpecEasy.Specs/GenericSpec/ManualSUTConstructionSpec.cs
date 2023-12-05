@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using Should;
+using FluentAssertions;
 
 namespace SpecEasy.Specs.GenericSpec
 {
@@ -19,7 +19,7 @@ namespace SpecEasy.Specs.GenericSpec
             When("testing a class that may be constructed manually", () => { });
 
             Given("the SUT is never accessed").Verify(() =>
-                Then("the method to construct the SUT is never called", () => constructSUTCallCount.ShouldEqual(0)));
+                Then("the method to construct the SUT is never called", () => constructSUTCallCount.Should().Be(0)));
 
             Given("the SUT is constructed automatically", () => shouldManauallyConstructSUT = false).Verify(() =>
             {
@@ -29,20 +29,20 @@ namespace SpecEasy.Specs.GenericSpec
                     EnsureSUT();
                 }).Verify(() =>
                 {
-                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.ShouldEqual(1));
+                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.Should().Be(1));
                     Then("the same instance of the SUT is returned every time", () =>
                     {
                         var sut1 = SUT;
                         var sut2 = SUT;
                         var sut3 = Get<Mockable>();
                         var sut4 = Get<Mockable>();
-                        sut1.ShouldBeSameAs(sut2);
-                        sut2.ShouldBeSameAs(sut3);
-                        sut3.ShouldBeSameAs(sut4);
+                        sut1.Should().BeSameAs(sut2);
+                        sut2.Should().BeSameAs(sut3);
+                        sut3.Should().BeSameAs(sut4);
                     });
                 });
 
-                Then("the dependency should be the one automatically constructed", () => SUT.Dep1.ShouldBeSameAs(Get<IDependency1>()));
+                Then("the dependency should be the one automatically constructed", () => SUT.Dep1.Should().BeSameAs(Get<IDependency1>()));
             });
 
             Given("the SUT is constructed manually", () => shouldManauallyConstructSUT = true).Verify(() =>
@@ -53,16 +53,16 @@ namespace SpecEasy.Specs.GenericSpec
                     EnsureSUT();
                 }).Verify(() =>
                 {
-                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.ShouldEqual(1));
+                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.Should().Be(1));
                     Then("the same instance of the SUT is returned every time", () =>
                     {
                         var sut1 = SUT;
                         var sut2 = SUT;
                         var sut3 = Get<Mockable>();
                         var sut4 = Get<Mockable>();
-                        sut1.ShouldBeSameAs(sut2);
-                        sut2.ShouldBeSameAs(sut3);
-                        sut3.ShouldBeSameAs(sut4);
+                        sut1.Should().BeSameAs(sut2);
+                        sut2.Should().BeSameAs(sut3);
+                        sut3.Should().BeSameAs(sut4);
                     });
                 });
 
@@ -74,7 +74,7 @@ namespace SpecEasy.Specs.GenericSpec
                     Given("the SUT is never accessed", () => {}).Verify(() =>
                         Then("no exception is thrown", () => Assert.Pass())));
 
-                Then("the dependency should be the one manually constructed", () => SUT.Dep1.Value.ShouldEqual(ManualConstructedDependencyValue));
+                Then("the dependency should be the one manually constructed", () => SUT.Dep1.Value.Should().Be(ManualConstructedDependencyValue));
             });
         }
 

@@ -1,5 +1,5 @@
 using System;
-using Should;
+using FluentAssertions;
 
 namespace SpecEasy.Specs.TinyIoC
 {
@@ -10,7 +10,7 @@ namespace SpecEasy.Specs.TinyIoC
             When("constructing the SUT instance", () => EnsureSUT());
 
             Given("the type being constructed has a single private constructor").Verify(() =>
-                Then("an exception should be thrown because we will not use private ctors to build the SUT instance", () => AssertWasThrown<Exception>(ex => ex.GetType().FullName.ShouldStartWith("TinyIoC.TinyIoCResolutionException"))));
+                Then("an exception should be thrown because we will not use private ctors to build the SUT instance", () => AssertWasThrown<Exception>(ex => ex.GetType().FullName.Should().StartWith("TinyIoC.TinyIoCResolutionException"))));
         }
     }
 }

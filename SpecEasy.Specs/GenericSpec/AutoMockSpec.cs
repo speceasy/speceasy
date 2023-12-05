@@ -1,5 +1,5 @@
-﻿using Rhino.Mocks;
-using Should;
+﻿using NSubstitute;
+using FluentAssertions;
 
 namespace SpecEasy.Specs.GenericSpec
 {
@@ -20,28 +20,28 @@ namespace SpecEasy.Specs.GenericSpec
                     var sut2 = SUT;
                     var sut3 = Get<Mockable>();
                     var sut4 = Get<Mockable>();
-                    sut1.ShouldBeSameAs(sut2);
-                    sut2.ShouldBeSameAs(sut3);
-                    sut3.ShouldBeSameAs(sut4);
+                    sut1.Should().BeSameAs(sut2);
+                    sut2.Should().BeSameAs(sut3);
+                    sut3.Should().BeSameAs(sut4);
                 });
 
-                Then("it gets a default mock object for dependency 1", () => SUT.Dep1.ShouldNotBeType<Dependency1Impl>());
+                Then("it gets a default mock object for dependency 1", () => SUT.Dep1.Should().NotBeOfType<Dependency1Impl>());
 
-                Given("stubbed values for dependencies", () => Get<IDependency1>().Stub(d => d.Value).Return(StubbedDepValue)).Verify(() =>
+                Given("stubbed values for dependencies", () => Get<IDependency1>().Value.Returns(StubbedDepValue)).Verify(() =>
                     Then("it should produce the same instance of a mock dependency each time it's requested", () =>
-                        Get<IDependency1>().ShouldBeSameAs(Get<IDependency1>())).
+                        Get<IDependency1>().Should().BeSameAs(Get<IDependency1>())).
                     Then("it should get stubbed values from its mocked dependencies", () =>
-                        SUT.Dep1.Value.ShouldEqual(StubbedDepValue))
+                        SUT.Dep1.Value.Should().Be(StubbedDepValue))
                 );
             });
 
             Given("a dependency registered by the caller", () => Set<IDependency1>(new Dependency1Impl(ManuallyRegisteredDepValue))).Verify(() =>
                 Then("it gets the same object each time a registered class is requested", () =>
-                    Get<IDependency1>().ShouldBeSameAs(Get<IDependency1>())).
+                    Get<IDependency1>().Should().BeSameAs(Get<IDependency1>())).
                 Then("it gets the same object each time an unregistered concrete object is requested", () =>
-                    Get<Dependency2Impl>().ShouldBeSameAs(Get<Dependency2Impl>())).
+                    Get<Dependency2Impl>().Should().BeSameAs(Get<Dependency2Impl>())).
                 Then("it gets the specified object for dependency 1", () =>
-                    SUT.Dep1.Value.ShouldEqual(ManuallyRegisteredDepValue)));
+                    SUT.Dep1.Value.Should().Be(ManuallyRegisteredDepValue)));
         }
     }
 

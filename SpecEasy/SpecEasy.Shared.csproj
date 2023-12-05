@@ -1,14 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net462;net47;net471;net472;net48;net481;netstandard2.0;netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <Trimming>none</Trimming>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <PackageLicenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/speceasy/speceasy</PackageProjectUrl>
-    <PackageIconUrl>https://raw.github.com/speceasy/speceasy/master/speceasy_logo_sq_128.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/speceasy/speceasy</RepositoryUrl>
+    <PackageId>SpecEasy</PackageId>
+    <PackageLicenseUrl>https://github.com/trackabout/speceasy/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/trackabout/speceasy</PackageProjectUrl>
+    <PackageIconUrl>https://raw.github.com/trackabout/speceasy/master/speceasy_logo_sq_128.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/trackabout/speceasy</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>bdd tdd unit test testing fluent</PackageTags>
     <PackageReleaseNotes>
@@ -30,16 +32,18 @@ Versions 3.1.x of SpecEasy include:
   - Support for NUnit 3.10.x
   - Support for .NET 4.7, and .NET 4.7.1
 
-    </PackageReleaseNotes>
+Versions 4.0.x of SpecEasy include:
+  - Support for NUnit 3.14.x
+  - Support for .NET 4.7.2, .NET 4.8, .NET 4.8.1; .NET Standard 2.0., .NET Standard 2.1, .NET 6.0, .NET 7.0, and .NET 8.0
+  - Replaces RhinoMocks with NSubstitute, which necessitates dropping support for NET Framework support prior to 4.6.1</PackageReleaseNotes>
     <Description>Specifications made easy.</Description>
-    <Copyright>2018</Copyright>
-    <Version>3.1.0</Version>
-    <AssemblyVersion>3.1.0</AssemblyVersion>
+    <Copyright>2024</Copyright>
+    <Version>4.0.0</Version>
+    <AssemblyVersion>4.0.0</AssemblyVersion>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="RhinoMocks" Version="3.6.1" />
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
   </ItemGroup>
-
-  </Project>
+</Project>

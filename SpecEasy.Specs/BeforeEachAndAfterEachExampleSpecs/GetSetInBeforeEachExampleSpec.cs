@@ -1,5 +1,5 @@
-﻿using Rhino.Mocks;
-using Should;
+﻿using NSubstitute;
+using FluentAssertions;
 
 namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
@@ -7,7 +7,7 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
     {
         protected override void BeforeEachExample()
         {
-            Get<IDependency>().Stub(dep => dep.GetValue()).Return(123);
+            Get<IDependency>().GetValue().Returns(123);
             Set<IAnotherDependency>(new AnotherDependency(789));
         }
 
@@ -18,16 +18,16 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
             When("using a dependency", () => result = SUT.UseDependency());
 
             Given("dependencies were set up in BeforeEachExample").Verify(() =>
-                Then("it should get a value from the first dependency that was set up", () => result.ShouldEqual(123)).
-                Then("it should get a value from the second dependency that was set up", () => SUT.UseAnotherDependency().ShouldEqual(789)));
+                Then("it should get a value from the first dependency that was set up", () => result.Should().Be(123)).
+                Then("it should get a value from the second dependency that was set up", () => SUT.UseAnotherDependency().Should().Be(789)));
 
             Given("dependency overridden in a Given", () =>
             {
-                Get<IDependency>().Stub(dep => dep.GetValue()).Return(456).Repeat.Any(); // Repeat.Any replaces the previous Stub
+                Get<IDependency>().GetValue().Returns(456);
                 Set<IAnotherDependency>(new AnotherDependency(987));
             }).Verify(() =>
-                Then("it should get the new value from the first dependency", () => result.ShouldEqual(456)).
-                Then("it should get the new value from the second dependency", () => SUT.UseAnotherDependency().ShouldEqual(987)));
+                Then("it should get the new value from the first dependency", () => result.Should().Be(456)).
+                Then("it should get the new value from the second dependency", () => SUT.UseAnotherDependency().Should().Be(987)));
         }
 
         public class ClassWithDependencies

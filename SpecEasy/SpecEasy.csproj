@@ -1,5 +1,3 @@
 ﻿<Project>
-
   <Import Project="SpecEasy.Shared.csproj" />
-
 </Project>
