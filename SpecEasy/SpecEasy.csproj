@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>NU5048,NU5125</NoWarn>
     <WarningsAsErrors />
     <PackageLicenseUrl>https://github.com/speceasy/speceasy/blob/master/LICENSE</PackageLicenseUrl>
