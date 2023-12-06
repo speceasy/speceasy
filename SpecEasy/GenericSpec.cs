@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Reflection;
-using Rhino.Mocks;
-using Rhino.Mocks.Interfaces;
+using NSubstitute;
 using TinyIoC;
 
 namespace SpecEasy
 {
-    public class Spec<TUnit> : Spec
+    public class Spec<TUnit> : Spec where TUnit: class
     {
         private TinyIoCContainer mockingContainer;
         private ResolveOptions resolveOptions;
@@ -15,7 +14,7 @@ namespace SpecEasy
 
         protected TUnit SUT
         {
-            get { return GetSUTInstance(); }
+            get => GetSUTInstance();
             set
             {
                 if (alreadyConstructedSUT && !typeof(TUnit).IsValueType && ReferenceEquals(constructedSUTInstance, value))
@@ -29,32 +28,17 @@ namespace SpecEasy
             }
         }
 
-        private ResolveOptions ResolveOptions
+        private ResolveOptions ResolveOptions => resolveOptions ?? (resolveOptions = new ResolveOptions
         {
-            get
-            {
-                return resolveOptions ?? (resolveOptions = new ResolveOptions
-                {
-                    UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
-                    FallbackResolutionAction = TryAutoMock
-                });
-            }
-        }
+            UnregisteredResolutionRegistrationOption = UnregisteredResolutionRegistrationOptions.RegisterAsSingleton,
+            FallbackResolutionAction = TryAutoMock
+        });
 
-        protected virtual TUnit ConstructSUT()
-        {
-            return Get<TUnit>();
-        }
+        protected virtual TUnit ConstructSUT() => Get<TUnit>();
 
-        protected void EnsureSUT()
-        {
-            SUT = SUT;
-        }
+        protected void EnsureSUT() => SUT = SUT;
 
-        protected T Mock<T>() where T : class
-        {
-            return MockRepository.GenerateMock<T>();
-        }
+        protected T Mock<T>() where T : class => Substitute.For<T>();
 
         protected T Get<T>()
         {
@@ -67,36 +51,6 @@ namespace SpecEasy
         {
             RequireMockingContainer();
             mockingContainer.Register(typeof(T), item);
-        }
-
-        protected void Raise<T>(Action<T> eventSubscription, params object[] args) where T : class
-        {
-            var mock = Get<T>();
-            mock.Raise(eventSubscription, args);
-        }
-
-        protected void AssertWasCalled<T>(Action<T> action)
-        {
-            var mock = Get<T>();
-            mock.AssertWasCalled(action);
-        }
-
-        protected void AssertWasCalled<T>(Action<T> action, Action<IMethodOptions<object>> methodOptions)
-        {
-            var mock = Get<T>();
-            mock.AssertWasCalled(action, methodOptions);
-        }
-
-        protected void AssertWasNotCalled<T>(Action<T> action)
-        {
-            var mock = Get<T>();
-            mock.AssertWasNotCalled(action);
-        }
-
-        protected void AssertWasNotCalled<T>(Action<T> action, Action<IMethodOptions<object>> methodOptions)
-        {
-            var mock = Get<T>();
-            mock.AssertWasNotCalled(action, methodOptions);
         }
 
         internal override void BeforeEachInit()
@@ -112,7 +66,7 @@ namespace SpecEasy
                 {
                     var constructor = ioc.GetConstructor(typeof (TUnit), namedParameterOverloads, ResolveOptions, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                     var args = ioc.ResolveConstructorParameters(constructor, namedParameterOverloads, ResolveOptions);
-                    return MockRepository.GeneratePartialMock<TUnit>(args);
+                    return Substitute.ForPartsOf<TUnit>(args);
                 }).AsSingleton();
             }
             else
@@ -132,7 +86,7 @@ namespace SpecEasy
         private object TryAutoMock(TinyIoCContainer.TypeRegistration registration, TinyIoCContainer container)
         {
             var type = registration.Type;
-            return type.IsInterface || type.IsAbstract ? MockRepository.GenerateMock(type, new Type[0]) : null;
+            return type.IsInterface || type.IsAbstract ? Substitute.For(new [] { type }, Array.Empty<object>()) : null;
         }
 
         private TUnit GetSUTInstance()

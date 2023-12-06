@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy", "SpecEasy\SpecEasy.csproj", "{EE2798F4-F2FA-45B2-95F8-9817AE888E80}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy.ExternalLib", "SpecEasy.ExternalLib\SpecEasy.ExternalLib.csproj", "{C37703E8-8EA2-4803-A458-C72962D8FB71}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy.Specs", "SpecEasy.Specs\SpecEasy.Specs.csproj", "{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecEasy.Signed", "SpecEasy\SpecEasy.Signed.csproj", "{F07B6529-218C-47D7-9267-2CE9FD77EBE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D907A89E-8913-4D9D-8D34-6A58E4AF52C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F07B6529-218C-47D7-9267-2CE9FD77EBE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

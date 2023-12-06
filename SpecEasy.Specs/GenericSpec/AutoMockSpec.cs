@@ -1,5 +1,5 @@
-﻿using Rhino.Mocks;
-using Should;
+﻿using NSubstitute;
+using Shouldly;
 
 namespace SpecEasy.Specs.GenericSpec
 {
@@ -25,13 +25,13 @@ namespace SpecEasy.Specs.GenericSpec
                     sut3.ShouldBeSameAs(sut4);
                 });
 
-                Then("it gets a default mock object for dependency 1", () => SUT.Dep1.ShouldNotBeType<Dependency1Impl>());
+                Then("it gets a default mock object for dependency 1", () => SUT.Dep1.ShouldNotBeOfType<Dependency1Impl>());
 
-                Given("stubbed values for dependencies", () => Get<IDependency1>().Stub(d => d.Value).Return(StubbedDepValue)).Verify(() =>
+                Given("stubbed values for dependencies", () => Get<IDependency1>().Value.Returns(StubbedDepValue)).Verify(() =>
                     Then("it should produce the same instance of a mock dependency each time it's requested", () =>
                         Get<IDependency1>().ShouldBeSameAs(Get<IDependency1>())).
                     Then("it should get stubbed values from its mocked dependencies", () =>
-                        SUT.Dep1.Value.ShouldEqual(StubbedDepValue))
+                        SUT.Dep1.Value.ShouldBe(StubbedDepValue))
                 );
             });
 
@@ -41,7 +41,7 @@ namespace SpecEasy.Specs.GenericSpec
                 Then("it gets the same object each time an unregistered concrete object is requested", () =>
                     Get<Dependency2Impl>().ShouldBeSameAs(Get<Dependency2Impl>())).
                 Then("it gets the specified object for dependency 1", () =>
-                    SUT.Dep1.Value.ShouldEqual(ManuallyRegisteredDepValue)));
+                    SUT.Dep1.Value.ShouldBe(ManuallyRegisteredDepValue)));
         }
     }
 

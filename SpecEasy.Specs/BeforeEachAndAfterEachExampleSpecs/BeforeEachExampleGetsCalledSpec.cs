@@ -1,4 +1,4 @@
-﻿using Should;
+﻿using Shouldly;
 
 namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
 {
@@ -10,10 +10,10 @@ namespace SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs
         {
             When("running a test with BeforeEachExample overridden", () => SUT.DoNothing());
 
-            Then("it should run BeforeEachExample", () => testValue.ShouldEqual(50));
+            Then("it should run BeforeEachExample", () => testValue.ShouldBe(50));
 
             Given("a given changes the value set in BeforeEachExample", () => testValue = 75).Verify(() =>
-                Then("it should not have the value from BeforeEachExample", () => testValue.ShouldEqual(75)));
+                Then("it should not have the value from BeforeEachExample", () => testValue.ShouldBe(75)));
         }
 
         protected override void BeforeEachExample()

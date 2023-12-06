@@ -1,5 +1,5 @@
 using System;
-using Should;
+using Shouldly;
 
 namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
 {
@@ -10,7 +10,7 @@ namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
         {
             When("calling a method that throws an exception", () => SUT.InvertThatThrowsArgumentOutOfRangeException(true));
 
-            Then("asserting the correct exception type with an expectation that fails will fail the test with a descriptive error message", () => AssertWasThrown<ArgumentOutOfRangeException>(ex => ex.ParamName.ShouldEqual("bogus param name")));
+            Then("asserting the correct exception type with an expectation that fails will fail the test with a descriptive error message", () => AssertWasThrown<ArgumentOutOfRangeException>(ex => ex.ParamName.ShouldBe("bogus param name")));
         }
     }
 }

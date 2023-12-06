@@ -1,4 +1,4 @@
-using Should;
+using Shouldly;
 
 namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
 {

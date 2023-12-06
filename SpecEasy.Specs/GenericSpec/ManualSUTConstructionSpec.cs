@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using Should;
+using Shouldly;
 
 namespace SpecEasy.Specs.GenericSpec
 {
@@ -19,7 +19,7 @@ namespace SpecEasy.Specs.GenericSpec
             When("testing a class that may be constructed manually", () => { });
 
             Given("the SUT is never accessed").Verify(() =>
-                Then("the method to construct the SUT is never called", () => constructSUTCallCount.ShouldEqual(0)));
+                Then("the method to construct the SUT is never called", () => constructSUTCallCount.ShouldBe(0)));
 
             Given("the SUT is constructed automatically", () => shouldManauallyConstructSUT = false).Verify(() =>
             {
@@ -29,7 +29,7 @@ namespace SpecEasy.Specs.GenericSpec
                     EnsureSUT();
                 }).Verify(() =>
                 {
-                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.ShouldEqual(1));
+                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.ShouldBe(1));
                     Then("the same instance of the SUT is returned every time", () =>
                     {
                         var sut1 = SUT;
@@ -53,7 +53,7 @@ namespace SpecEasy.Specs.GenericSpec
                     EnsureSUT();
                 }).Verify(() =>
                 {
-                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.ShouldEqual(1));
+                    Then("the method to construct the SUT should only be called once", () => constructSUTCallCount.ShouldBe(1));
                     Then("the same instance of the SUT is returned every time", () =>
                     {
                         var sut1 = SUT;
@@ -74,7 +74,7 @@ namespace SpecEasy.Specs.GenericSpec
                     Given("the SUT is never accessed", () => {}).Verify(() =>
                         Then("no exception is thrown", () => Assert.Pass())));
 
-                Then("the dependency should be the one manually constructed", () => SUT.Dep1.Value.ShouldEqual(ManualConstructedDependencyValue));
+                Then("the dependency should be the one manually constructed", () => SUT.Dep1.Value.ShouldBe(ManualConstructedDependencyValue));
             });
         }
 

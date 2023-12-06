@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NSubstitute;
+using System;
 using System.Threading.Tasks;
-using Rhino.Mocks;
-using Should;
+using Shouldly;
 
 namespace SpecEasy.Specs.Async
 {
@@ -18,24 +18,25 @@ namespace SpecEasy.Specs.Async
 
             When("loading", async () => result = await SUT.LoadAsync(Name).ConfigureAwait(false));
 
-            Given("a value has been saved", () => Get<IPersistence>().Stub(persistence => persistence.LoadAsync(Name)).Return(Task.Factory.StartNew(() => Value))).Verify(() =>
+            Given("a value has been saved", () => Get<IPersistence>().LoadAsync(Name).Returns(Task.Factory.StartNew(() => Value))).Verify(() =>
             {
-                Then("the desired value is loaded", () => result.ShouldEqual(Value));
+                Then("the desired value is loaded", () => result.ShouldBe(Value));
 
-                Given("the persistence tracks the load count", ()=> Get<IPersistence>().Stub(persistence => persistence.GetLoadCountAsync()).Return(Task.Factory.StartNew(()=>count))).Verify(()=>
-                    Then("the number of loads can be retrieved", async () => count.ShouldEqual(await SUT.GetLoadCountAsync().ConfigureAwait(false))));
+                Given("the persistence tracks the load count", () => Get<IPersistence>().GetLoadCountAsync().Returns(Task.Factory.StartNew(() => count))).Verify(() =>
+                    Then("the number of loads can be retrieved", async () => count.ShouldBe(await SUT.GetLoadCountAsync().ConfigureAwait(false))));
             });
 
-            Given("there is an error loading the value", () => Get<IPersistence>().Stub(persistence => persistence.LoadAsync(Name)).Throw(new InvalidOperationException())).Verify(() =>
-                Then("an exception is thrown", () => AssertWasThrown<InvalidOperationException>()));
+            Given("there is an error loading the value", () => Get<IPersistence>().LoadAsync(Name).Returns<Task<string>>(s => throw new InvalidOperationException())).Verify(() =>
+                Then("an exception is thrown", AssertWasThrown<InvalidOperationException>));
 
             Given("the data was previously persisted", async () =>
             {
-                Get<IPersistence>().Stub(persistence => persistence.SaveAsync(Arg<string>.Is.Equal(Name), Arg<string>.Is.Anything)).Return(Task.Factory.StartNew(() => { })).WhenCalled(x => intermediate = (string)x.Arguments[1]);
+                Get<IPersistence>().SaveAsync(Name, Arg.Any<string>()).Returns(Task.Factory.StartNew(() => { }));
+                Get<IPersistence>().When(x => x.SaveAsync(Name, Arg.Any<string>())).Do(x =>  intermediate = (string)x[1]);
                 await SUT.SaveAsync(Name, Value).ConfigureAwait(false);
             }).Verify(() =>
-                Given("the data is then loaded", () => Get<IPersistence>().Stub(persistence => persistence.LoadAsync(Name)).Return(Task.Factory.StartNew(() => intermediate))).Verify(() =>
-                    Then("the previously stored data is retrieved", () => result.ShouldEqual(Value))));
+                Given("the data is then loaded", () => Get<IPersistence>().LoadAsync(Name).Returns(Task.Factory.StartNew(() => intermediate))).Verify(() =>
+                    Then("the previously stored data is retrieved", () => result.ShouldBe(Value))));
         }
     }
 

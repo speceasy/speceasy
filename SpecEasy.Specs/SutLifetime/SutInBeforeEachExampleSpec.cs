@@ -1,4 +1,4 @@
-using Should;
+using Shouldly;
 using SpecEasy.Specs.SutLifetime.SupportingExamples;
 
 namespace SpecEasy.Specs.SutLifetime
@@ -17,7 +17,7 @@ namespace SpecEasy.Specs.SutLifetime
             When("getting the value from SUT", () => value = SUT.Value);
 
             Given($"SUT was set up in {nameof(BeforeEachExample)}").Verify(() =>
-                Then($"it should get the value from the SUT set up in {nameof(BeforeEachExample)}", () => value.ShouldEqual(123)));
+                Then($"it should get the value from the SUT set up in {nameof(BeforeEachExample)}", () => value.ShouldBe(123)));
         }
     }
 }

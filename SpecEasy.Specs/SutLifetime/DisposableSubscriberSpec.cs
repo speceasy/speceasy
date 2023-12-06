@@ -1,4 +1,4 @@
-﻿using System;
+﻿using NSubstitute;
 using NUnit.Framework;
 using SpecEasy.Specs.SutLifetime.SupportingExamples;
 
@@ -10,9 +10,9 @@ namespace SpecEasy.Specs.SutLifetime
         {
             DisposableSubscriber originalSUT = null;
 
-            When("the updateable is updated", () => Raise<IUpdateable>(updateable => updateable.Updated += null, Get<IUpdateable>(), EventArgs.Empty));
+            When("the updateable is updated", () => Get<IUpdateable>().Updated += Raise.Event());
 
-            Given("SUT is constructed automatically", () => EnsureSUT()).Verify(() =>
+            Given("SUT is constructed automatically", EnsureSUT).Verify(() =>
                 Then("the updated count should be 1", () => Assert.AreEqual(1, SUT.UpdatedCount)).
                 Then("SUT has not been disposed", () => Assert.IsFalse(SUT.Disposed)));
 
