@@ -1,4 +1,4 @@
-using Should;
+using FluentAssertions;
 
 namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
 {
@@ -13,10 +13,10 @@ namespace SpecEasy.Specs.ExceptionReporting.SupportingExamples
             When("inverting a boolean value", () => result = SUT.InvertThatThrowsArgumentOutOfRangeException(input));
 
             Given("a false input", () => input = false).Verify(() =>
-                Then("the result is true", () => result.ShouldBeTrue()));
+                Then("the result is true", () => result.Should().BeTrue()));
 
             Given("a true input", () => input = true).Verify(() =>
-                Then("the result is false", () => result.ShouldBeFalse()));
+                Then("the result is false", () => result.Should().BeFalse()));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using FluentAssertions;
 using SpecEasy.Specs.BeforeEachAndAfterEachExampleSpecs;
-using Should;
 
 namespace SpecEasy.Specs.GivenCount
 {
@@ -56,7 +56,7 @@ namespace SpecEasy.Specs.GivenCount
         private void VerifyGivenCalls(List<string> givenCalls, string expectedValue, bool clearValuesAfterVerify = true)
         {
             var givenCallListString = string.Join(" -> ", givenCalls);
-            givenCallListString.ShouldEqual(expectedValue);
+            givenCallListString.Should().Be(expectedValue);
             if (clearValuesAfterVerify) givenCalls.Clear();
         }
     }

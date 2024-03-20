@@ -1,0 +1,8 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <SourceFiles Include="$(ProjectDir)SqlCe-binaries\*.dll;$(ProjectDir)SqlCe-binaries\Microsoft.VC90.CRT.manifest" />
+  </ItemGroup>
+  <Target Name="CopySqlCeBinaries" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(SourceFiles)" DestinationFolder="$(TargetDir)" />
+  </Target>
+</Project>

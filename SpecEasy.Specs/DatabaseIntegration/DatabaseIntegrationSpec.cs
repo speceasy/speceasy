@@ -4,8 +4,8 @@ using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
 using Dapper;
+using FluentAssertions;
 using NUnit.Framework;
-using Should;
 
 namespace SpecEasy.Specs.DatabaseIntegration
 {
@@ -78,12 +78,12 @@ namespace SpecEasy.Specs.DatabaseIntegration
             When("querying a database within a spec", () => queryResult = GetPosts());
 
             Given("a post is created in a test context.", () => CreatePost(firstPostBody)).Verify(() =>
-                Then("the current context can find the single post created.", () => queryResult.Count.ShouldEqual(1)).
+                Then("the current context can find the single post created.", () => queryResult.Count.Should().Be(1)).
                 Then("a subsequent assertion from within the same context should find the same single post, but it should not be duplicated.", () =>
-                        queryResult.All(p => p.Body.Equals(firstPostBody)).ShouldBeTrue()));
+                        queryResult.All(p => p.Body.Equals(firstPostBody)).Should().BeTrue()));
 
             Given("a post is created in a context following but separate from a previous context.", () => CreatePost(secondPostBody)).Verify(() =>
-                Then("the current context should only find the single post created in this context.", () => queryResult.Count.ShouldEqual(1)));
+                Then("the current context should only find the single post created in this context.", () => queryResult.Count.Should().Be(1)));
         }
 
         private IList<dynamic> GetPosts()

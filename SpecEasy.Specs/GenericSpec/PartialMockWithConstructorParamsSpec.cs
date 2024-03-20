@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using Rhino.Mocks;
+﻿using NSubstitute;
+using NUnit.Framework;
 
 namespace SpecEasy.Specs.GenericSpec
 {
@@ -11,8 +11,8 @@ namespace SpecEasy.Specs.GenericSpec
 
             When("adding dependency value to the calculated integer", () => result = SUT.AddDependencyValueToCalculateInteger());
 
-            Given("the dependency value is \"10\"", () => Get<IDependency1>().Stub(s => s.Value).Return("10")).Verify(() =>
-            Given("the calculated integer is 10", () => SUT.Stub(s => s.CalculateInteger()).Return(10)).Verify(() =>
+            Given("the dependency value is \"10\"", () => Get<IDependency1>().Value.Returns("10")).Verify(() =>
+            Given("the calculated integer is 10", () => SUT.CalculateInteger().Returns(10)).Verify(() =>
                 Then("the result is 20", () => Assert.AreEqual(20, result))));
         }
     }
