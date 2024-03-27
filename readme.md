@@ -1,4 +1,4 @@
-<h1 align="center"><img src="https://raw.github.com/trackabout/speceasy/master/speceasy_logo.png" alt="SpecEasy" height="85"></h1>
+<h1 align="center"><img src="https://raw.github.com/speceasy/speceasy/master/speceasy_logo.png" alt="SpecEasy" height="85"></h1>
 
 SpecEasy is a BDD-based unit testing framework that allows you to easily and quickly write tests using a fluid interface that reduces the amount of code needed to create tests.
 
@@ -461,7 +461,7 @@ You can combine SpecEasy with any assertion framework; the core SpecEasy assembl
 
 ## License
 
-SpecEasy is released under the [MIT license](https://raw.github.com/trackabout/speceasy/master/LICENSE).
+SpecEasy is released under the [MIT license](https://raw.github.com/speceasy/speceasy/master/LICENSE).
 
 [NuGet]: https://www.nuget.org/packages/SpecEasy
 [NUnit]: https://www.nuget.org/packages/NUnit/

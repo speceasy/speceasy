@@ -1,3 +1,53 @@
-﻿<Project>
-  <Import Project="SpecEasy.Shared.csproj" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <Trimming>none</Trimming>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <PackageId>SpecEasy</PackageId>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/speceasy/speceasy</PackageProjectUrl>
+    <PackageIcon>speceasy_logo_sq_128.png</PackageIcon>
+    <RepositoryUrl>https://github.com/speceasy/speceasy</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>bdd tdd unit test testing fluent</PackageTags>
+    <PackageReleaseNotes>
+
+Version 2.1.0 of SpecEasy includes:
+  - Prevent exceptions in the method under test from being ignored when there is also an assertion failure. See https://github.com/speceasy/speceasy/pull/24.
+  - Added the ability to detect and use non-public constructors when constructing the SUT.
+  - Enable the testing of abstract classes.
+  - Support for .NET 4.5 in addition to the existing .NET 4.5.1 support.
+  - Include spec method names as prefix for test case description.
+  - Added `And` and `But` spec context methods. These methods set up context identically to the original `Given` methods but are provided as a way to improve readability.
+  - Several other minor fixes and improvements.
+
+Versions 3.0.x of SpecEasy include:
+  - Support for NUnit 3.8.x
+  - Support for .NET 4.5.2, .NET 4.6, .NET 4.6.1, and .NET 4.6.2
+
+Versions 3.1.x of SpecEasy include:
+  - Support for NUnit 3.10.x
+  - Support for .NET 4.7, and .NET 4.7.1
+
+Versions 4.0.x of SpecEasy include:
+  - Support for NUnit 3.14.x
+  - Support for .NET 4.7.2, .NET 4.8, .NET 4.8.1; .NET Standard 2.0., .NET Standard 2.1, .NET 6.0, .NET 7.0, and .NET 8.0
+  - Replaces RhinoMocks with NSubstitute, which necessitates dropping support for NET Framework support prior to 4.6.1</PackageReleaseNotes>
+    <Description>Specifications made easy.</Description>
+    <Copyright>2024</Copyright>
+    <Version>4.0.0</Version>
+    <AssemblyVersion>4.0.0</AssemblyVersion>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\speceasy_logo_sq_128.png" Pack="true" PackagePath="" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+  </ItemGroup>
 </Project>
