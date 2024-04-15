@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/speceasy/speceasy</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>bdd tdd unit test testing fluent</PackageTags>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageReleaseNotes>
 
 Version 2.1.0 of SpecEasy includes:
@@ -45,6 +46,7 @@ Versions 4.0.x of SpecEasy include:
   <ItemGroup>
     <None Include="..\speceasy_logo_sq_128.png" Pack="true" PackagePath="" />
     <None Include="..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\readme.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NSubstitute" Version="5.1.0" />
